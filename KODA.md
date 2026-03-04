@@ -175,7 +175,7 @@ psql -U postgres -f db/init.sql
 
 ### Вариант 1: Через GitHub (рекомендуется)
 
-1. Код уже на GitHub: https://github.com/supertrue-hub1/Sravni
+1. Код уже на GitHub: https://github.com/supertrue-hub1/Newpay
 2. В панели Timeweb: **Git** → **Добавить проект**
 3. Выберите GitHub → авторизуйтесь
 4. Выберите репозиторий **NewPay**

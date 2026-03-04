@@ -116,11 +116,49 @@ export default function HomeContent() {
   const [isLoaded, setIsLoaded] = useState(false)
   const t = useTranslations('HomePage')
 
-  // Загрузка данных из localStorage
-  const loadData = useCallback(() => {
+  // Загрузка данных из БД/API
+  const loadData = useCallback(async () => {
     if (typeof window === 'undefined') return
     
-    // Загрузка МФО
+    // Загрузка МФО из API (база данных)
+    try {
+      const response = await fetch('/api/mfo')
+      if (response.ok) {
+        const data = await response.json()
+        if (Array.isArray(data) && data.length > 0) {
+          const convertedData: MFO[] = data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            logo: item.logo,
+            rating: item.rating,
+            reviews: item.reviews,
+            sumMin: item.sum_min,
+            sumMax: item.sum_max,
+            termMin: item.term_min,
+            termMax: item.term_max,
+            percent: item.percent,
+            firstFree: item.first_free,
+            instant: item.instant,
+            badge: item.badge,
+            siteUrl: item.site_url,
+            address: item.address,
+            phone: item.phone,
+            inn: item.inn,
+            ogrn: item.ogrn,
+            license: item.license,
+            clicks: item.clicks || 0,
+            conversions: item.conversions || 0,
+          }))
+          setMfoData(convertedData)
+          setIsLoaded(true)
+          return
+        }
+      }
+    } catch (e) {
+      console.log('API not available, trying localStorage')
+    }
+    
+    // Если API недоступен - пробуем localStorage
     const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
     if (storedMfo) {
       try {
@@ -128,7 +166,6 @@ export default function HomeContent() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           setMfoData(parsed)
         } else {
-          // Если пустой массив - используем статические данные
           setMfoData(staticMfoData)
         }
       } catch (e) {
@@ -136,7 +173,6 @@ export default function HomeContent() {
         setMfoData(staticMfoData)
       }
     } else {
-      // Если ключа нет - используем статические данные
       setMfoData(staticMfoData)
     }
 

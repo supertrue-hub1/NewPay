@@ -21,26 +21,71 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
   const [selectedMfo, setSelectedMfo] = useState<MFO | null>(null)
   const [sortType, setSortType] = useState<SortType>('popular')
   const [tabValue, setTabValue] = useState<number>(0)
-  const [mfoData, setMfoData] = useState<MFO[]>(staticMfoData)
-  const [isLoaded, setIsLoaded] = useState(true)
+  const [mfoData, setMfoData] = useState<MFO[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
 
-  // Загрузка данных из localStorage при монтировании
+  // Загрузка данных из БД/API при монтировании
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
       if (typeof window === 'undefined') return
       
+      try {
+        // Пробуем загрузить из API (база данных)
+        const response = await fetch('/api/mfo')
+        if (response.ok) {
+          const data = await response.json()
+          if (Array.isArray(data) && data.length > 0) {
+            // Преобразуем данные из БД в формат MFO
+            const convertedData: MFO[] = data.map((item: any) => ({
+              id: item.id,
+              name: item.name,
+              logo: item.logo,
+              rating: item.rating,
+              reviews: item.reviews,
+              sumMin: item.sum_min,
+              sumMax: item.sum_max,
+              termMin: item.term_min,
+              termMax: item.term_max,
+              percent: item.percent,
+              firstFree: item.first_free,
+              instant: item.instant,
+              badge: item.badge,
+              siteUrl: item.site_url,
+              address: item.address,
+              phone: item.phone,
+              inn: item.inn,
+              ogrn: item.ogrn,
+              license: item.license,
+              clicks: item.clicks || 0,
+              conversions: item.conversions || 0,
+            }))
+            setMfoData(convertedData)
+            setIsLoaded(true)
+            return
+          }
+        }
+      } catch (e) {
+        console.log('API not available, trying localStorage:', e)
+      }
+      
+      // Если API недоступен - пробуем localStorage
       const storedMfo = localStorage.getItem('mfo')
       if (storedMfo) {
         try {
           const parsed = JSON.parse(storedMfo)
-          // Если данные есть и это массив - используем их
           if (Array.isArray(parsed) && parsed.length > 0) {
             setMfoData(parsed)
+            setIsLoaded(true)
+            return
           }
         } catch (e) {
           console.error('Error parsing MFO data:', e)
         }
       }
+      
+      // Фоллбек на статические данные
+      setMfoData(staticMfoData)
+      setIsLoaded(true)
     }
 
     loadData()
