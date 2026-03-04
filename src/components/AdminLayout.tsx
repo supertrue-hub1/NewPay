@@ -28,6 +28,7 @@ interface MenuItemType {
 
 const menuItems: MenuItemType[] = [
   { label: 'МФО', icon: <Dashboard />, tabId: 'mfo' },
+  { label: 'Обзор МФО', icon: <Info />, tabId: 'mfoOverview' },
   { label: 'Кредитные карты', icon: <CreditCard />, tabId: 'cards' },
   { label: 'Блог', icon: <Article />, tabId: 'blog' },
   { label: 'FAQ', icon: <HelpOutline />, tabId: 'faq' },

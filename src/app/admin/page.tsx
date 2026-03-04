@@ -52,7 +52,7 @@ const transliterate = (text: string): string => {
     .toLowerCase()
 }
 
-type TabType = 'mfo' | 'cards' | 'blog' | 'faq' | 'promokody' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms'
+type TabType = 'mfo' | 'mfoOverview' | 'cards' | 'blog' | 'faq' | 'promokody' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms'
 
 // Категории статей
 const ARTICLE_CATEGORIES = [
@@ -296,6 +296,78 @@ export default function AdminPage() {
             Выйти
           </Button>
         </Box>
+
+        {/* === Обзор МФО === */}
+        {activeTab === 'mfoOverview' && (
+          <>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h5" sx={{ mb: 2, color: 'white', fontWeight: 700 }}>
+                Редактирование обзоров МФО
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2 }}>
+                Здесь вы можете отредактировать дополнительную информацию для страниц обзоров: плюсы, минусы, риски и описание компании
+              </Typography>
+            </Box>
+            <Grid container spacing={2}>
+              {mfoData.map((mfo) => (
+                <Grid size={{ xs: 12, md: 6 }} key={mfo.id}>
+                  <Card>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                        <Logo logo={mfo.logo} size={40} />
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>{mfo.name}</Typography>
+                      </Box>
+                      
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" color="success.main" sx={{ mb: 1, fontWeight: 600 }}>
+                          Плюсы ({mfo.pros?.length || 0})
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                          {mfo.pros?.slice(0, 2).join(', ') || 'Не задано'}
+                          {(mfo.pros?.length || 0) > 2 && '...'}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" color="error.main" sx={{ mb: 1, fontWeight: 600 }}>
+                          Минусы ({mfo.cons?.length || 0})
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                          {mfo.cons?.slice(0, 2).join(', ') || 'Не задано'}
+                          {(mfo.cons?.length || 0) > 2 && '...'}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" color="warning.main" sx={{ mb: 1, fontWeight: 600 }}>
+                          Риски ({mfo.risks?.length || 0})
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                          {mfo.risks?.slice(0, 2).join(', ') || 'Не задано'}
+                          {(mfo.risks?.length || 0) > 2 && '...'}
+                        </Typography>
+                      </Box>
+                      
+                      <Button 
+                        variant="contained" 
+                        fullWidth
+                        startIcon={<Edit />}
+                        onClick={() => {
+                          setEditingItem(mfo)
+                          setFormData(mfo)
+                          setSlugManuallyEdited(true)
+                          setActiveTab('mfo')
+                        }}
+                      >
+                        Редактировать
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        )}
 
         {/* === МФО === */}
         {activeTab === 'mfo' && (
