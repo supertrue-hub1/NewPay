@@ -626,7 +626,7 @@ export default function MfoComparePage() {
                 borderBottom: 1, 
                 borderColor: 'divider',
                 px: 2,
-                '& .MuiTab-root': { fontWeight: 600, textTransform: 'none' },
+                '& .MuiTab-root': { fontWeight: 600, textTransform: 'none', minWidth: 'auto' },
                 '& .Mui-selected': { color: '#1a237e' },
                 '& .MuiTabs-indicator': { bgcolor: '#1a237e' },
               }}
@@ -634,6 +634,7 @@ export default function MfoComparePage() {
               <Tab icon={<CreditCard sx={{ fontSize: 18 }} />} iconPosition="start" label="Условия" />
               <Tab icon={<Person sx={{ fontSize: 18 }} />} iconPosition="start" label="Требования" />
               <Tab icon={<Schedule sx={{ fontSize: 18 }} />} iconPosition="start" label="Как получить" />
+              <Tab icon={<Info sx={{ fontSize: 18 }} />} iconPosition="start" label="О компании" />
             </Tabs>
 
             <DialogContent sx={{ p: 3 }}>
@@ -769,6 +770,89 @@ export default function MfoComparePage() {
                         <Typography variant="body1" sx={{ fontWeight: 600 }}>Получите деньги на карту</Typography>
                         <Typography variant="body2" color="text.secondary">Мгновенное зачисление</Typography>
                       </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+
+              {tabValue === 3 && (
+                <Box>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                    О компании {selectedMfo.name}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Paper sx={{ p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                      <Grid container spacing={2}>
+                        <Grid size={{ xs: 12 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <Verified sx={{ color: '#4caf50' }} />
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                              Официальный статус
+                            </Typography>
+                          </Box>
+                          <Typography variant="body2" color="text.secondary">
+                            {selectedMfo.name} — микрофинансовая организация, осуществляющая деятельность на основании лицензии ЦБ РФ.
+                          </Typography>
+                        </Grid>
+                        
+                        <Grid size={{ xs: 12 }}>
+                          <Divider sx={{ my: 1 }} />
+                        </Grid>
+                        
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">Лицензия</Typography>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                            {selectedMfo.license || 'ЦБ РФ'}
+                          </Typography>
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">ИНН</Typography>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                            {selectedMfo.inn || '—'}
+                          </Typography>
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">ОГРН</Typography>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                            {selectedMfo.ogrn || '—'}
+                          </Typography>
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">Рейтинг</Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Rating value={selectedMfo.rating} precision={0.1} size="small" readOnly />
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                              {selectedMfo.rating}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                    
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        Официальный сайт:
+                      </Typography>
+                      <Button 
+                        variant="outlined" 
+                        fullWidth
+                        onClick={() => window.open(selectedMfo.siteUrl || '#', '_blank')}
+                        sx={{ justifyContent: 'flex-start' }}
+                      >
+                        {selectedMfo.siteUrl || 'Перейти на сайт'}
+                      </Button>
+                    </Box>
+                    
+                    <Box sx={{ p: 2, bgcolor: '#e3f2fd', borderRadius: 2 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Важная информация
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Процентная ставка по займу составляет {selectedMfo.percent}% в день. 
+                        Перед оформлением займа ознакомьтесь с условиями договора и правилами предоставления микрозаймов.
+                        Возраст заёмщика: от 18 до {selectedMfo.termMax > 25 ? '75' : '65'} лет.
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>

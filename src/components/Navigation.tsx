@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Button, Box, Container } from '@mui/material'
 const navItems = [
   { label: 'Главная', href: '/' },
   { label: 'Займы', href: '/allmfo' },
+  { label: 'Сравнить', href: '/mfo' },
   { label: 'Кредитные карты', href: '/cards' },
   { label: 'Статьи', href: '/articles' },
 ]
