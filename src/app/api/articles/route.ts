@@ -77,6 +77,7 @@ export async function GET(request: NextRequest) {
     filteredArticles = filteredArticles.filter((a: StaticArticle) => a.category === category)
   }
   
+  const offset = (page - 1) * limit
   const total = filteredArticles.length
   const totalPages = Math.ceil(total / limit)
   const paginatedArticles = filteredArticles.slice(offset, offset + limit)
