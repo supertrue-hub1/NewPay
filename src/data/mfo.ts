@@ -4,6 +4,7 @@ export interface MFO {
   id: number
   name: string
   logo: string
+  slug?: string
   rating: number
   reviews: number
   sumMin: number
@@ -24,6 +25,10 @@ export interface MFO {
   inn?: string
   ogrn?: string
   license?: string
+  // Дополнительные поля для страницы обзора
+  pros?: string[]
+  cons?: string[]
+  risks?: string[]
 }
 
 const initialMfo: MFO[] = [

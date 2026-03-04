@@ -447,7 +447,7 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
                   <Tab icon={<Description sx={{ fontSize: 18 }} />} iconPosition="start" label="Условия" />
                   <Tab icon={<CheckCircle sx={{ fontSize: 18 }} />} iconPosition="start" label="Требования" />
                   <Tab icon={<AccessTime sx={{ fontSize: 18 }} />} iconPosition="start" label="Как получить" />
-                  <Tab icon={<InfoIcon sx={{ fontSize: 18 }} />} iconPosition="start" label="О МФО" />
+                  <Tab icon={<InfoIcon sx={{ fontSize: 18 }} />} iconPosition="start" label="О компании" />
                 </Tabs>
 
                 <Box sx={{ p: 3 }}>
