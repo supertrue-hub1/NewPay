@@ -143,7 +143,7 @@ export default function ArticleDetailPage() {
                   <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>Теги:</Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                     {article.tags.map((tag) => (
-                      <Chip key={tag} label={#} size="small" component={Link} href={/articles?tag=} sx={{ cursor: 'pointer' }} />
+                      <Chip key={tag} label={`#${tag}`} size="small" component={Link} href={`/articles?tag=${encodeURIComponent(tag)}`} sx={{ cursor: 'pointer' }} />
                     ))}
                   </Stack>
                 </Box>
@@ -154,8 +154,8 @@ export default function ArticleDetailPage() {
                   <ShareIcon fontSize="small" /> Поделиться:
                 </Typography>
                 <Stack direction="row" spacing={1}>
-                  <Button variant="contained" size="small" href={https://vk.com/share.php?url=/articles/} target="_blank" sx={{ bgcolor: '#2787f5' }}>ВКонтакте</Button>
-                  <Button variant="contained" size="small" href={https://t.me/share/url?url=/articles/&text=} target="_blank" sx={{ bgcolor: '#0088cc' }}>Telegram</Button>
+                  <Button variant="contained" size="small" href={`https://vk.com/share.php?url=${siteUrl}/articles/${article.slug}`} target="_blank" sx={{ bgcolor: '#2787f5' }}>ВКонтакте</Button>
+                  <Button variant="contained" size="small" href={`https://t.me/share/url?url=${siteUrl}/articles/${article.slug}&text=${article.title}`} target="_blank" sx={{ bgcolor: '#0088cc' }}>Telegram</Button>
                 </Stack>
               </Box>
             </Card>
@@ -166,7 +166,7 @@ export default function ArticleDetailPage() {
                 <Grid container spacing={3}>
                   {relatedArticles.map((related) => (
                     <Grid size={{ xs: 12, md: 4 }} key={related.id}>
-                      <Card component={Link} href={/articles/} sx={{ textDecoration: 'none', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s', '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 } }}>
+                      <Card component={Link} href={`/articles/${related.slug}`} sx={{ textDecoration: 'none', height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s', '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 } }}>
                         <Box sx={{ position: 'relative', height: 140 }}>
                           {related.coverImage ? (
                             <Image src={related.coverImage} alt={related.title} fill style={{ objectFit: 'cover' }} />
@@ -200,7 +200,7 @@ export default function ArticleDetailPage() {
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>Популярное</Typography>
                 <Stack spacing={2}>
                   {staticArticles.filter((a: StaticArticle) => a.status === 'PUBLISHED').sort((a: StaticArticle, b: StaticArticle) => (b.views || 0) - (a.views || 0)).slice(0, 5).map((a: StaticArticle) => (
-                    <Box key={a.id} component={Link} href={/articles/} sx={{ textDecoration: 'none', '&:hover .article-title': { color: '#667eea' } }}>
+                    <Box key={a.id} component={Link} href={`/articles/${a.slug}`} sx={{ textDecoration: 'none', '&:hover .article-title': { color: '#667eea' } }}>
                       <Typography className="article-title" variant="body2" sx={{ fontWeight: 600, color: '#212121', transition: 'color 0.2s' }}>{a.title}</Typography>
                       <Typography variant="caption" color="text.secondary">{a.views?.toLocaleString()} просмотров</Typography>
                     </Box>
