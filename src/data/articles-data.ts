@@ -1,7 +1,20 @@
-// Серверные данные статей (статические, для ISR)
-import { Article } from './articles'
+// Статические данные статей (для fallback)
+export interface Article {
+  id: number
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  image?: string
+  author: string
+  date: string
+  category: string
+  views?: number
+  status: 'DRAFT' | 'PUBLISHED'
+  tags?: string[]
+}
 
-export const articlesData: Article[] = [
+export const articles: Article[] = [
   {
     id: 1,
     title: 'Как выбрать лучший микрозайм',
@@ -31,6 +44,8 @@ export const articlesData: Article[] = [
     date: '2024-01-15',
     category: 'Советы',
     views: 1250,
+    status: 'PUBLISHED',
+    tags: ['микрозаймы', 'выбор МФО', 'финансы'],
   },
   {
     id: 2,
@@ -62,6 +77,8 @@ export const articlesData: Article[] = [
     date: '2024-01-10',
     category: 'Образование',
     views: 890,
+    status: 'PUBLISHED',
+    tags: ['грейс-период', 'кредитная карта', 'банки'],
   },
   {
     id: 3,
@@ -92,6 +109,8 @@ export const articlesData: Article[] = [
     date: '2024-01-05',
     category: 'Советы',
     views: 2100,
+    status: 'PUBLISHED',
+    tags: ['кредитная история', 'кредитный рейтинг', 'советы'],
   },
   {
     id: 4,
@@ -130,6 +149,8 @@ export const articlesData: Article[] = [
     date: '2024-01-01',
     category: 'Сравнение',
     views: 756,
+    status: 'PUBLISHED',
+    tags: ['кредитная карта', 'микрозайм', 'сравнение'],
   },
   {
     id: 5,
@@ -166,5 +187,10 @@ export const articlesData: Article[] = [
     date: '2023-12-28',
     category: 'Безопасность',
     views: 543,
+    status: 'PUBLISHED',
+    tags: ['безопасность', 'мошенничество', 'онлайн-заявки'],
   },
 ]
+
+// Legacy export for backward compatibility
+export { articles as articlesData }
