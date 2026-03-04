@@ -5,22 +5,8 @@ import Image from 'next/image'
 import { Article, ArticlesApiResponse } from '@/types/article'
 import { articles as staticArticles, Article as StaticArticle } from '@/data/articles-data'
 
-// Функция для получения статьи по slug
-async function getArticle(slug: string): Promise<Article | null> {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/articles/${slug}`, {
-      next: { revalidate: 60 }
-    })
-    
-    if (response.ok) {
-      const data: ArticlesApiResponse = await response.json()
-      return data.data?.[0] || null
-    }
-  } catch (error) {
-    console.log('API not available, using static data')
-  }
-  
-  // Fallback to static data
+// Функция для получения статьи по slug (статические данные)
+function getArticle(slug: string): Article | null {
   const staticArticle = staticArticles.find((a: StaticArticle) => a.slug === slug)
   if (!staticArticle) return null
 
@@ -43,20 +29,18 @@ async function getArticle(slug: string): Promise<Article | null> {
   }
 }
 
-// Получение всех slug для статической генерации
+// Динамический роутинг - без статической генерации
+export const dynamicParams = true
+
+// Получение всех slug для статической генерации (упрощенная версия)
 export async function generateStaticParams() {
-  const publishedArticles = staticArticles.filter(
-    (a: StaticArticle) => a.status === 'PUBLISHED'
-  )
-  return publishedArticles.map((article: StaticArticle) => ({
-    slug: article.slug
-  }))
+  return []
 }
 
 // Динамические метаданные для SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const article = await getArticle(slug)
+  const article = getArticle(slug)
 
   if (!article) {
     return {
