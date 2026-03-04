@@ -199,26 +199,9 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             )}
 
             {/* Article Content */}
-            <div className="bg-white rounded-xl shadow-md p-5 md:p-8">
-              <div 
-                className="article-content text-gray-700 leading-relaxed text-base"
-                dangerouslySetInnerHTML={{ __html: article.content }}
-              />
-              <style jsx global>{`
-                .article-content h1 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 1rem; color: #1f2937; }
-                .article-content h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 1rem; color: #1f2937; }
-                .article-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.75rem; color: #374151; }
-                .article-content p { margin: 0.75rem 0; line-height: 1.7; }
-                .article-content ul, .article-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-                .article-content li { margin: 0.5rem 0; }
-                .article-content a { color: #4f46e5; text-decoration: underline; }
-                .article-content a:hover { color: #4338ca; }
-                .article-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1rem 0; }
-                .article-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-                .article-content th, .article-content td { padding: 0.75rem; border: 1px solid #e5e7eb; text-align: left; }
-                .article-content th { background: #f3f4f6; font-weight: 600; }
-                .article-content blockquote { border-left: 4px solid #4f46e5; padding-left: 1rem; margin: 1rem 0; font-style: italic; color: #6b7280; }
-              `}</style>
+            <div className="bg-white rounded-xl shadow-md p-5 md:p-8 text-gray-700 leading-relaxed text-base">
+              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+            </div>
 
               {/* Tags */}
               {article.tags && article.tags.length > 0 && (
