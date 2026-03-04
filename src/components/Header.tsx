@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
     href: '/allmfo',
     subitems: [
       { label: 'Все займы', href: '/allmfo' },
+      { label: 'Сравнить займы', href: '/mfo' },
       { label: 'Займы онлайн', href: '/zajmy-online' },
       { label: 'Займы по городам', href: '/zajmy-online/moskva' },
     ]

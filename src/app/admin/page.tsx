@@ -815,6 +815,15 @@ export default function AdminPage() {
                   <Grid size={{ xs: 6 }}><TextField fullWidth label="Бейдж" value={formData.badge} onChange={(e) => updateFormField('badge', e.target.value)} /></Grid>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="URL сайта" value={formData.siteUrl} onChange={(e) => updateFormField('siteUrl', e.target.value)} placeholder="https://example.com" InputProps={{ endAdornment: formData.siteUrl ? <Button size="small" href={formData.siteUrl} target="_blank" rel="noopener noreferrer">Открыть</Button> : null }} /></Grid>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="Описание" multiline rows={2} value={formData.infoModal} onChange={(e) => updateFormField('infoModal', e.target.value)} /></Grid>
+                  
+                  {/* Дополнительные поля "О компании" */}
+                  <Grid size={{ xs: 12 }}><Divider sx={{ my: 1 }} /><Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>О компании</Typography></Grid>
+                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="ИНН" value={formData.inn || ''} onChange={(e) => updateFormField('inn', e.target.value)} placeholder="1234567890" /></Grid>
+                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="ОГРН" value={formData.ogrn || ''} onChange={(e) => updateFormField('ogrn', e.target.value)} placeholder="1234567890123" /></Grid>
+                  <Grid size={{ xs: 12 }}><TextField fullWidth label="Лицензия" value={formData.license || ''} onChange={(e) => updateFormField('license', e.target.value)} placeholder="ЦБ РФ № 1234567890123" /></Grid>
+                  <Grid size={{ xs: 12 }}><TextField fullWidth label="Адрес" value={formData.address || ''} onChange={(e) => updateFormField('address', e.target.value)} placeholder="г. Москва, ул. Примерная, д. 1" /></Grid>
+                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Телефон" value={formData.phone || ''} onChange={(e) => updateFormField('phone', e.target.value)} placeholder="+7 (495) 123-45-67" /></Grid>
+                  
                   <Grid size={{ xs: 6 }}><FormControlLabel control={<Switch checked={formData.firstFree} onChange={(e) => updateFormField('firstFree', e.target.checked)} />} label="Первый займ 0%" /></Grid>
                   <Grid size={{ xs: 6 }}><FormControlLabel control={<Switch checked={formData.instant} onChange={(e) => updateFormField('instant', e.target.checked)} />} label="Мгновенно" /></Grid>
                 </>
