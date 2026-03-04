@@ -1,0 +1,147 @@
+import { useState, useEffect } from 'react'
+
+export interface CreditCard {
+  id: number
+  name: string
+  bank: string
+  logo: string
+  rating: number
+  reviews: number
+  cashback: number
+  gracePeriod: number
+  annualFee: number
+  limit: number
+  percent: number
+  badge?: string
+  features: string[]
+}
+
+const initialCards: CreditCard[] = [
+  {
+    id: 1,
+    name: 'Тинькофф Платинум',
+    bank: 'Тинькофф Банк',
+    logo: 'Т',
+    rating: 4.8,
+    reviews: 25000,
+    cashback: 5,
+    gracePeriod: 55,
+    annualFee: 0,
+    limit: 300000,
+    percent: 12.9,
+    badge: 'Хит продаж',
+    features: ['Кэшбэк 5%', '55 дней грейс-период', 'Без годовой платы'],
+  },
+  {
+    id: 2,
+    name: 'Альфа-Стандарт',
+    bank: 'Альфа-Банк',
+    logo: 'А',
+    rating: 4.7,
+    reviews: 18000,
+    cashback: 3,
+    gracePeriod: 60,
+    annualFee: 590,
+    limit: 500000,
+    percent: 11.99,
+    features: ['Кэшбэк 3%', '60 дней грейс-период', 'Мили на Travel'],
+  },
+  {
+    id: 3,
+    name: 'СберКарта',
+    bank: 'СберБанк',
+    logo: 'С',
+    rating: 4.6,
+    reviews: 42000,
+    cashback: 4,
+    gracePeriod: 50,
+    annualFee: 0,
+    limit: 300000,
+    percent: 13.9,
+    badge: 'Выбор клиентов',
+    features: ['Кэшбэк 4%', '50 дней грейс-период', 'Без годовой платы'],
+  },
+  {
+    id: 4,
+    name: 'ВТБ Классическая',
+    bank: 'ВТБ',
+    logo: 'В',
+    rating: 4.5,
+    reviews: 15000,
+    cashback: 2,
+    gracePeriod: 50,
+    annualFee: 0,
+    limit: 200000,
+    percent: 14.9,
+    features: ['Кэшбэк 2%', '50 дней грейс-период', 'Без годовой платы'],
+  },
+  {
+    id: 5,
+    name: 'Почта Банк В垫',
+    bank: 'Почта Банк',
+    logo: 'П',
+    rating: 4.3,
+    reviews: 8000,
+    cashback: 3,
+    gracePeriod: 60,
+    annualFee: 0,
+    limit: 150000,
+    percent: 14.9,
+    features: ['Кэшбэк 3%', '60 дней грейс-период', 'Без годовой платы'],
+  },
+  {
+    id: 6,
+    name: 'Росбанк 120 дней',
+    bank: 'Росбанк',
+    logo: 'Р',
+    rating: 4.4,
+    reviews: 6500,
+    cashback: 5,
+    gracePeriod: 120,
+    annualFee: 890,
+    limit: 400000,
+    percent: 11.5,
+    badge: 'Лучший грейс',
+    features: ['Кэшбэк 5%', '120 дней грейс-период', 'Премиальная поддержка'],
+  },
+]
+
+export const useCardsData = () => {
+  const [cardsData, setCardsData] = useState<CreditCard[]>(initialCards)
+
+  useEffect(() => {
+    const stored = localStorage.getItem('cards')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        setCardsData(parsed)
+      } catch {
+        // ignore parse error
+      }
+    }
+  }, [])
+
+  const saveCards = (cards: CreditCard[]) => {
+    localStorage.setItem('cards', JSON.stringify(cards))
+    setCardsData(cards)
+  }
+
+  const addCard = (card: Omit<CreditCard, 'id'>) => {
+    const newCard = { ...card, id: Date.now() }
+    saveCards([...cardsData, newCard])
+  }
+
+  const updateCard = (card: CreditCard) => {
+    saveCards(cardsData.map(c => c.id === card.id ? card : c))
+  }
+
+  const deleteCard = (id: number) => {
+    saveCards(cardsData.filter(c => c.id !== id))
+  }
+
+  const resetCards = () => {
+    saveCards(initialCards)
+  }
+
+  return { cardsData, addCard, updateCard, deleteCard, resetCards }
+}

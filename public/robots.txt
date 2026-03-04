@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://sravnipay.ru
+
+# Sitemaps
+Sitemap: https://sravnipay.ru/sitemap.xml

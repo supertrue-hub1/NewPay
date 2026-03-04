@@ -1,0 +1,66 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# deployment
+.next.zip
+build.log
+DEPLOYMENT.md
+DEPLOY_TIMEWEB.md
+
+# local scripts (now tracked)
+# build.ps1
+# start-dev.ps1
+# run-dev.bat
+# run-dev-fixed.bat
+# run-dev-fixed.ps1
+# start-project.bat
+# start-dev-clean.ps1
+# run-project.bat
+# start-server.bat
+# server-start.sh
+# deploy.sh
+# deploy-timeweb.sh
+# ecosystem.config.js
+# GITHUB_SETUP.md
+
+# public assets
+public/.htaccess

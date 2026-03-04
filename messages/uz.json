@@ -1,0 +1,23 @@
+{
+  "HomePage": {
+    "title": "Kartaga onlayn kreditlarni solishtirish — Yuqori tasdiqlash reytingi MFO",
+    "description": "2026-yil uchun dolzarb ro'yxat. Haqiqiy sharhlar, halol stavkalar va MFOlar jim turgan yashirin komissiyalar."
+  },
+  "Navigation": {
+    "home": "Bosh sahifa",
+    "loans": "Kreditlar",
+    "cards": "Kredit kartalari",
+    "articles": "Maqolalar",
+    "faq": "FAQ",
+    "more": "Yana",
+    "promocodes": "Promokodlar",
+    "complaint": "Rossiya Markaziy Bankiga shikoyat",
+    "illegalLenders": "Noqonuniy kredit beruvchilar"
+  },
+  "Loans": {
+    "title": "Onlayn kreditlar",
+    "subtitle": "Mikromoliya tashkilotlaridan eng yaxshi takliflar",
+    "apply": "Ariza topshirish",
+    "details": "Batafsil"
+  }
+}

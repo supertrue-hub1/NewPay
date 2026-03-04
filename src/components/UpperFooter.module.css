@@ -1,0 +1,177 @@
+.Root {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.List {
+  display: flex;
+  padding: 4px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  list-style: none;
+  margin: 0;
+  gap: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.Trigger {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.Trigger:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
+}
+
+.Trigger[data-active] {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+.Icon {
+  position: relative;
+  top: 1px;
+  transition: transform 0.2s ease;
+}
+
+.Trigger[data-state='open'] .Icon {
+  transform: rotate(180deg);
+}
+
+.Content {
+  width: 100%;
+  padding: 12px;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  animation: slideDown 0.2s ease;
+}
+
+.Content:focus {
+  outline: none;
+}
+
+.GridLinkList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 400px;
+}
+
+.FlexLinkList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 280px;
+}
+
+.LinkCard {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.LinkCard:hover {
+  background: rgba(99, 102, 241, 0.06);
+  border-color: rgba(99, 102, 241, 0.12);
+}
+
+.LinkTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.LinkDescription {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.Positioner {
+  z-index: 100;
+}
+
+.Popup {
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.Arrow {
+  fill: white;
+}
+
+.ArrowFill {
+  fill: white;
+}
+
+.ArrowOuterStroke {
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 1px;
+}
+
+.ArrowInnerStroke {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 0.5px;
+}
+
+.Viewport {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background-color: white;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .List {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .GridLinkList {
+    width: 100%;
+  }
+}
