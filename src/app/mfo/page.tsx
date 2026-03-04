@@ -778,7 +778,7 @@ export default function MfoComparePage() {
               {tabValue === 3 && (
                 <Box>
                   <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
-                    О компании {selectedMfo.name}
+                    О компании
                   </Typography>
                   
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -829,20 +829,6 @@ export default function MfoComparePage() {
                         </Grid>
                       </Grid>
                     </Paper>
-                    
-                    <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        Официальный сайт:
-                      </Typography>
-                      <Button 
-                        variant="outlined" 
-                        fullWidth
-                        onClick={() => window.open(selectedMfo.siteUrl || '#', '_blank')}
-                        sx={{ justifyContent: 'flex-start' }}
-                      >
-                        {selectedMfo.siteUrl || 'Перейти на сайт'}
-                      </Button>
-                    </Box>
                     
                     <Box sx={{ p: 2, bgcolor: '#e3f2fd', borderRadius: 2 }}>
                       <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
