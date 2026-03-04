@@ -138,47 +138,43 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* Article Header */}
-      <div className="bg-gradient-to-r from-indigo-900 to-indigo-700 text-white py-12">
+      <div className="bg-gradient-to-r from-indigo-900 to-indigo-700 text-white py-8 md:py-10">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <span className="inline-block bg-indigo-500 text-white px-4 py-1 rounded-full text-sm font-medium mb-4">
+            <span className="inline-block bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-medium mb-3">
               {article.category}
             </span>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3">
               {article.title}
             </h1>
-            <p className="text-xl text-indigo-100 mb-6">
+            <p className="text-base text-indigo-100 mb-4">
               {article.excerpt}
             </p>
-            <div className="flex flex-wrap items-center gap-4 text-indigo-200">
-              <span className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm text-indigo-200">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
                 {article.author}
               </span>
-              <span className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {new Date(article.publishedAt || article.createdAt).toLocaleDateString('ru-RU', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
+                {new Date(article.publishedAt || article.createdAt).toLocaleDateString('ru-RU')}
               </span>
-              <span className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                   <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                 </svg>
-                {article.views.toLocaleString()} просмотров
+                {article.views.toLocaleString()}
               </span>
-              <span className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                 </svg>
-                {article.readingTime} мин чтения
+                {article.readingTime} мин
               </span>
             </div>
           </div>
@@ -191,7 +187,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
           <article className="lg:w-2/3">
             {/* Cover Image */}
             {article.coverImage && (
-              <div className="relative h-64 md:h-96 w-full mb-8 rounded-2xl overflow-hidden">
+              <div className="relative h-48 md:h-64 w-full mb-6 rounded-xl overflow-hidden">
                 <Image
                   src={article.coverImage}
                   alt={article.title}
@@ -203,11 +199,26 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             )}
 
             {/* Article Content */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+            <div className="bg-white rounded-xl shadow-md p-5 md:p-8">
               <div 
-                className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-indigo-600 prose-img:rounded-xl"
+                className="article-content text-gray-700 leading-relaxed text-base"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
+              <style jsx global>{`
+                .article-content h1 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 1rem; color: #1f2937; }
+                .article-content h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 1rem; color: #1f2937; }
+                .article-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.75rem; color: #374151; }
+                .article-content p { margin: 0.75rem 0; line-height: 1.7; }
+                .article-content ul, .article-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+                .article-content li { margin: 0.5rem 0; }
+                .article-content a { color: #4f46e5; text-decoration: underline; }
+                .article-content a:hover { color: #4338ca; }
+                .article-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1rem 0; }
+                .article-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+                .article-content th, .article-content td { padding: 0.75rem; border: 1px solid #e5e7eb; text-align: left; }
+                .article-content th { background: #f3f4f6; font-weight: 600; }
+                .article-content blockquote { border-left: 4px solid #4f46e5; padding-left: 1rem; margin: 1rem 0; font-style: italic; color: #6b7280; }
+              `}</style>
 
               {/* Tags */}
               {article.tags && article.tags.length > 0 && (
