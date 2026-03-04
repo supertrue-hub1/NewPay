@@ -164,7 +164,11 @@ export default function HomeContent() {
       try {
         const parsed = JSON.parse(storedMfo)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setMfoData(parsed)
+          // Дедупликация по уникальному ID
+          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
+            index === self.findIndex((m: MFO) => m.id === item.id)
+          )
+          setMfoData(uniqueMfo)
         } else {
           setMfoData(staticMfoData)
         }

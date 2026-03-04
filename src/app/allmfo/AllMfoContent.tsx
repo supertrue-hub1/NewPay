@@ -74,7 +74,11 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
         try {
           const parsed = JSON.parse(storedMfo)
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setMfoData(parsed)
+            // Дедупликация по уникальному ID
+            const uniqueMfo = parsed.filter((item: any, index: number, self: any[]) => 
+              index === self.findIndex((m: any) => m.id === item.id)
+            )
+            setMfoData(uniqueMfo)
             setIsLoaded(true)
             return
           }

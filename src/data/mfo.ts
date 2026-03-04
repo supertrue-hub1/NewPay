@@ -207,7 +207,15 @@ export const useMfoData = () => {
       if (stored) {
         try {
           const parsed = JSON.parse(stored)
-          setMfoData(parsed)
+          // Дедупликация по уникальному ID
+          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
+            index === self.findIndex((m: MFO) => m.id === item.id)
+          )
+          setMfoData(uniqueMfo)
+          // Обновляем localStorage с дедуплицированными данными
+          if (uniqueMfo.length !== parsed.length) {
+            localStorage.setItem('mfo', JSON.stringify(uniqueMfo))
+          }
         } catch {
           setMfoData(initialMfo)
           localStorage.setItem('mfo', JSON.stringify(initialMfo))

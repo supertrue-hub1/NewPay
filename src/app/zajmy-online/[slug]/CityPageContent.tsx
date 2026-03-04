@@ -82,7 +82,11 @@ export default function CityPageContent({ city }: Props) {
       try {
         const parsed = JSON.parse(storedMfo)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setMfoData(parsed)
+          // Дедупликация по уникальному ID
+          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
+            index === self.findIndex((m: MFO) => m.id === item.id)
+          )
+          setMfoData(uniqueMfo)
         }
       } catch (e) {
         console.error('Error parsing MFO data:', e)
