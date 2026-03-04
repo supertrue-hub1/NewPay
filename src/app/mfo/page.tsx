@@ -15,7 +15,15 @@ import {
   ToggleButton,
   TextField,
   Paper,
-  Fade
+  Fade,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Divider,
+  Tabs,
+  Tab
 } from '@mui/material'
 import { useState, useMemo, useCallback } from 'react'
 import { 
@@ -25,7 +33,13 @@ import {
   Speed, 
   AttachMoney,
   CheckCircle,
-  WorkspacePremium
+  WorkspacePremium,
+  Close,
+  Info,
+  Verified,
+  Schedule,
+  CreditCard,
+  Person
 } from '@mui/icons-material'
 import Logo from '@/components/Logo'
 import { mfoData as staticMfoData } from '@/data/mfo-data'
@@ -33,7 +47,6 @@ import { MFO } from '@/types/mfo'
 
 type SortType = 'overpayment' | 'amount' | 'speed'
 
-// Расширенный тип для предложений с расчетами
 interface MfoOffer extends MFO {
   totalRepayment: number
   overpayment: number
@@ -45,10 +58,10 @@ export default function MfoComparePage() {
   const [term, setTerm] = useState<number>(10)
   const [sortType, setSortType] = useState<SortType>('overpayment')
   const [mfoData] = useState<MFO[]>(staticMfoData)
+  const [selectedMfo, setSelectedMfo] = useState<MfoOffer | null>(null)
+  const [tabValue, setTabValue] = useState<number>(0)
 
-  // Расчёт переплаты и суммы к возврату
   const calculateRepayment = useCallback((mfo: MFO, loanAmount: number, days: number) => {
-    // Проверяем, подходит ли МФО по сумме и сроку
     if (mfo.sumMin > loanAmount || mfo.sumMax < loanAmount) {
       return null
     }
@@ -56,7 +69,6 @@ export default function MfoComparePage() {
       return null
     }
 
-    // Формула: Amount + (Amount * (InterestRatePerDay / 100) * Days)
     const dailyRate = mfo.percent / 100
     const totalRepayment = Math.round(loanAmount + (loanAmount * dailyRate * days))
     const overpayment = totalRepayment - loanAmount
@@ -64,7 +76,6 @@ export default function MfoComparePage() {
     return { totalRepayment, overpayment }
   }, [])
 
-  // Обработчики изменения значений
   const handleAmountChange = useCallback((_e: React.SyntheticEvent | Event, value: number | number[]) => {
     setAmount(value as number)
   }, [])
@@ -73,7 +84,6 @@ export default function MfoComparePage() {
     setTerm(value as number)
   }, [])
 
-  // Вычисляем предложения с расчетами
   const mfoOffers = useMemo((): MfoOffer[] => {
     const calculated = mfoData
       .map(mfo => {
@@ -88,14 +98,12 @@ export default function MfoComparePage() {
       })
       .filter((mfo): mfo is MfoOffer => mfo !== null)
 
-    // Сортировка
     let sorted: MfoOffer[] = []
     if (sortType === 'overpayment') {
       sorted = [...calculated].sort((a, b) => a.overpayment - b.overpayment)
     } else if (sortType === 'amount') {
       sorted = [...calculated].sort((a, b) => b.sumMax - a.sumMax)
     } else if (sortType === 'speed') {
-      // Сортировка по скорости одобрения (мгновенно = быстрее)
       sorted = [...calculated].sort((a, b) => {
         if (a.instant && !b.instant) return -1
         if (!a.instant && b.instant) return 1
@@ -103,7 +111,6 @@ export default function MfoComparePage() {
       })
     }
 
-    // Помечаем лучшее предложение (первое в отсортированном списке)
     if (sorted.length > 0) {
       sorted[0].isBest = true
     }
@@ -111,15 +118,23 @@ export default function MfoComparePage() {
     return sorted
   }, [mfoData, amount, term, sortType, calculateRepayment])
 
-  // Форматирование суммы
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('ru-RU').format(value) + ' ₽'
+  }
+
+  const handleOpenModal = (mfo: MfoOffer) => {
+    setSelectedMfo(mfo)
+    setTabValue(0)
+  }
+
+  const handleCloseModal = () => {
+    setSelectedMfo(null)
+    setTabValue(0)
   }
 
   return (
     <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="xl">
-        {/* Заголовок */}
         <Box sx={{ mb: 4 }}>
           <Typography 
             variant="h3" 
@@ -141,7 +156,6 @@ export default function MfoComparePage() {
         </Box>
 
         <Grid container spacing={3}>
-          {/* Левая колонка - Калькулятор (Sticky) */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Box sx={{ position: { md: 'sticky' }, top: { md: 20 } }}>
               <Card sx={{ 
@@ -155,7 +169,6 @@ export default function MfoComparePage() {
                     Калькулятор займа
                   </Typography>
 
-                  {/* Сумма займа */}
                   <Box sx={{ mb: 4 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <AccountBalanceWallet sx={{ color: 'white', fontSize: 20, opacity: 0.8 }} />
@@ -214,7 +227,6 @@ export default function MfoComparePage() {
                     </Box>
                   </Box>
 
-                  {/* Срок займа */}
                   <Box sx={{ mb: 4 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <CalendarToday sx={{ color: 'white', fontSize: 20, opacity: 0.8 }} />
@@ -273,7 +285,6 @@ export default function MfoComparePage() {
                     </Box>
                   </Box>
 
-                  {/* Итоговая сумма */}
                   {mfoOffers.length > 0 && (
                     <Fade in>
                       <Paper sx={{ 
@@ -301,7 +312,6 @@ export default function MfoComparePage() {
                 </CardContent>
               </Card>
 
-              {/* Сортировка */}
               <Card sx={{ mt: 2, borderRadius: 2 }}>
                 <CardContent sx={{ p: 2 }}>
                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
@@ -346,7 +356,6 @@ export default function MfoComparePage() {
             </Box>
           </Grid>
 
-          {/* Правая колонка - Список МФО */}
           <Grid size={{ xs: 12, md: 8 }}>
             {mfoOffers.length === 0 ? (
               <Card sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
@@ -372,11 +381,9 @@ export default function MfoComparePage() {
                       '&:hover': {
                         transform: 'translateY(-4px)',
                         boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                      },
-                      group: 'mfo-card'
+                      }
                     }}
                   >
-                    {/* Бейдж "Лучшее предложение" */}
                     {mfo.isBest && (
                       <Chip 
                         icon={<WorkspacePremium sx={{ fontSize: 18 }} />}
@@ -397,7 +404,6 @@ export default function MfoComparePage() {
 
                     <CardContent sx={{ p: 2.5 }}>
                       <Grid container spacing={2} alignItems="center">
-                        {/* Логотип и название */}
                         <Grid size={{ xs: 12, sm: 3 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                             <Logo logo={mfo.logo} size={48} />
@@ -415,7 +421,6 @@ export default function MfoComparePage() {
                           </Box>
                         </Grid>
 
-                        {/* Условия */}
                         <Grid size={{ xs: 6, sm: 3 }}>
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                             Ставка
@@ -425,7 +430,6 @@ export default function MfoComparePage() {
                           </Typography>
                         </Grid>
 
-                        {/* Расчёт */}
                         <Grid size={{ xs: 6, sm: 3 }}>
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                             К возврату
@@ -438,7 +442,6 @@ export default function MfoComparePage() {
                           </Typography>
                         </Grid>
 
-                        {/* Кнопка */}
                         <Grid size={{ xs: 12, sm: 3 }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                             <Button
@@ -455,6 +458,24 @@ export default function MfoComparePage() {
                             >
                               Оформить
                             </Button>
+                            
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleOpenModal(mfo)}
+                              startIcon={<Info />}
+                              sx={{ 
+                                borderColor: '#1a237e',
+                                color: '#1a237e',
+                                '&:hover': { borderColor: '#3949ab', bgcolor: 'rgba(26, 35, 126, 0.04)' },
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                py: 0.5
+                              }}
+                            >
+                              Подробнее
+                            </Button>
+
                             <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center', flexWrap: 'wrap' }}>
                               {mfo.firstFree && (
                                 <Chip 
@@ -477,7 +498,6 @@ export default function MfoComparePage() {
                         </Grid>
                       </Grid>
 
-                      {/* Дополнительная информация при наведении */}
                       <Box sx={{ 
                         mt: 2, 
                         pt: 2, 
@@ -501,7 +521,6 @@ export default function MfoComparePage() {
               </Box>
             )}
 
-            {/* Информационный блок */}
             <Paper sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: '#e8eaf6' }}>
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
                 Как выбрать МФО?
@@ -515,7 +534,7 @@ export default function MfoComparePage() {
                         Процентная ставка
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Обращайте внимание на суточную ставку — даже 0.1% может существенно повлиять на переплату
+                        Обращайте внимание на суточную ставку
                       </Typography>
                     </Box>
                   </Box>
@@ -528,7 +547,7 @@ export default function MfoComparePage() {
                         Первый займ под 0%
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Многие МФО предлагают первый займ бесплатно — идеально для новых клиентов
+                        Многие МФО предлагают первый займ бесплатно
                       </Typography>
                     </Box>
                   </Box>
@@ -541,7 +560,7 @@ export default function MfoComparePage() {
                         Скорость одобрения
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Мгновенное одобрение важно, когда деньги нужны срочно
+                        Мгновенное одобрение важно для срочных займов
                       </Typography>
                     </Box>
                   </Box>
@@ -554,7 +573,7 @@ export default function MfoComparePage() {
                         Отзывы и рейтинг
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Изучите отзывы других заёмщиков перед оформлением займа
+                        Изучите отзывы других заёмщиков
                       </Typography>
                     </Box>
                   </Box>
@@ -564,6 +583,213 @@ export default function MfoComparePage() {
           </Grid>
         </Grid>
       </Container>
+
+      {/* Модальное окно с информацией о МФО */}
+      <Dialog 
+        open={!!selectedMfo} 
+        onClose={handleCloseModal} 
+        maxWidth="sm" 
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
+      >
+        {selectedMfo && (
+          <>
+            <DialogTitle sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              pb: 1
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Logo logo={selectedMfo.logo} size={48} />
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    {selectedMfo.name}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Rating value={selectedMfo.rating} precision={0.1} size="small" readOnly />
+                    <Typography variant="body2" color="text.secondary">
+                      ({selectedMfo.reviews.toLocaleString()} отзывов)
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <IconButton onClick={handleCloseModal}>
+                <Close />
+              </IconButton>
+            </DialogTitle>
+
+            <Tabs 
+              value={tabValue} 
+              onChange={(_, v) => setTabValue(v)}
+              sx={{ 
+                borderBottom: 1, 
+                borderColor: 'divider',
+                px: 2,
+                '& .MuiTab-root': { fontWeight: 600, textTransform: 'none' },
+                '& .Mui-selected': { color: '#1a237e' },
+                '& .MuiTabs-indicator': { bgcolor: '#1a237e' },
+              }}
+            >
+              <Tab icon={<CreditCard sx={{ fontSize: 18 }} />} iconPosition="start" label="Условия" />
+              <Tab icon={<Person sx={{ fontSize: 18 }} />} iconPosition="start" label="Требования" />
+              <Tab icon={<Schedule sx={{ fontSize: 18 }} />} iconPosition="start" label="Как получить" />
+            </Tabs>
+
+            <DialogContent sx={{ p: 3 }}>
+              {tabValue === 0 && (
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 6 }}>
+                    <Typography variant="body2" color="text.secondary">Сумма займа</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      {selectedMfo.sumMin.toLocaleString()} - {selectedMfo.sumMax.toLocaleString()} ₽
+                    </Typography>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Typography variant="body2" color="text.secondary">Срок займа</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      {selectedMfo.termMin} - {selectedMfo.termMax} дней
+                    </Typography>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Typography variant="body2" color="text.secondary">Ставка</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                      {selectedMfo.percent}% в день
+                    </Typography>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Typography variant="body2" color="text.secondary">Вероятность одобрения</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>Высокая</Typography>
+                  </Grid>
+                  
+                  <Grid size={{ xs: 12 }}>
+                    <Divider sx={{ my: 1 }} />
+                  </Grid>
+                  
+                  <Grid size={{ xs: 12 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Ваш расчёт:</Typography>
+                    <Paper sx={{ p: 2, bgcolor: '#f5f5f5', borderRadius: 2 }}>
+                      <Grid container spacing={2}>
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">Сумма к возврату</Typography>
+                          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a237e' }}>
+                            {formatCurrency(selectedMfo.totalRepayment)}
+                          </Typography>
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                          <Typography variant="body2" color="text.secondary">Переплата</Typography>
+                          <Typography variant="h5" sx={{ fontWeight: 700, color: '#f44336' }}>
+                            +{formatCurrency(selectedMfo.overpayment)}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                  <Grid size={{ xs: 12 }}>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                      {selectedMfo.firstFree && (
+                        <Chip icon={<CheckCircle sx={{ fontSize: 16 }} />} label="Первый займ 0%" color="primary" />
+                      )}
+                      {selectedMfo.instant && (
+                        <Chip icon={<Speed sx={{ fontSize: 16 }} />} label="Мгновенно" />
+                      )}
+                      {selectedMfo.badge && (
+                        <Chip label={selectedMfo.badge} color="success" />
+                      )}
+                    </Box>
+                  </Grid>
+                </Grid>
+              )}
+
+              {tabValue === 1 && (
+                <Box>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                    Требования к заёмщику:
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Возраст от 18 до 75 лет</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Гражданство РФ</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Паспорт РФ</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Постоянная регистрация</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Наличие банковской карты</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />
+                      <Typography variant="body1">Мобильный телефон</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+
+              {tabValue === 2 && (
+                <Box>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                    Как получить займ:
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                      <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: '#1a237e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>1</Box>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>Выберите сумму и срок</Typography>
+                        <Typography variant="body2" color="text.secondary">Укажите нужную сумму на калькуляторе</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 2, p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                      <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: '#1a237e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>2</Box>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>Заполните заявку</Typography>
+                        <Typography variant="body2" color="text.secondary">Укажите паспортные данные и контакты</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 2, p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                      <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: '#1a237e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>3</Box>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>Дождитесь одобрения</Typography>
+                        <Typography variant="body2" color="text.secondary">Обычно занимает 1-5 минут</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 2, p: 2, bgcolor: '#e8f5e9', borderRadius: 2 }}>
+                      <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: '#4caf50', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>✓</Box>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>Получите деньги на карту</Typography>
+                        <Typography variant="body2" color="text.secondary">Мгновенное зачисление</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+            </DialogContent>
+
+            <DialogActions sx={{ p: 2, pt: 0 }}>
+              <Button onClick={handleCloseModal}>Закрыть</Button>
+              <Button 
+                variant="contained" 
+                onClick={() => {
+                  window.open(selectedMfo.siteUrl || '#', '_blank')
+                }}
+                sx={{ bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' } }}
+              >
+                Оформить займ
+              </Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Box>
   )
 }
