@@ -45,8 +45,10 @@ async function getArticle(slug: string): Promise<Article | null> {
 
 // Получение всех slug для статической генерации
 export async function generateStaticParams() {
-  const articles = staticArticles.filter((a: StaticArticle) => a.status === 'PUBLISHED')
-  return articles.map((article: StaticArticle) => ({
+  const publishedArticles = staticArticles.filter(
+    (a: StaticArticle) => a.status === 'PUBLISHED'
+  )
+  return publishedArticles.map((article: StaticArticle) => ({
     slug: article.slug
   }))
 }
