@@ -70,8 +70,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: article.excerpt,
     keywords: [article.category, 'микрозаймы', 'кредиты', 'финансы', ...(article.tags || [])],
     authors: [{ name: article.author }],
-    publishedTime: article.publishedAt?.toISOString() || article.createdAt.toISOString(),
-    modifiedTime: article.updatedAt.toISOString(),
     openGraph: {
       title: article.title,
       description: article.excerpt,
@@ -79,6 +77,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       locale: 'ru_RU',
       url: articleUrl,
       siteName: 'NewPay',
+      publishedTime: article.publishedAt?.toISOString() || article.createdAt.toISOString(),
+      modifiedTime: article.updatedAt.toISOString(),
       images: article.coverImage ? [
         {
           url: article.coverImage,
