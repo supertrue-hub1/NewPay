@@ -249,7 +249,6 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                   >
                     Одноклассники
                   </a>
-                </div>
               </div>
             </div>
 
