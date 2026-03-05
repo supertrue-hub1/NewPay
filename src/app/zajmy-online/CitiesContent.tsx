@@ -1,10 +1,9 @@
 ﻿'use client'
 
 import { Box, Container, Typography, Grid, Card, CardContent, Button, Slider, Chip } from '@mui/material'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { cities, getTopCities } from '@/data/cities'
-import { MFO } from '@/data/mfo'
-import { mfoData as staticMfoData } from '@/data/mfo-data'
+import { useMfoData } from '@/data/mfo'
 import Logo from '@/components/Logo'
 
 const VISIBLE_COUNT = 12
@@ -52,28 +51,9 @@ const getGeoText = (slug: string) => {
 }
 
 export default function CitiesContent() {
-  const [mfoData, setMfoData] = useState<MFO[]>(staticMfoData)
+  const { mfoData, isLoaded } = useMfoData()
   const topCities = getTopCities(10)
   const [selectedCity, setSelectedCity] = useState<string | null>(null)
-  
-  // Загрузка данных из localStorage
-  useEffect(() => {
-    const storedMfo = localStorage.getItem('mfo')
-    if (storedMfo) {
-      try {
-        const parsed = JSON.parse(storedMfo)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Дедупликация по уникальному ID
-          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
-            index === self.findIndex((m: MFO) => m.id === item.id)
-          )
-          setMfoData(uniqueMfo)
-        }
-      } catch (e) {
-        console.error('Error parsing MFO data:', e)
-      }
-    }
-  }, [])
   
   const [sum, setSum] = useState(10000)
   const [days, setDays] = useState(7)

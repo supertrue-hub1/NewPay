@@ -1,10 +1,9 @@
 'use client'
 
 import { Box, Container, Typography, Grid, Card, CardContent, Button, Slider, Breadcrumbs, Link, Chip } from '@mui/material'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { City } from '@/data/cities'
-import { MFO } from '@/data/mfo'
-import { mfoData as staticMfoData } from '@/data/mfo-data'
+import { useMfoData } from '@/data/mfo'
 import Logo from '@/components/Logo'
 
 interface Props {
@@ -71,28 +70,9 @@ const getDefaultText = (cityName: string, cityGenitive: string) => ({
 })
 
 export default function CityPageContent({ city }: Props) {
-  const [mfoData, setMfoData] = useState<MFO[]>(staticMfoData)
+  const { mfoData, isLoaded } = useMfoData()
   const [sum, setSum] = useState(10000)
   const [days, setDays] = useState(7)
-
-  // Загрузка данных из localStorage
-  useEffect(() => {
-    const storedMfo = localStorage.getItem('mfo')
-    if (storedMfo) {
-      try {
-        const parsed = JSON.parse(storedMfo)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Дедупликация по уникальному ID
-          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
-            index === self.findIndex((m: MFO) => m.id === item.id)
-          )
-          setMfoData(uniqueMfo)
-        }
-      } catch (e) {
-        console.error('Error parsing MFO data:', e)
-      }
-    }
-  }, [])
 
   const cityText = cityTexts[city.slug] || getDefaultText(city.name, city.nameGenitive)
 
