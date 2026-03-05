@@ -31,95 +31,53 @@ function Calculator() {
   }, [])
 
   return (
-    <Card sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Калькулятор займа
-      </Typography>
-      <Box sx={{ mb: 4 }}>
-        <Typography gutterBottom>Сумма: {sum.toLocaleString()} ₽</Typography>
+    <Card sx={{ p: 3, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>Калькулятор займа</Typography>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Сумма: {sum.toLocaleString()} ₽</Typography>
         <Slider
           value={sum}
           onChange={handleSumChange}
           min={1000}
           max={30000}
           step={1000}
-          marks={[
-            { value: 1000, label: '1 000 ₽' },
-            { value: 30000, label: '30 000 ₽' },
-          ]}
-          size="medium"
-          sx={{
-            '& .MuiSlider-markLabel': {
-              transform: 'translateX(-50%)',
-            },
-            '& .MuiSlider-markLabel[data-index="0"]': {
-              left: '3.33% !important',
-            },
-            '& .MuiSlider-markLabel[data-index="1"]': {
-              left: '96.67% !important',
-            },
-          }}
+          sx={{ color: '#667eea' }}
         />
       </Box>
-      <Box sx={{ mb: 4 }}>
-        <Typography gutterBottom>Срок: {term} дней</Typography>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Срок: {term} дней</Typography>
         <Slider
           value={term}
           onChange={handleTermChange}
           min={5}
           max={30}
-          marks={[
-            { value: 5, label: '5 дн.' },
-            { value: 30, label: '30 дн.' },
-          ]}
-          size="medium"
-          sx={{
-            '& .MuiSlider-markLabel': {
-              transform: 'translateX(-50%)',
-            },
-            '& .MuiSlider-markLabel[data-index="0"]': {
-              left: '3.33% !important',
-            },
-            '& .MuiSlider-markLabel[data-index="1"]': {
-              left: '96.67% !important',
-            },
-          }}
+          step={1}
+          sx={{ color: '#667eea' }}
         />
       </Box>
-      <Typography variant="h5" sx={{ color: '#4caf50', fontWeight: 700, mb: 2 }}>
-        К возврату: {totalAmount.toLocaleString()} ₽
-      </Typography>
-      <Button 
-        variant="contained" 
-        fullWidth 
-        size="large"
-        href="/allmfo"
-        sx={{ 
-          bgcolor: '#4caf50', 
-          '&:hover': { bgcolor: '#43a047' },
-          py: 1.5,
-          fontSize: '1.1rem',
-          fontWeight: 600
-        }}
-      >
-        Подобрать займ
-      </Button>
+      <Box sx={{ textAlign: 'center', p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+        <Typography variant="body2" color="text.secondary">К возврату:</Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#4caf50' }}>
+          {totalAmount.toLocaleString()} ₽
+        </Typography>
+      </Box>
     </Card>
   )
 }
 
 export default function HomeContent() {
   const [selectedMfo, setSelectedMfo] = useState<MFO | null>(null)
-  const [tabValue, setTabValue] = useState<number>(0)
+  const [tabValue, setTabValue] = useState(0)
   const [mfoData, setMfoData] = useState<MFO[]>([])
   const [faqData, setFaqData] = useState<FAQ[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
+
   const t = useTranslations('HomePage')
 
   // Загрузка данных из БД/API
   const loadData = useCallback(async () => {
     if (typeof window === 'undefined') return
-    
+
     // Загрузка МФО из API (база данных)
     try {
       const response = await fetch('/api/mfo')
@@ -157,7 +115,7 @@ export default function HomeContent() {
     } catch (e) {
       console.log('API not available, trying localStorage')
     }
-    
+
     // Если API недоступен - пробуем localStorage
     const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
     if (storedMfo) {
@@ -210,9 +168,8 @@ export default function HomeContent() {
         loadData()
       }
     }
-
     window.addEventListener('storage', handleStorage)
-    
+
     // Также периодически проверяем localStorage (для той же вкладки)
     const interval = setInterval(loadData, 1000)
 
@@ -231,53 +188,46 @@ export default function HomeContent() {
   }, [])
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 8 }}>
-      <Box sx={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white', 
-        py: 10, 
-        mb: 4,
-        borderRadius: '0 0 50px 50px',
-      }}>
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Grid container spacing={4} alignItems="center">
-            <Grid size={{ xs: 12, md: 7 }}>
-              <Box sx={{ 
-                display: 'inline-block', 
-                bgcolor: 'rgba(255,255,255,0.15)', 
-                borderRadius: 3, 
-                px: 2, 
-                py: 0.5, 
-                mb: 2 
-              }}>
-                <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                  🔥 Лучшие предложения от проверенных МФО
-                </Typography>
-              </Box>
-              <Typography variant="h2" component="h1" gutterBottom sx={{ 
-                fontWeight: 800,
-                fontSize: { xs: '2.2rem', md: '3.2rem' },
-                lineHeight: 1.2,
-                mb: 2
-              }}>
-                {t('title')}
-              </Typography>
-              <Typography variant="h6" sx={{ mb: 4, opacity: 0.95, fontWeight: 400, fontSize: { xs: '1rem', md: '1.15rem' } }}>
-                {t('description')}
-              </Typography>
-            </Grid>
-            <Grid size={{ xs: 12, md: 5 }}>
-              <Calculator />
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
+    <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
-        <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
-          Займы на карту без отказа — Мгновенный подбор лучших МФО
-        </Typography>
+        {/* Hero секция */}
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            sx={{ 
+              fontWeight: 800, 
+              mb: 2,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            🔥 Лучшие предложения от проверенных МФО
+          </Typography>
+          <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
+            {t('title')}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
+            {t('description')}
+          </Typography>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: '#667eea' }}>
+            Займы на карту без отказа — Мгновенный подбор лучших МФО
+          </Typography>
+        </Box>
 
+        {/* Калькулятор */}
+        <Box sx={{ maxWidth: 500, mx: 'auto', mb: 6 }}>
+          <Calculator />
+        </Box>
+
+        {/* Карточки МФО */}
+        {!isLoaded ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
         <Grid container spacing={2}>
           {mfoData.slice(0, 8).map((mfo) => (
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
@@ -339,7 +289,7 @@ export default function HomeContent() {
                         Высокая
                       </Typography>
                     </Grid>
-                  </Box>
+                  </Grid>
 
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
@@ -363,6 +313,7 @@ export default function HomeContent() {
             </Grid>
           ))}
         </Grid>
+        )}
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <Button 
