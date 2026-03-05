@@ -254,56 +254,53 @@ export default function CitiesContent() {
                   }
                 }}
               >
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'flex-start' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-<Logo logo={mfo.logo} size={50} />
+                <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, alignItems: 'flex-start' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Logo logo={mfo.logo} size={36} />
                       <Box>
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>{mfo.name}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>{mfo.name}</Typography>
                       </Box>
                     </Box>
-                    {mfo.badge && <Chip label={mfo.badge} color="success" size="small" />}
+                    {mfo.badge && <Chip label={mfo.badge} color="success" size="small" sx={{ height: 20, fontSize: '0.65rem' }} />}
                   </Box>
 
-                  <Grid container spacing={1.5} sx={{ mb: 2 }}>
+                  <Grid container spacing={1} sx={{ mb: 1 }}>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="body2" color="text.secondary">Сумма</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                        {mfo.sumMin.toLocaleString()} - {mfo.sumMax.toLocaleString()} ₽
+                      <Typography variant="caption" color="text.secondary">Сумма</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                        {mfo.sumMin.toLocaleString()}-{mfo.sumMax.toLocaleString()} ₽
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="body2" color="text.secondary">Срок</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                        {mfo.termMin}-{mfo.termMax} дней
+                      <Typography variant="caption" color="text.secondary">Срок</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                        {mfo.termMin}-{mfo.termMax} дн.
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="body2" color="text.secondary">Ставка</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>
-                        {mfo.percent}% в день
+                      <Typography variant="caption" color="text.secondary">Ставка</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#4caf50', lineHeight: 1.2 }}>
+                        {mfo.percent}%/день
                       </Typography>
-                    </Grid>
-                    <Grid size={{ xs: 6 }}>
-                      <Typography variant="body2" color="text.secondary">Вероятность</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>Высокая</Typography>
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {mfo.firstFree && <Chip label="Первый займ 0%" color="primary" size="small" />}
-                    {mfo.instant && <Chip label="Мгновенно" size="small" />}
+                  <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, minHeight: 20 }}>
+                    {mfo.firstFree && <Chip label="0%" color="primary" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />}
+                    {mfo.instant && <Chip label="Мгновенно" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />}
                   </Box>
 
                   <Box sx={{ mt: 'auto' }}>
                     <Button
                       variant="contained"
                       fullWidth
+                      size="small"
                       href={mfo.siteUrl || '#'}
                       target="_blank"
-                      sx={{ bgcolor: '#4caf50', borderRadius: 2, '&:hover': { bgcolor: '#388e3c' } }}
+                      sx={{ bgcolor: '#4caf50', borderRadius: 2, '&:hover': { bgcolor: '#388e3c' }, fontSize: '0.75rem', py: 0.5 }}
                     >
-                      Получить деньги
+                      Получить
                     </Button>
                   </Box>
                 </CardContent>
