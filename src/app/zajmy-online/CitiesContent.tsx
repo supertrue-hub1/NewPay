@@ -241,8 +241,8 @@ export default function CitiesContent() {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  height: '100%', 
-                  width: '100%',
+                  width: 250,
+                  height: 280,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer',
                   borderRadius: 3,

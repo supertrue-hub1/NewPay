@@ -10,7 +10,6 @@ import Logo from '@/components/Logo'
 import ReviewSection from '@/components/ReviewSection'
 import { mfoData as staticMfoData } from '@/data/mfo-data'
 import { faqData as staticFaqData } from '@/data/faq-data'
-import { Button as ShadcnButton } from '@/components/ui/button'
 
 const STORAGE_KEY_MFO = 'mfo'
 const STORAGE_KEY_FAQ = 'faq'
@@ -284,10 +283,10 @@ export default function HomeContent() {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  height: '100%', 
+                  width: 250,
+                  height: 280,
                   display: 'flex', 
                   flexDirection: 'column', 
-                  width: '100%',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer',
                   '&:hover': {
@@ -391,22 +390,6 @@ export default function HomeContent() {
             Как это работает
           </Typography>
           
-          {/* Тестовая shadcn/ui кнопка */}
-          <Box sx={{ mb: 4, p: 3, bgcolor: '#f0f9ff', borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>Тест shadcn/ui кнопок:</Typography>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-              <ShadcnButton>Default</ShadcnButton>
-              <ShadcnButton variant="destructive">Destructive</ShadcnButton>
-              <ShadcnButton variant="outline">Outline</ShadcnButton>
-              <ShadcnButton variant="secondary">Secondary</ShadcnButton>
-              <ShadcnButton variant="ghost">Ghost</ShadcnButton>
-              <ShadcnButton variant="success">Success</ShadcnButton>
-              <ShadcnButton size="sm">Small</ShadcnButton>
-              <ShadcnButton size="lg">Large</ShadcnButton>
-              <ShadcnButton size="xl">Extra Large</ShadcnButton>
-            </Box>
-          </Box>
-
           <Grid container spacing={3}>
             {[
               { step: '1', title: 'Выберите сумму и срок', desc: 'Используйте калькулятор для подбора оптимальных условий' },
