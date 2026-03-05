@@ -42,7 +42,7 @@ import {
   Person
 } from '@mui/icons-material'
 import Logo from '@/components/Logo'
-import { mfoData as staticMfoData } from '@/data/mfo-data'
+import { useMfoData } from '@/data/mfo'
 import { MFO } from '@/types/mfo'
 
 type SortType = 'overpayment' | 'amount' | 'speed'
@@ -54,10 +54,10 @@ interface MfoOffer extends MFO {
 }
 
 export default function MfoComparePage() {
+  const { mfoData, isLoaded } = useMfoData()
   const [amount, setAmount] = useState<number>(10000)
   const [term, setTerm] = useState<number>(10)
   const [sortType, setSortType] = useState<SortType>('overpayment')
-  const [mfoData] = useState<MFO[]>(staticMfoData)
   const [selectedMfo, setSelectedMfo] = useState<MfoOffer | null>(null)
   const [tabValue, setTabValue] = useState<number>(0)
 
@@ -155,6 +155,13 @@ export default function MfoComparePage() {
           </Typography>
         </Box>
 
+        {!isLoaded ? (
+          <Card sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+            <Typography variant="h6" color="text.secondary">
+              Загрузка данных...
+            </Typography>
+          </Card>
+        ) : (
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Box sx={{ position: { md: 'sticky' }, top: { md: 20 } }}>
@@ -582,6 +589,7 @@ export default function MfoComparePage() {
             </Paper>
           </Grid>
         </Grid>
+        )}
       </Container>
 
       {/* Модальное окно с информацией о МФО */}
