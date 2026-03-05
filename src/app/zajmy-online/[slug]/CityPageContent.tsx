@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Container, Typography, Grid, Card, CardContent, Button, Slider, Breadcrumbs, Link, Chip } from '@mui/material'
+import { Box, Container, Typography, Grid, Card, CardContent, Button, Slider, Breadcrumbs, Link, Chip, Rating } from '@mui/material'
 import { useState } from 'react'
 import { City } from '@/data/cities'
 import { useMfoData } from '@/data/mfo'
@@ -183,6 +183,12 @@ export default function CityPageContent({ city }: Props) {
                       <Logo logo={mfo.logo} size={36} />
                       <Box>
                         <Typography variant="body1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>{mfo.name}</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Rating value={mfo.rating} precision={0.1} size="small" readOnly />
+                          <Typography variant="caption" color="text.secondary">
+                            ({mfo.reviews.toLocaleString()})
+                          </Typography>
+                        </Box>
                       </Box>
                     </Box>
                     {mfo.badge && <Chip label={mfo.badge} color="success" size="small" sx={{ height: 20, fontSize: '0.65rem' }} />}
