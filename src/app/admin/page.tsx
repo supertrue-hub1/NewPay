@@ -897,49 +897,6 @@ export default function AdminPage() {
                   
 <Grid size={{ xs: 6 }}><FormControlLabel control={<Switch checked={formData.firstFree} onChange={(e) => updateFormField('firstFree', e.target.checked)} />} label="Первый займ 0%" /></Grid>
                   <Grid size={{ xs: 6 }}><FormControlLabel control={<Switch checked={formData.instant} onChange={(e) => updateFormField('instant', e.target.checked)} />} label="Мгновенно" /></Grid>
-                  
-                  {/* Плюсы, Минусы, Риски для страницы обзора */}
-                  <Grid size={{ xs: 12 }}><Divider sx={{ my: 1 }} /><Typography variant="h6" sx={{ mb: 2, color: 'success.main' }}>Плюсы (для страницы обзора)</Typography></Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <TextField 
-                      fullWidth 
-                      label="Плюсы (каждый с новой строки)" 
-                      multiline 
-                      rows={3} 
-                      value={formData.pros?.join('\n') || ''} 
-                      onChange={(e) => updateFormField('pros', e.target.value.split('\n').filter(p => p.trim()))}
-                      placeholder="Первый займ под 0%&#10;Мгновенное зачисление&#10;Высокий рейтинг"
-                      helperText="Перечисление преимуществ, каждое с новой строки"
-                    />
-                  </Grid>
-                  
-                  <Grid size={{ xs: 12 }}><Typography variant="h6" sx={{ mb: 2, color: 'error.main' }}>Минусы (для страницы обзора)</Typography></Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <TextField 
-                      fullWidth 
-                      label="Минусы (каждый с новой строки)" 
-                      multiline 
-                      rows={3} 
-                      value={formData.cons?.join('\n') || ''} 
-                      onChange={(e) => updateFormField('cons', e.target.value.split('\n').filter(c => c.trim()))}
-                      placeholder="Высокие проценты при просрочке&#10;Требование к постоянной регистрации"
-                      helperText="Перечисление недостатков, каждое с новой строки"
-                    />
-                  </Grid>
-                  
-                  <Grid size={{ xs: 12 }}><Typography variant="h6" sx={{ mb: 2, color: 'warning.main' }}>Риски при просрочке</Typography></Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <TextField 
-                      fullWidth 
-                      label="Риски (каждый с новой строки)" 
-                      multiline 
-                      rows={3} 
-                      value={formData.risks?.join('\n') || ''} 
-                      onChange={(e) => updateFormField('risks', e.target.value.split('\n').filter(r => r.trim()))}
-                      placeholder="Штрафы за просрочку до 0,8% в день&#10;Возможна передача долга коллекторам"
-                      helperText="Перечисление рисков при просрочке платежа"
-                    />
-                  </Grid>
                 </>
               )}
 
