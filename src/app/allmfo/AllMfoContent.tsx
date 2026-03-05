@@ -339,8 +339,8 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  width: 250,
-                  height: 280,
+                  height: 280, 
+                  width: '100%',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer',
                   '&:hover': {
@@ -349,66 +349,65 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
                   }
                 }}
               >
-                <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Logo logo={mfo.logo} size={36} />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Logo logo={mfo.logo} size={50} />
                       <Box>
-                        <Typography variant="body1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>{mfo.name}</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 700 }}>{mfo.name}</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Rating value={mfo.rating} precision={0.1} size="small" readOnly />
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="body2" color="text.secondary">
                             ({mfo.reviews.toLocaleString()})
                           </Typography>
                         </Box>
                       </Box>
                     </Box>
-                    {mfo.badge && <Chip label={mfo.badge} color="success" size="small" sx={{ height: 20, fontSize: '0.65rem' }} />}
+                    {mfo.badge && <Chip label={mfo.badge} color="success" size="small" />}
                   </Box>
 
-                  <Grid container spacing={1} sx={{ mb: 1 }}>
+                  <Grid container spacing={2} sx={{ mb: 2 }}>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="caption" color="text.secondary">Сумма</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                        {mfo.sumMin.toLocaleString()}-{mfo.sumMax.toLocaleString()} ₽
+                      <Typography variant="body2" color="text.secondary">Сумма</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        {mfo.sumMin.toLocaleString()} - {mfo.sumMax.toLocaleString()} ₽
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="caption" color="text.secondary">Срок</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                        {mfo.termMin}-{mfo.termMax} дн.
+                      <Typography variant="body2" color="text.secondary">Срок</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        {mfo.termMin}-{mfo.termMax} дней
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="caption" color="text.secondary">Ставка</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#4caf50', lineHeight: 1.2 }}>
-                        {mfo.percent}%/день
+                      <Typography variant="body2" color="text.secondary">Ставка</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>
+                        {mfo.percent}% в день
                       </Typography>
+                    </Grid>
+                    <Grid size={{ xs: 6 }}>
+                      <Typography variant="body2" color="text.secondary">Вероятность</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>Высокая</Typography>
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, minHeight: 20 }}>
-                    {mfo.firstFree && <Chip label="0%" color="primary" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />}
-                    {mfo.instant && <Chip label="Мгновенно" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />}
-                  </Box>
+                  {/* Убраны чипсы firstFree и instant */}
 
-                  <Box sx={{ display: 'flex', gap: 0.5 }}>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       variant="outlined"
-                      size="small"
                       onClick={() => setSelectedMfo(mfo)}
-                      sx={{ minWidth: 30, p: 0.5, minHeight: 28 }}
+                      sx={{ minWidth: 50 }}
                     >
                       <Info />
                     </Button>
                     <Button
                       variant="contained"
                       fullWidth
-                      size="small"
                       onClick={() => window.open(mfo.siteUrl || '#', '_blank')}
-                      sx={{ bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' }, fontSize: '0.75rem', py: 0.5 }}
+                      sx={{ bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' } }}
                     >
-                      Получить
+                      Получить деньги
                     </Button>
                   </Box>
                 </CardContent>

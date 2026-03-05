@@ -283,7 +283,7 @@ export default function HomeContent() {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  height: '100%', 
+                  height: 280, 
                   display: 'flex', 
                   flexDirection: 'column', 
                   width: '100%',
@@ -339,12 +339,9 @@ export default function HomeContent() {
                         Высокая
                       </Typography>
                     </Grid>
-                  </Grid>
-
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {mfo.firstFree && <Chip label="Первый займ 0%" color="primary" size="small" />}
-                    {mfo.instant && <Chip label="Мгновенно" size="small" />}
                   </Box>
+
+                  {/* Убраны чипсы firstFree и instant */}
 
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button

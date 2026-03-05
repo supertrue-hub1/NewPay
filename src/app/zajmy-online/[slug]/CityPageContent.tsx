@@ -164,7 +164,7 @@ export default function CityPageContent({ city }: Props) {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  height: '100%', 
+                  height: 280, 
                   width: '100%',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer',
@@ -213,10 +213,7 @@ export default function CityPageContent({ city }: Props) {
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {mfo.firstFree && <Chip label="Первый займ 0%" color="primary" size="small" />}
-                    {mfo.instant && <Chip label="Мгновенно" size="small" />}
-                  </Box>
+                  {/* Убраны чипсы firstFree и instant */}
 
                   <Box sx={{ mt: 'auto' }}>
                     <Button
