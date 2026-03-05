@@ -341,8 +341,6 @@ export default function HomeContent() {
                     </Grid>
                   </Box>
 
-                  {/* Убраны чипсы firstFree и instant */}
-
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       variant="outlined"

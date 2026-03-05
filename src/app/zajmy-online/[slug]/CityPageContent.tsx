@@ -213,8 +213,6 @@ export default function CityPageContent({ city }: Props) {
                     </Grid>
                   </Grid>
 
-                  {/* Убраны чипсы firstFree и instant */}
-
                   <Box sx={{ mt: 'auto' }}>
                     <Button
                       variant="contained"

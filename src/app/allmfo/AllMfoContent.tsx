@@ -391,8 +391,6 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
                     </Grid>
                   </Grid>
 
-                  {/* Убраны чипсы firstFree и instant */}
-
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       variant="outlined"

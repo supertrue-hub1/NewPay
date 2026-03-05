@@ -290,8 +290,6 @@ export default function CitiesContent() {
                     </Grid>
                   </Grid>
 
-                  {/* Убраны чипсы firstFree и instant */}
-
                   <Box sx={{ mt: 'auto' }}>
                     <Button
                       variant="contained"
