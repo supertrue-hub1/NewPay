@@ -132,7 +132,7 @@ export default function AdminPage() {
   }
 
   // ВСЕ хуки должны вызываться ПЕРЕД условными return!
-  const { mfoData, addMfo, updateMfo, deleteMfo, resetData: resetMfo } = useMfoData()
+  const { mfoData, addMfo, updateMfo, deleteMfo } = useMfoData()
   const { cardsData, addCard, updateCard, deleteCard, resetCards } = useCardsData()
   const { articlesData, addArticle, updateArticle, deleteArticle, resetArticles } = useArticlesData()
   const { faqData, addFAQ, updateFAQ, deleteFAQ, resetFAQ } = useFAQData()
@@ -256,8 +256,7 @@ export default function AdminPage() {
   }
 
   const handleReset = () => {
-    if (activeTab === 'mfo') resetMfo()
-    else if (activeTab === 'cards') resetCards()
+    if (activeTab === 'cards') resetCards()
     else if (activeTab === 'blog') resetArticles()
     else if (activeTab === 'faq') resetFAQ()
     else if (activeTab === 'promokody') resetPromoCodes()
@@ -374,7 +373,6 @@ export default function AdminPage() {
           <>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, gap: 1 }}>
               <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>Добавить МФО</Button>
-              <Button variant="outlined" color="warning" onClick={handleReset}>Сбросить</Button>
             </Box>
             <Card>
               <CardContent>
