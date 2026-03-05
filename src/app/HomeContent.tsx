@@ -233,7 +233,7 @@ export default function HomeContent() {
             <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
-                  height: 280, 
+                  height: '100%', 
                   display: 'flex', 
                   flexDirection: 'column', 
                   width: '100%',
