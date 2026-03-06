@@ -134,6 +134,22 @@
   .hamburger {
     display: flex;
   }
+
+  .logoMobile {
+    display: block !important;
+  }
+
+  .logoDesktop {
+    display: none !important;
+  }
+}
+
+.logoMobile {
+  display: none;
+}
+
+.logoDesktop {
+  display: block !important;
 }
 
 .placeholder {
