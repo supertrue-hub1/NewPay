@@ -248,90 +248,93 @@ export default function HomeContent() {
 
   const t = useTranslations('HomePage')
 
-  // Загрузка данных из БД/API
-  const loadData = useCallback(async () => {
-    if (typeof window === 'undefined') return
+ // Загрузка данных из БД/API
+ const loadData = useCallback(async () => {
+   if (typeof window === 'undefined') return
 
-    // Загрузка МФО из API (база данных)
-    try {
-      const response = await fetch('/api/mfo')
-      if (response.ok) {
-        const data = await response.json()
-        if (Array.isArray(data) && data.length > 0) {
-          const convertedData: MFO[] = data.map((item: any) => ({
-            id: item.id,
-            name: item.name,
-            logo: item.logo,
-            rating: item.rating,
-            reviews: item.reviews,
-            sumMin: item.sum_min,
-            sumMax: item.sum_max,
-            termMin: item.term_min,
-            termMax: item.term_max,
-            percent: item.percent,
-            firstFree: item.first_free,
-            instant: item.instant,
-            badge: item.badge,
-            siteUrl: item.site_url,
-            address: item.address,
-            phone: item.phone,
-            inn: item.inn,
-            ogrn: item.ogrn,
-            license: item.license,
-            clicks: item.clicks || 0,
-            conversions: item.conversions || 0,
-          }))
-          setMfoData(convertedData)
-          setIsLoaded(true)
-          return
-        }
-      }
-    } catch (e) {
-      console.log('API not available, trying localStorage')
-    }
+   let mfoLoadedFromApi = false
 
-    // Если API недоступен - пробуем localStorage
-    const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
-    if (storedMfo) {
-      try {
-        const parsed = JSON.parse(storedMfo)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Дедупликация по уникальному ID
-          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
-            index === self.findIndex((m: MFO) => m.id === item.id)
-          )
-          setMfoData(uniqueMfo)
-        } else {
-          setMfoData(staticMfoData)
-        }
-      } catch (e) {
-        console.error('Error parsing MFO data:', e)
-        setMfoData(staticMfoData)
-      }
-    } else {
-      setMfoData(staticMfoData)
-    }
+   // Загрузка МФО из API (база данных)
+   try {
+     const response = await fetch('/api/mfo')
+     if (response.ok) {
+       const data = await response.json()
+       if (Array.isArray(data) && data.length > 0) {
+         const convertedData: MFO[] = data.map((item: any) => ({
+           id: item.id,
+           name: item.name,
+           logo: item.logo,
+           rating: item.rating,
+           reviews: item.reviews,
+           sumMin: item.sum_min,
+           sumMax: item.sum_max,
+           termMin: item.term_min,
+           termMax: item.term_max,
+           percent: item.percent,
+           firstFree: item.first_free,
+           instant: item.instant,
+           badge: item.badge,
+           siteUrl: item.site_url,
+           address: item.address,
+           phone: item.phone,
+           inn: item.inn,
+           ogrn: item.ogrn,
+           license: item.license,
+           clicks: item.clicks || 0,
+           conversions: item.conversions || 0,
+         }))
+         setMfoData(convertedData)
+         mfoLoadedFromApi = true
+       }
+     }
+   } catch (e) {
+     console.log('API not available, trying localStorage')
+   }
 
-    // Загрузка FAQ
-    const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
-    if (storedFaq) {
-      try {
-        const parsed = JSON.parse(storedFaq)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setFaqData(parsed)
-        } else {
-          setFaqData(staticFaqData)
-        }
-      } catch (e) {
-        console.error('Error parsing FAQ data:', e)
-        setFaqData(staticFaqData)
-      }
-    } else {
-      setFaqData(staticFaqData)
-    }
+   // Если API недоступен - пробуем localStorage
+   if (!mfoLoadedFromApi) {
+     const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
+     if (storedMfo) {
+       try {
+         const parsed = JSON.parse(storedMfo)
+         if (Array.isArray(parsed) && parsed.length > 0) {
+           // Дедупликация по уникальному ID
+           const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
+             index === self.findIndex((m: MFO) => m.id === item.id)
+           )
+           setMfoData(uniqueMfo)
+         } else {
+           setMfoData(staticMfoData)
+         }
+       } catch (e) {
+         console.error('Error parsing MFO data:', e)
+         setMfoData(staticMfoData)
+       }
+     } else {
+       setMfoData(staticMfoData)
+     }
+   }
 
-    setIsLoaded(true)
-  }, [])
+   // Загрузка FAQ
+   const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
+   if (storedFaq) {
+     try {
+       const parsed = JSON.parse(storedFaq)
+       if (Array.isArray(parsed) && parsed.length > 0) {
+         setFaqData(parsed)
+       } else {
+         setFaqData(staticFaqData)
+       }
+     } catch (e) {
+       console.error('Error parsing FAQ data:', e)
+       setFaqData(staticFaqData)
+     }
+   } else {
+     setFaqData(staticFaqData)
+   }
+
+   setIsLoaded(true)
+ }, [])
 
   useEffect(() => {
     loadData()
