@@ -41,7 +41,7 @@ const navItems: NavItem[] = [
 const Logo = ({ mobile = false }: { mobile?: boolean }) => (
   <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
     <img 
-      src="/header.svg" 
+      src="/logo.svg" 
       alt="SravniPay" 
       style={{ 
         height: mobile ? 40 : 100, 

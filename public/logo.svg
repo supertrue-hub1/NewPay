@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="200" viewBox="0 0 860 220" role="img" aria-label="cashpeek.ru dashboard logo">
+  
+
+  <g transform="translate(36,36)">
+    
+
+    <rect x="67" y="93" width="16" height="28" rx="6" fill="#7209b7"/>
+    <rect x="95" y="74" width="16" height="46" rx="6" fill="#3a0ca3"/>
+    <rect x="120" y="56" width="16" height="64" rx="6" fill="#7209b7"/>
+    <rect x="145" y="36" width="16" height="84" rx="6" fill="#3a0ca3"/>
+
+  </g>
+
+  <text x="210" y="135"
+        fill="#3a0ca3"
+        font-family="Inter, Poppins, Arial, sans-serif"
+        font-size="62"
+        font-weight="800"
+        letter-spacing="-1.8">cash</text>
+
+  <text x="370" y="135"
+        fill="#3a0ca3"
+        font-family="Inter, Poppins, Arial, sans-serif"
+        font-size="62"
+        font-weight="800"
+        letter-spacing="-1.8">peek.ru</text>
+
+</svg>
