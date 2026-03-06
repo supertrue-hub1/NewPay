@@ -366,29 +366,52 @@ export default function HomeContent() {
       <ModernHeader />
 <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4, pt: '120px' }}>
       <Container maxWidth="lg">
-        {/* Hero секция */}
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
+      {/* Hero секция */}
+ <Box
+ sx={{
+ textAlign: 'center',
+ mb:6,
+ py:6,
+ px:4,
+ borderRadius:4,
+ overflow: 'hidden',
+ position: 'relative',
+ bgcolor: '#667eea',
+ backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+ boxShadow: '0 16px 40px rgba(102, 126, 234, 0.28)',
+ color: '#fff',
+ '&::before': {
+ content: '""',
+ position: 'absolute',
+ inset: 0,
+ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 45%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.16), transparent 40%)',
+ pointerEvents: 'none',
+ zIndex:0,
+ },
+ '& > *': {
+ position: 'relative',
+ zIndex:1,
+ },
+ }}
+ >
           <Typography 
             variant="h2" 
             component="h1" 
             sx={{ 
               fontWeight: 800, 
               mb: 2,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              color: '#fff',
             }}
           >
             🔥 Лучшие предложения от проверенных МФО
           </Typography>
-          <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography variant="h5" sx={{ mb: 4, color: 'rgba(255,255,255,0.9)' }}>
             {t('title')}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
+          <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', color: 'rgba(255,255,255,0.85)' }}>
             {t('description')}
           </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 600, color: '#667eea' }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: '#fff' }}>
             Займы на карту без отказа — Мгновенный подбор лучших МФО
           </Typography>
         </Box>
