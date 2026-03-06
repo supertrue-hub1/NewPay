@@ -1,14 +1,28 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
+// Статические данные FAQ как fallback
+const staticFaqData = [
+  { id: 1, question: 'Как получить займ?', answer: 'Для получения займа необходимо заполнить заявку на сайте МФО, указав паспортные данные и реквизиты банковской карты. Решение принимается в течение нескольких минут.' },
+  { id: 2, question: 'Какие требования к заёмщику?', answer: 'Основные требования: возраст от 18 до 75 лет, гражданство РФ, постоянная регистрация, наличие действующего паспорта и банковской карты.' },
+  { id: 3, question: 'Можно ли получить займ с плохой кредитной историей?', answer: 'Да, многие МФО выдают займы клиентам с плохой кредитной историей. Однако это может повлиять на условия займа.' },
+  { id: 4, question: 'Как погасить займ?', answer: 'Погасить займ можно через личный кабинет на сайте МФО, через банковское приложение, в терминалах оплаты или в отделениях банков.' },
+  { id: 5, question: 'Что делать при просрочке?', answer: 'При возникновении просрочки необходимо связаться с МФО для урегулирования ситуации. Просрочка влечёт начисление штрафных процентов.' },
+]
+
 // GET /api/faq - Получить все FAQ
 export async function GET() {
   try {
     const result = await query('SELECT * FROM faq ORDER BY id')
-    return NextResponse.json(result.rows)
+    if (result.rows && result.rows.length > 0) {
+      return NextResponse.json(result.rows)
+    }
+    // Если данных нет в БД - возвращаем статические
+    return NextResponse.json(staticFaqData)
   } catch (error) {
     console.error('Error fetching FAQ:', error)
-    return NextResponse.json({ error: 'Failed to fetch FAQ' }, { status: 500 })
+    // При ошибке возвращаем статические данные вместо 500
+    return NextResponse.json(staticFaqData)
   }
 }
 

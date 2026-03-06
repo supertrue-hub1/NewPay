@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
+import { mfoData as staticMfoData } from '@/data/mfo-data'
 
 // GET /api/mfo - Получить все MFO компании
 export async function GET() {
   try {
     const result = await query('SELECT * FROM mfo_companies ORDER BY rating DESC')
-    return NextResponse.json(result.rows)
+    if (result.rows && result.rows.length > 0) {
+      return NextResponse.json(result.rows)
+    }
+    // Если данных нет в БД - возвращаем статические
+    return NextResponse.json(staticMfoData)
   } catch (error) {
     console.error('Error fetching MFO:', error)
-    return NextResponse.json({ error: 'Failed to fetch MFO' }, { status: 500 })
+    // При ошибке возвращаем статические данные вместо 500
+    return NextResponse.json(staticMfoData)
   }
 }
 
