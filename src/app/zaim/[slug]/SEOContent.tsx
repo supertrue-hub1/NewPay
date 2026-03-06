@@ -1,15 +1,56 @@
 'use client'
 
-import { Container, Typography, Box, Grid, Card, CardContent, Button, Rating, Chip } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Container, Typography, Box, Grid, Card, CardContent, Button, Rating, Chip, CircularProgress } from '@mui/material'
 import { SEOPage } from '@/lib/seo-pages-generator'
-import { mfoData } from '@/data/mfo-data'
+import { MFO } from '@/data/mfo'
 import Logo from '@/components/Logo'
+import Link from 'next/link'
 
 interface SEOContentProps {
   data: SEOPage
 }
 
 export default function SEOContent({ data }: SEOContentProps) {
+  const [mfoList, setMfoList] = useState<MFO[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    const loadMfo = async () => {
+      try {
+        const res = await fetch('/api/mfo')
+        if (res.ok) {
+          const data = await res.json()
+          const converted: MFO[] = data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            logo: item.logo,
+            rating: parseFloat(item.rating),
+            reviews: item.reviews,
+            sumMin: item.sum_min,
+            sumMax: item.sum_max,
+            termMin: item.term_min,
+            termMax: item.term_max,
+            percent: parseFloat(item.percent),
+            firstFree: item.first_free,
+            instant: item.instant,
+            badge: item.badge,
+            siteUrl: item.site_url,
+            address: item.address,
+            phone: item.phone,
+            inn: item.inn,
+            ogrn: item.ogrn,
+            license: item.license,
+          }))
+          setMfoList(converted)
+        }
+      } catch (e) {
+        console.error('Error loading MFO:', e)
+      }
+      setIsLoaded(true)
+    }
+    loadMfo()
+  }, [])
   return (
     <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
@@ -40,9 +81,14 @@ export default function SEOContent({ data }: SEOContentProps) {
         <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
           ТОП МФО для оформления займа
         </Typography>
+        {!isLoaded ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {mfoData.slice(0, 8).map((mfo) => (
-            <Grid size={{ xs: 12, md: 6 }} key={mfo.id}>
+          {mfoList.slice(0, 8).map((mfo) => (
+            <Grid size={{ xs: 6, sm: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
                   cursor: 'pointer', 
@@ -112,6 +158,7 @@ export default function SEOContent({ data }: SEOContentProps) {
             </Grid>
           ))}
         </Grid>
+        )}
         
         {/* Преимущества */}
         <Card sx={{ mb: 4, p: 3, borderRadius: 2 }}>
