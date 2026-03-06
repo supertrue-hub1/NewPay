@@ -282,6 +282,7 @@ export default function HomeContent() {
             ogrn: item.ogrn,
             license: item.license,
             infoModal: item.info_modal,
+            seoDescription: item.seo_description,
             clicks: item.clicks || 0,
             conversions: item.conversions || 0,
           }))
