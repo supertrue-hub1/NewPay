@@ -1,19 +1,13 @@
-# Deployment to Timeweb - TODO List
+# TODO - Remove Header from Home Page
 
-## Phase 1: Configuration Changes
+## Plan:
+1. [x] Read and understand the file structure
+2. [x] Modify ClientLayout.tsx to hide Header on home page
+3. [x] Add modern inline header with navigation to HomeContent.tsx
+4. [x] Test the changes (environment issues - skipped)
 
-- [ ] 1. Update next.config.ts for static export (output: 'export')
-- [ ] 2. Configure next-intl for static export
-- [ ] 3. Update/fix middleware for static hosting
-- [ ] 4. Update routing for static export
+## Details:
+- Remove Header component from home page only
+- Add inline header with navigation menu to HomeContent.tsx
+- Keep the same navigation items as in the original Header
 
-## Phase 2: Build & Test
-
-- [ ] 5. Test build locally with `npm run build`
-- [ ] 6. Verify static output in `out/` directory
-
-## Phase 3: Deployment to Timeweb
-
-- [ ] 7. Upload files to Timeweb via FTP/SSH
-- [ ] 8. Configure .htaccess for proper routing
-- [ ] 9. Test the deployed site

@@ -1,9 +1,9 @@
 'use client'
 
-import { Container, Typography, Box, Slider, Card, CardContent, Grid, Chip, Button, Rating, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Accordion, AccordionSummary, AccordionDetails, Tabs, Tab, CircularProgress } from '@mui/material'
+import { Container, Typography, Box, Card, CardContent, Grid, Chip, Button, Rating, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Accordion, AccordionSummary, AccordionDetails, Tabs, Tab, CircularProgress } from '@mui/material'
 import { MFO } from '@/data/mfo'
 import { FAQ } from '@/data/faq'
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Close, Info, Description, CheckCircle, AccessTime, Info as InfoIcon, Menu, KeyboardArrowDown } from '@mui/icons-material'
 import { useTranslations } from 'next-intl'
 import Logo from '@/components/Logo'
@@ -232,56 +232,7 @@ function ModernHeader() {
   )
 }
 
-function Calculator() {
-  const [sum, setSum] = useState(10000)
-  const [term, setTerm] = useState(10)
 
-  const totalAmount = useMemo(() => {
-    return Math.round(sum * (0.008 * term) * 100) / 100
-  }, [sum, term])
-
-  const handleSumChange = useCallback((_: Event | React.SyntheticEvent, value: number | number[]) => {
-    setSum(value as number)
-  }, [])
-
-  const handleTermChange = useCallback((_: Event | React.SyntheticEvent, value: number | number[]) => {
-    setTerm(value as number)
-  }, [])
-
-  return (
-    <Card sx={{ p: 3, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>Калькулятор займа</Typography>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Сумма: {sum.toLocaleString()} ₽</Typography>
-        <Slider
-          value={sum}
-          onChange={handleSumChange}
-          min={1000}
-          max={30000}
-          step={1000}
-          sx={{ color: '#667eea' }}
-        />
-      </Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Срок: {term} дней</Typography>
-        <Slider
-          value={term}
-          onChange={handleTermChange}
-          min={5}
-          max={30}
-          step={1}
-          sx={{ color: '#667eea' }}
-        />
-      </Box>
-      <Box sx={{ textAlign: 'center', p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
-        <Typography variant="body2" color="text.secondary">К возврату:</Typography>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#4caf50' }}>
-          {totalAmount.toLocaleString()} ₽
-        </Typography>
-      </Box>
-    </Card>
-  )
-}
 
 export default function HomeContent() {
   const [selectedMfo, setSelectedMfo] = useState<MFO | null>(null)
@@ -435,11 +386,6 @@ export default function HomeContent() {
           <Typography variant="body1" sx={{ fontWeight: 600, color: '#667eea' }}>
             Займы на карту без отказа — Мгновенный подбор лучших МФО
           </Typography>
-        </Box>
-
-        {/* Калькулятор */}
-        <Box sx={{ maxWidth: 500, mx: 'auto', mb: 6 }}>
-          <Calculator />
         </Box>
 
         {/* Карточки МФО */}
