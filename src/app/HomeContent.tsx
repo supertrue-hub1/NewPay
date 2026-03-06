@@ -252,6 +252,9 @@ export default function HomeContent() {
   const loadData = useCallback(async () => {
     if (typeof window === 'undefined') return
 
+    let mfoLoaded = false
+    let faqLoaded = false
+
     // Загрузка МФО из API (база данных)
     try {
       const response = await fetch('/api/mfo')
@@ -283,52 +286,68 @@ export default function HomeContent() {
             conversions: item.conversions || 0,
           }))
           setMfoData(convertedData)
-          setIsLoaded(true)
-          return
+          mfoLoaded = true
         }
       }
     } catch (e) {
-      console.log('API not available, trying localStorage')
+      console.log('API MFO not available')
     }
 
-    // Если API недоступен - пробуем localStorage
-    const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
-    if (storedMfo) {
-      try {
-        const parsed = JSON.parse(storedMfo)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Дедупликация по уникальному ID
-          const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
-            index === self.findIndex((m: MFO) => m.id === item.id)
-          )
-          setMfoData(uniqueMfo)
-        } else {
+    // Если API не загрузил - используем localStorage или статические данные
+    if (!mfoLoaded) {
+      const storedMfo = localStorage.getItem(STORAGE_KEY_MFO)
+      if (storedMfo) {
+        try {
+          const parsed = JSON.parse(storedMfo)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const uniqueMfo = parsed.filter((item: MFO, index: number, self: MFO[]) => 
+              index === self.findIndex((m: MFO) => m.id === item.id)
+            )
+            setMfoData(uniqueMfo)
+          } else {
+            setMfoData(staticMfoData)
+          }
+        } catch (e) {
+          console.error('Error parsing MFO data:', e)
           setMfoData(staticMfoData)
         }
-      } catch (e) {
-        console.error('Error parsing MFO data:', e)
+      } else {
         setMfoData(staticMfoData)
       }
-    } else {
-      setMfoData(staticMfoData)
     }
 
-    // Загрузка FAQ
-    const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
-    if (storedFaq) {
-      try {
-        const parsed = JSON.parse(storedFaq)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setFaqData(parsed)
-        } else {
+    // Загрузка FAQ из API
+    try {
+      const response = await fetch('/api/faq')
+      if (response.ok) {
+        const data = await response.json()
+        if (Array.isArray(data) && data.length > 0) {
+          setFaqData(data)
+          faqLoaded = true
+        }
+      }
+    } catch (e) {
+      console.log('API FAQ not available')
+    }
+
+    // Если API не загрузил FAQ - используем localStorage или статические данные
+    if (!faqLoaded) {
+      const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
+      if (storedFaq) {
+        try {
+          const parsed = JSON.parse(storedFaq)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setFaqData(parsed)
+          } else {
+            setFaqData(staticFaqData)
+          }
+        } catch (e) {
+          console.error('Error parsing FAQ data:', e)
           setFaqData(staticFaqData)
         }
-      } catch (e) {
-        console.error('Error parsing FAQ data:', e)
+      } else {
         setFaqData(staticFaqData)
       }
-    } else {
-      setFaqData(staticFaqData)
     }
 
     setIsLoaded(true)
