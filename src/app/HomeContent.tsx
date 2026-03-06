@@ -93,7 +93,8 @@ function ModernHeader() {
                   onMouseEnter={() => handleMouseEnter(item.href)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Link
+                  <Box
+                    component={Link}
                     href={item.href}
                     sx={{
                       display: 'flex',
@@ -115,7 +116,7 @@ function ModernHeader() {
                   >
                     {item.label}
                     {item.subitems && <KeyboardArrowDown sx={{ fontSize: 16, opacity: 0.6 }} />}
-                  </Link>
+                  </Box>
                   
                   {item.subitems && hoveredItem === item.href && (
                     <Box 
@@ -134,8 +135,9 @@ function ModernHeader() {
                       onMouseLeave={handleMouseLeave}
                     >
                       {item.subitems.map((subitem) => (
-                        <Link
+                        <Box
                           key={subitem.href}
+                          component={Link}
                           href={subitem.href}
                           sx={{
                             display: 'block',
@@ -152,7 +154,7 @@ function ModernHeader() {
                           }}
                         >
                           {subitem.label}
-                        </Link>
+                        </Box>
                       ))}
                     </Box>
                   )}
@@ -194,10 +196,11 @@ function ModernHeader() {
             </IconButton>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+<Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {navItems.map((item) => (
-              <Link
+              <Box
                 key={item.href}
+                component={Link}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 sx={{
@@ -220,7 +223,7 @@ function ModernHeader() {
               >
                 {item.label}
                 {item.subitems && <KeyboardArrowDown sx={{ fontSize: 18, opacity: 0.6, transform: 'rotate(-90deg)' }} />}
-              </Link>
+              </Box>
             ))}
           </Box>
         </Box>
