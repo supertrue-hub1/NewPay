@@ -4,11 +4,24 @@ import { query } from '@/lib/db'
 // GET /api/partners - Получить всех партнёров
 export async function GET() {
   try {
+    // Проверяем существование таблицы
+    const checkTable = await query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'partners'
+      )
+    `)
+    
+    if (!checkTable.rows[0].exists) {
+      return NextResponse.json([])
+    }
+    
     const result = await query('SELECT * FROM partners WHERE is_active = true ORDER BY sort_order ASC')
     return NextResponse.json(result.rows)
   } catch (error) {
     console.error('Error fetching partners:', error)
-    return NextResponse.json({ error: 'Failed to fetch partners' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch partners', details: String(error) }, { status: 500 })
   }
 }
 
@@ -27,6 +40,19 @@ export async function POST(request: Request) {
       sort_order = 0
     } = body
 
+    // Проверяем существование таблицы
+    const checkTable = await query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'partners'
+      )
+    `)
+    
+    if (!checkTable.rows[0].exists) {
+      return NextResponse.json({ error: 'Таблица partners не существует. Создайте её через панель БД.' }, { status: 500 })
+    }
+
     const result = await query(
       `INSERT INTO partners (name, slug, description, image_url, link, category, is_active, sort_order) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
@@ -37,7 +63,7 @@ export async function POST(request: Request) {
     return NextResponse.json(result.rows[0], { status: 201 })
   } catch (error) {
     console.error('Error creating partner:', error)
-    return NextResponse.json({ error: 'Failed to create partner' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to create partner', details: String(error) }, { status: 500 })
   }
 }
 
