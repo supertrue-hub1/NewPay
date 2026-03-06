@@ -76,24 +76,16 @@ export default function ArticlesPage() {
   if (!data) return null
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 6 }}>
-      {/* Header */}
-      <Box sx={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white', 
-        py: 6,
-      }}>
-        <Container maxWidth="lg">
-          <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 2 }}>
-            Статьи о займах и финансах
-          </Typography>
-          <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 400, maxWidth: 600 }}>
-            Полезные материалы о микрозаймах, кредитных картах и управлении личными финансами
-          </Typography>
-        </Container>
-      </Box>
+    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 6, pt: 4 }}>
 
-      <Container maxWidth="lg" sx={{ mt: -4, position: 'relative', zIndex: 2 }}>
+      <Container maxWidth="lg">
+        <Typography variant="h3" component="h1" sx={{ fontWeight: 800, mb: 1 }}>
+          Статьи о займах и финансах
+        </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 4, fontWeight: 400 }}>
+          Полезные материалы о микрозаймах, кредитных картах и управлении личными финансами
+        </Typography>
+
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 8 }}>
             {/* Featured Article - Герой дня */}
