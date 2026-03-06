@@ -1,11 +1,30 @@
 import { NextResponse } from 'next/server'
-import { query } from '@/lib/db'
+import { Pool } from 'pg'
+
+// Используем суперпользователя для создания таблицы
+const adminPool = new Pool({
+  user: 'postgres',
+  password: process.env.DB_PASSWORD || '546815hH!',
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5432'),
+  database: process.env.DB_NAME || 'my_mfo',
+})
+
+const adminQuery = async (text: string, params?: any[]) => {
+  const client = await adminPool.connect()
+  try {
+    const res = await client.query(text, params)
+    return res
+  } finally {
+    client.release()
+  }
+}
 
 // GET /api/partners/setup - Создать таблицу partners (однократно)
 export async function GET() {
   try {
     // Создание таблицы
-    await query(`
+    await adminQuery(`
       CREATE TABLE IF NOT EXISTS partners (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -22,13 +41,13 @@ export async function GET() {
     `)
 
     // Индексы
-    await query(`CREATE INDEX IF NOT EXISTS idx_partners_sort_order ON partners(sort_order)`)
-    await query(`CREATE INDEX IF NOT EXISTS idx_partners_is_active ON partners(is_active)`)
+    await adminQuery(`CREATE INDEX IF NOT EXISTS idx_partners_sort_order ON partners(sort_order)`)
+    await adminQuery(`CREATE INDEX IF NOT EXISTS idx_partners_is_active ON partners(is_active)`)
 
     // Seed данные (если таблица пустая)
-    const existing = await query('SELECT COUNT(*) as count FROM partners')
+    const existing = await adminQuery('SELECT COUNT(*) as count FROM partners')
     if (parseInt(existing.rows[0].count) === 0) {
-      await query(`
+      await adminQuery(`
         INSERT INTO partners (name, slug, description, image_url, link, category, is_active, sort_order) VALUES
         ('Сбербанк', 'sberbank', 'Крупнейший банк России', 'https://logo.clearbit.com/sberbank.ru', 'https://sberbank.ru', 'Банк', true, 1),
         ('Тинькофф', 'tinkoff', 'Банк без отделений', 'https://logo.clearbit.com/tinkoff.ru', 'https://tinkoff.ru', 'Банк', true, 2),
@@ -41,9 +60,11 @@ export async function GET() {
       `)
     }
 
+    await adminPool.end()
     return NextResponse.json({ success: true, message: 'Таблица partners создана' })
   } catch (error) {
     console.error('Error setting up partners:', error)
+    await adminPool.end()
     return NextResponse.json({ error: 'Failed to setup partners', details: String(error) }, { status: 500 })
   }
 }
