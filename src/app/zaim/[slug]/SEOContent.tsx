@@ -101,8 +101,9 @@ export default function SEOContent({ data }: SEOContentProps) {
                     variant="contained" 
                     fullWidth 
                     sx={{ mt: 2, bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' } }}
-                    href={mfo.siteUrl}
+                    href={mfo.siteUrl || '#'}
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Получить деньги
                   </Button>
