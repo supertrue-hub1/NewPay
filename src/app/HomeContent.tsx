@@ -361,11 +361,10 @@ export default function HomeContent() {
     setSelectedMfo(null)
   }, [])
 
-  return (
-    <>
-      <ModernHeader />
-<Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4, pt: '120px' }}>
-      <Container maxWidth="lg">
+ return (
+ <>
+<Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py:4 }}>
+ <Container maxWidth="lg">
       {/* Hero секция */}
  <Box
  sx={{
