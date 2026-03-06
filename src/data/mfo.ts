@@ -44,7 +44,7 @@ export const useMfoData = () => {
         if (res.ok) {
           const data = await res.json()
           // Преобразование snake_case в camelCase если нужно
-          const formattedData = data.map((row: any) => ({
+            const formattedData = data.map((row: any) => ({
             id: row.id,
             name: row.name,
             logo: row.logo,
@@ -65,6 +65,7 @@ export const useMfoData = () => {
             inn: row.inn,
             ogrn: row.ogrn,
             license: row.license,
+            infoModal: row.info_modal,
             clicks: row.clicks,
             conversions: row.conversions,
             pros: row.pros || [],
@@ -106,6 +107,7 @@ export const useMfoData = () => {
           inn: mfo.inn,
           ogrn: mfo.ogrn,
           license: mfo.license,
+          info_modal: mfo.infoModal,
           pros: mfo.pros || [],
           cons: mfo.cons || [],
           risks: mfo.risks || [],
@@ -137,6 +139,7 @@ export const useMfoData = () => {
             inn: row.inn,
             ogrn: row.ogrn,
             license: row.license,
+            infoModal: row.info_modal,
             pros: row.pros || [],
             cons: row.cons || [],
             risks: row.risks || [],
@@ -175,6 +178,7 @@ export const useMfoData = () => {
           inn: mfo.inn,
           ogrn: mfo.ogrn,
           license: mfo.license,
+          info_modal: mfo.infoModal,
           pros: mfo.pros || [],
           cons: mfo.cons || [],
           risks: mfo.risks || [],
@@ -206,6 +210,7 @@ export const useMfoData = () => {
             inn: row.inn,
             ogrn: row.ogrn,
             license: row.license,
+            infoModal: row.info_modal,
             pros: row.pros || [],
             cons: row.cons || [],
             risks: row.risks || [],

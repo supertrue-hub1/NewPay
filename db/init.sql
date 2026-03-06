@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS mfo_companies (
     inn VARCHAR(20),
     ogrn VARCHAR(20),
     license VARCHAR(255),
+    info_modal TEXT,
     clicks INTEGER DEFAULT 0,
     conversions INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
