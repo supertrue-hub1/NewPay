@@ -278,6 +278,7 @@ export default function HomeContent() {
             inn: item.inn,
             ogrn: item.ogrn,
             license: item.license,
+            infoModal: item.info_modal,
             clicks: item.clicks || 0,
             conversions: item.conversions || 0,
           }))
