@@ -76,9 +76,9 @@ export default function ArticlesPage() {
   if (!data) return null
 
   return (
-    <Box sx={{ minHeight: '100vh', pb: 6, pt: 4 }}>
+    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 6, pt: 4 }}>
 
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Typography variant="h3" component="h1" sx={{ fontWeight: 800, mb: 1 }}>
           Статьи о займах и финансах
         </Typography>

@@ -95,8 +95,8 @@ const promoCodes: PromoCode[] = [
 
 export default function PromokodyPage() {
   return (
-    <Box sx={{ minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="md">
+    <Box sx={{ bgcolor: '#f8f9fa', minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="lg">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800, display: { xs: 'none', md: 'block' } }}>
           Промокоды и скидки на займы
         </Typography>

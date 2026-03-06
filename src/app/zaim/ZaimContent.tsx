@@ -19,8 +19,8 @@ export default function ZaimContent() {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="md">
+    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 7 }}>
             <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
