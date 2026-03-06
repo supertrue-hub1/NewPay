@@ -4,15 +4,230 @@ import { Container, Typography, Box, Slider, Card, CardContent, Grid, Chip, Butt
 import { MFO } from '@/data/mfo'
 import { FAQ } from '@/data/faq'
 import { useState, useMemo, useCallback, useEffect } from 'react'
-import { Close, Info, Description, CheckCircle, AccessTime, Info as InfoIcon } from '@mui/icons-material'
+import { Close, Info, Description, CheckCircle, AccessTime, Info as InfoIcon, Menu, KeyboardArrowDown } from '@mui/icons-material'
 import { useTranslations } from 'next-intl'
 import Logo from '@/components/Logo'
 import ReviewSection from '@/components/ReviewSection'
 import { mfoData as staticMfoData } from '@/data/mfo-data'
 import { faqData as staticFaqData } from '@/data/faq-data'
+import Link from 'next/link'
 
 const STORAGE_KEY_MFO = 'mfo'
 const STORAGE_KEY_FAQ = 'faq'
+
+// Навигационное меню
+const navItems = [
+  { label: 'Главная', href: '/' },
+  { 
+    label: 'Займы', 
+    href: '/allmfo',
+    subitems: [
+      { label: 'Все займы', href: '/allmfo' },
+      { label: 'Сравнить займы', href: '/mfo' },
+      { label: 'Займы онлайн', href: '/zajmy-online' },
+      { label: 'Займы по городам', href: '/zajmy-online/moskva' },
+    ]
+  },
+  { label: 'Кредитные карты', href: '/cards' },
+  { label: 'Статьи', href: '/articles' },
+  { label: 'FAQ', href: '/faq' },
+  { 
+    label: 'Ещё', 
+    href: '#',
+    subitems: [
+      { label: 'Отзывы', href: '/reviews' },
+      { label: 'Жалоба в ЦБ РФ', href: '/complaint-cb' },
+      { label: 'Нелегальные кредиторы', href: '/illegal-lenders' },
+    ]
+  },
+]
+
+function ModernHeader() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [dropdownTimeout, setDropdownTimeout] = useState<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleMouseEnter = (href: string) => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout)
+      setDropdownTimeout(null)
+    }
+    setHoveredItem(href)
+  }
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setHoveredItem(null)
+    }, 150)
+    setDropdownTimeout(timeout)
+  }
+
+  return (
+    <>
+      {/* Desktop Header */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1200,
+          bgcolor: '#fff',
+          borderBottom: '1px solid #e5e7eb',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1.5, minHeight: 70 }}>
+            {/* Logo */}
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+              <img src="/header.svg" alt="NewPay" style={{ height: 60 }} />
+            </Link>
+
+            {/* Desktop Navigation */}
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5 }}>
+              {navItems.map((item) => (
+                <Box 
+                  key={item.href}
+                  sx={{ position: 'relative' }}
+                  onMouseEnter={() => handleMouseEnter(item.href)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Link
+                    href={item.href}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.3,
+                      px: 1.5,
+                      py: 1,
+                      color: '#374151',
+                      textDecoration: 'none',
+                      fontSize: 14,
+                      fontWeight: 500,
+                      borderRadius: 1,
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        bgcolor: '#f3f4f6',
+                        color: '#1a237e',
+                      },
+                    }}
+                  >
+                    {item.label}
+                    {item.subitems && <KeyboardArrowDown sx={{ fontSize: 16, opacity: 0.6 }} />}
+                  </Link>
+                  
+                  {item.subitems && hoveredItem === item.href && (
+                    <Box 
+                      sx={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        bgcolor: '#fff',
+                        borderRadius: 2,
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                        py: 1,
+                        minWidth: 200,
+                        zIndex: 1300,
+                      }}
+                      onMouseEnter={() => handleMouseEnter(item.href)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {item.subitems.map((subitem) => (
+                        <Link
+                          key={subitem.href}
+                          href={subitem.href}
+                          sx={{
+                            display: 'block',
+                            px: 2,
+                            py: 1,
+                            color: '#374151',
+                            textDecoration: 'none',
+                            fontSize: 14,
+                            transition: 'all 0.2s',
+                            '&:hover': {
+                              bgcolor: '#f3f4f6',
+                              color: '#1a237e',
+                            },
+                          }}
+                        >
+                          {subitem.label}
+                        </Link>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ))}
+            </Box>
+
+            {/* Mobile Hamburger */}
+            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+              <IconButton onClick={() => setMobileOpen(true)} sx={{ color: '#374151' }}>
+                <Menu />
+              </IconButton>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: '#fff',
+            zIndex: 1300,
+            p: 3,
+            overflow: 'auto',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center' }} onClick={() => setMobileOpen(false)}>
+              <img src="/header.svg" alt="NewPay" style={{ height: 50 }} />
+            </Link>
+            <IconButton onClick={() => setMobileOpen(false)} sx={{ color: '#374151' }}>
+              <Close />
+            </IconButton>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  px: 2,
+                  py: 1.5,
+                  color: '#374151',
+                  textDecoration: 'none',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  borderRadius: 2,
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    bgcolor: '#f3f4f6',
+                    color: '#1a237e',
+                  },
+                }}
+              >
+                {item.label}
+                {item.subitems && <KeyboardArrowDown sx={{ fontSize: 18, opacity: 0.6, transform: 'rotate(-90deg)' }} />}
+              </Link>
+            ))}
+          </Box>
+        </Box>
+      )}
+    </>
+  )
+}
 
 function Calculator() {
   const [sum, setSum] = useState(10000)
@@ -188,7 +403,9 @@ export default function HomeContent() {
   }, [])
 
   return (
-    <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4 }}>
+    <>
+      <ModernHeader />
+      <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4, pt: '90px' }}>
       <Container maxWidth="lg">
         {/* Hero секция */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
@@ -568,5 +785,6 @@ export default function HomeContent() {
         </Dialog>
       </Container>
     </Box>
+    </>
   )
 }
