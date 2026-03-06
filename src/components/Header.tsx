@@ -108,14 +108,9 @@ if (!mounted) {
     <>
       <header className={styles.header} suppressHydrationWarning>
         <div className={styles.container}>
-          {/* Logo - Desktop */}
-          <div style={{ position: 'absolute', left: 24 }} className="logoDesktop">
+          {/* Logo */}
+          <div style={{ position: 'absolute', left: 24 }}>
             <Logo />
-          </div>
-
-          {/* Logo - Mobile */}
-          <div style={{ position: 'absolute', left: 24 }} className="logoMobile">
-            <Logo mobile />
           </div>
 
           {/* Desktop Navigation */}
