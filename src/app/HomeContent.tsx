@@ -72,104 +72,109 @@ function ModernHeader() {
           left: 0,
           right: 0,
           zIndex: 1200,
-          bgcolor: '#fff',
-          borderBottom: '1px solid #e5e7eb',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          bgcolor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1.5, minHeight: 70 }}>
-            {/* Logo */}
+        <Box sx={{ maxWidth: 1400, mx: 'auto', px: 3, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          {/* Logo */}
+          <Box sx={{ position: 'absolute', left: 24 }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-              <img src="/header.svg" alt="NewPay" style={{ height: 60 }} />
+              <img src="/header.svg" alt="NewPay" style={{ height: 100 }} />
             </Link>
-
-            {/* Desktop Navigation */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5 }}>
-              {navItems.map((item) => (
-                <Box 
-                  key={item.href}
-                  sx={{ position: 'relative' }}
-                  onMouseEnter={() => handleMouseEnter(item.href)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Box
-                    component={Link}
-                    href={item.href}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 0.3,
-                      px: 1.5,
-                      py: 1,
-                      color: '#374151',
-                      textDecoration: 'none',
-                      fontSize: 14,
-                      fontWeight: 500,
-                      borderRadius: 1,
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        bgcolor: '#f3f4f6',
-                        color: '#1a237e',
-                      },
-                    }}
-                  >
-                    {item.label}
-                    {item.subitems && <KeyboardArrowDown sx={{ fontSize: 16, opacity: 0.6 }} />}
-                  </Box>
-                  
-                  {item.subitems && hoveredItem === item.href && (
-                    <Box 
-                      sx={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        bgcolor: '#fff',
-                        borderRadius: 2,
-                        boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
-                        py: 1,
-                        minWidth: 200,
-                        zIndex: 1300,
-                      }}
-                      onMouseEnter={() => handleMouseEnter(item.href)}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      {item.subitems.map((subitem) => (
-                        <Box
-                          key={subitem.href}
-                          component={Link}
-                          href={subitem.href}
-                          sx={{
-                            display: 'block',
-                            px: 2,
-                            py: 1,
-                            color: '#374151',
-                            textDecoration: 'none',
-                            fontSize: 14,
-                            transition: 'all 0.2s',
-                            '&:hover': {
-                              bgcolor: '#f3f4f6',
-                              color: '#1a237e',
-                            },
-                          }}
-                        >
-                          {subitem.label}
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-              ))}
-            </Box>
-
-            {/* Mobile Hamburger */}
-            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-              <IconButton onClick={() => setMobileOpen(true)} sx={{ color: '#374151' }}>
-                <Menu />
-              </IconButton>
-            </Box>
           </Box>
-        </Container>
+
+          {/* Desktop Navigation */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, ml: '70px' }}>
+            {navItems.map((item) => (
+              <Box 
+                key={item.href}
+                sx={{ position: 'relative' }}
+                onMouseEnter={() => handleMouseEnter(item.href)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Box
+                  component={Link}
+                  href={item.href}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    px: 1.5,
+                    py: 1,
+                    color: '#374151',
+                    textDecoration: 'none',
+                    fontSize: 14,
+                    fontWeight: 500,
+                    borderRadius: '12px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: 'rgba(99, 102, 241, 0.08)',
+                      color: '#4f46e5',
+                    },
+                  }}
+                >
+                  {item.label}
+                  {item.subitems && <KeyboardArrowDown sx={{ fontSize: 18, opacity: 0.6 }} />}
+                </Box>
+                
+                {item.subitems && hoveredItem === item.href && (
+                  <Box 
+                    sx={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      mt: 1,
+                      bgcolor: '#fff',
+                      borderRadius: '16px',
+                      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.12)',
+                      border: '1px solid rgba(0, 0, 0, 0.06)',
+                      py: 1,
+                      px: 1,
+                      minWidth: 180,
+                      zIndex: 1300,
+                    }}
+                    onMouseEnter={() => handleMouseEnter(item.href)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {item.subitems.map((subitem) => (
+                      <Box
+                        key={subitem.href}
+                        component={Link}
+                        href={subitem.href}
+                        sx={{
+                          display: 'block',
+                          px: 2,
+                          py: 1.5,
+                          color: '#4b5563',
+                          textDecoration: 'none',
+                          fontSize: 14,
+                          borderRadius: '10px',
+                          transition: 'all 0.15s ease',
+                          '&:hover': {
+                            bgcolor: '#f3f4f6',
+                            color: '#1f2937',
+                          },
+                        }}
+                      >
+                        {subitem.label}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Box>
+
+          {/* Mobile Hamburger */}
+          <Box sx={{ position: 'absolute', right: 24, display: { xs: 'block', md: 'none' } }}>
+            <IconButton onClick={() => setMobileOpen(true)} sx={{ bgcolor: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px' }}>
+              <Menu sx={{ fontSize: 24, color: '#374151' }} />
+            </IconButton>
+          </Box>
+        </Box>
       </Box>
 
       {/* Mobile Menu */}
@@ -359,7 +364,7 @@ export default function HomeContent() {
   return (
     <>
       <ModernHeader />
-      <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4, pt: '90px' }}>
+<Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4, pt: '120px' }}>
       <Container maxWidth="lg">
         {/* Hero секция */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
