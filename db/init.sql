@@ -63,9 +63,31 @@ CREATE INDEX IF NOT EXISTS idx_mfo_name ON mfo_companies(name);
 CREATE INDEX IF NOT EXISTS idx_mfo_rating ON mfo_companies(rating DESC);
 CREATE INDEX IF NOT EXISTS idx_mfo_stats_date ON mfo_stats(date);
 
+-- Создание таблицы FAQ
+CREATE TABLE IF NOT EXISTS faq (
+    id SERIAL PRIMARY KEY,
+    question VARCHAR(500) NOT NULL,
+    answer TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Создание индексов для FAQ
+CREATE INDEX IF NOT EXISTS idx_faq_question ON faq(question);
+
 -- Назначение прав пользователю
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO adminmfo;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO adminmfo;
+
+-- Вставка начальных данных FAQ
+INSERT INTO faq (question, answer) VALUES
+('Как взять займ?', 'Выберите сумму и срок на калькуляторе, заполните заявку и получите деньги на карту.'),
+('Какие требования к заёмщику?', 'Возраст от 18 лет, паспорт РФ, постоянная регистрация.'),
+('Как погасить займ?', 'Через личный кабинет МФО, банковским переводом или в терминале.'),
+('Можно ли продлить займ?', 'Да, большинство МФО предоставляют услугу пролонгации.'),
+('Как влияет кредитная история?', 'При плохой КИ шансы на одобрение ниже, но есть МФО с высоким процентом одобрения.'),
+('Сколько времени занимает одобрение?', 'От 1 до 15 минут. Многие МФО одобряют заявки мгновенно.'),
+('Какая максимальная сумма займа?', 'До 30 000 рублей для новых клиентов, постоянные клиенты могут получить до 100 000 рублей.');
 
 -- Вставка начальных данных (примеры MFO)
 INSERT INTO mfo_companies (name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, badge, site_url, address, phone, inn, ogrn, license) VALUES
