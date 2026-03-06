@@ -194,56 +194,17 @@ export default function ReviewsContent() {
   }
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 8 }}>
-      {/* Hero секция */}
-      <Box sx={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white', 
-        py: 8, 
-        mb: 4,
-      }}>
-        <Container maxWidth="lg">
-          <Typography variant="h2" sx={{ fontWeight: 800, mb: 2, textAlign: 'center' }}>
-            Отзывы клиентов
-          </Typography>
-          <Typography variant="h6" sx={{ textAlign: 'center', opacity: 0.95, maxWidth: 600, mx: 'auto' }}>
-            Узнайте, что говорят наши клиенты о работе сервиса. Мы ценим каждый отзыв и постоянно работаем над улучшением.
-          </Typography>
-          
-          {/* Статистика */}
-          <Grid container spacing={3} sx={{ mt: 4, justifyContent: 'center' }}>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h3" sx={{ fontWeight: 800 }}>115+</Typography>
-                <Typography variant="body1" sx={{ opacity: 0.9 }}>Отзывов</Typography>
-              </Box>
-            </Grid>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h3" sx={{ fontWeight: 800 }}>4.8</Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                  <Rating value={4.8} precision={0.1} readOnly sx={{ color: '#fff' }} />
-                </Box>
-              </Box>
-            </Grid>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h3" sx={{ fontWeight: 800 }}>98%</Typography>
-                <Typography variant="body1" sx={{ opacity: 0.9 }}>Довольных клиентов</Typography>
-              </Box>
-            </Grid>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h3" sx={{ fontWeight: 800 }}>24/7</Typography>
-                <Typography variant="body1" sx={{ opacity: 0.9 }}>Работаем круглосуточно</Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+    <Box sx={{ minHeight: '100vh', pb: 8, pt: 4 }}>
+      <Container maxWidth="md">
+        <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
+          Отзывы клиентов
+        </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+          Узнайте, что говорят наши клиенты о работе сервиса. Мы ценим каждый отзыв и постоянно работаем над улучшением.
+        </Typography>
+      </Container>
 
-      <Container maxWidth="lg">
-        {/* Карусель отзывов */}
+      {/* Карусель отзывов */}
         <Box sx={{ mb: 8 }}>
           <ReviewSection />
         </Box>

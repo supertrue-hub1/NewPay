@@ -128,8 +128,8 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
   }, [])
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="md">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
           {pageTitle || 'Все МФО'} — займы онлайн на карту без отказа
         </Typography>
@@ -138,15 +138,15 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
         </Typography>
 
         {/* Калькулятор */}
-        <Card sx={{ p: 3, mb: 4, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: 3 }}>
+        <Card sx={{ p: 3, mb: 4, bgcolor: '#f8f9fa', borderRadius: 3, border: '1px solid #e0e0e0' }}>
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Box sx={{ color: 'white' }}>
+              <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                  <AccountBalanceWallet sx={{ fontSize: 20, opacity: 0.8 }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>Сумма</Typography>
+                  <AccountBalanceWallet sx={{ fontSize: 20, color: '#666' }} />
+                  <Typography variant="body2" color="text.secondary">Сумма</Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: '#1a237e' }}>
                   {amount.toLocaleString()} ₽
                 </Typography>
                 <Slider
@@ -155,27 +155,21 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
                   min={1000}
                   max={30000}
                   step={500}
-                  sx={{ 
-                    color: 'white',
-                    '& .MuiSlider-thumb': { width: 20, height: 20, bgcolor: 'white', '&:hover': { boxShadow: '0 0 0 8px rgba(255,255,255,0.16)' } },
-                    '& .MuiSlider-track': { height: 6, borderRadius: 3 },
-                    '& .MuiSlider-rail': { height: 6, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.3)' },
-                  }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                  <Typography variant="caption" sx={{ opacity: 0.7 }}>1 000 ₽</Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.7 }}>30 000 ₽</Typography>
+                  <Typography variant="caption" color="text.secondary">1 000 ₽</Typography>
+                  <Typography variant="caption" color="text.secondary">30 000 ₽</Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Box sx={{ color: 'white' }}>
+              <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                  <CalendarToday sx={{ fontSize: 20, opacity: 0.8 }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>Срок (дней)</Typography>
+                  <CalendarToday sx={{ fontSize: 20, color: '#666' }} />
+                  <Typography variant="body2" color="text.secondary">Срок (дней)</Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: '#1a237e' }}>
                   {term} дней
                 </Typography>
                 <Slider
@@ -184,33 +178,26 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
                   min={1}
                   max={30}
                   step={1}
-                  sx={{ 
-                    color: 'white',
-                    '& .MuiSlider-thumb': { width: 20, height: 20, bgcolor: 'white', '&:hover': { boxShadow: '0 0 0 8px rgba(255,255,255,0.16)' } },
-                    '& .MuiSlider-track': { height: 6, borderRadius: 3 },
-                    '& .MuiSlider-rail': { height: 6, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.3)' },
-                  }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                  <Typography variant="caption" sx={{ opacity: 0.7 }}>1 день</Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.7 }}>30 дней</Typography>
+                  <Typography variant="caption" color="text.secondary">1 день</Typography>
+                  <Typography variant="caption" color="text.secondary">30 дней</Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Box sx={{ color: 'white', textAlign: { xs: 'left', md: 'right' } }}>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>Вернуть</Typography>
-                <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+              <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Вернуть</Typography>
+                <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, color: '#1a237e' }}>
                   {returnAmount.toLocaleString()} ₽
                 </Typography>
                 <Box sx={{ 
                   display: 'inline-block', 
-                  bgcolor: 'rgba(255,255,255,0.2)', 
+                  bgcolor: '#e8eaf6', 
                   borderRadius: 2, 
                   px: 2, 
                   py: 1,
-                  backdropFilter: 'blur(10px)',
                   mb: 2
                 }}>
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -248,7 +235,7 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
             </Grid>
           </Grid>
 
-          <Typography variant="body2" color="white" sx={{ mt: 3, textAlign: 'center', opacity: 0.8 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
             Показано: {filteredMfo.length} из {mfoData.length} предложений
           </Typography>
         </Card>

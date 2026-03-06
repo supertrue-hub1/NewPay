@@ -54,8 +54,8 @@ export default function CardsContent() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="md">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
           Кредитные карты
         </Typography>
