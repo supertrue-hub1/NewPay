@@ -315,22 +315,39 @@ export default function HomeContent() {
      }
    }
 
-   // Загрузка FAQ
-   const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
-   if (storedFaq) {
-     try {
-       const parsed = JSON.parse(storedFaq)
-       if (Array.isArray(parsed) && parsed.length > 0) {
-         setFaqData(parsed)
-       } else {
+   // Загрузка FAQ из API
+   let faqLoadedFromApi = false
+   try {
+     const faqResponse = await fetch('/api/data?type=faq')
+     if (faqResponse.ok) {
+       const faqApiData = await faqResponse.json()
+       if (Array.isArray(faqApiData) && faqApiData.length > 0) {
+         setFaqData(faqApiData)
+         faqLoadedFromApi = true
+       }
+     }
+   } catch (e) {
+     console.log('FAQ API not available, trying localStorage')
+   }
+
+   // Если API недоступен - пробуем localStorage для FAQ
+   if (!faqLoadedFromApi) {
+     const storedFaq = localStorage.getItem(STORAGE_KEY_FAQ)
+     if (storedFaq) {
+       try {
+         const parsed = JSON.parse(storedFaq)
+         if (Array.isArray(parsed) && parsed.length > 0) {
+           setFaqData(parsed)
+         } else {
+           setFaqData(staticFaqData)
+         }
+       } catch (e) {
+         console.error('Error parsing FAQ data:', e)
          setFaqData(staticFaqData)
        }
-     } catch (e) {
-       console.error('Error parsing FAQ data:', e)
+     } else {
        setFaqData(staticFaqData)
      }
-   } else {
-     setFaqData(staticFaqData)
    }
 
    setIsLoaded(true)
