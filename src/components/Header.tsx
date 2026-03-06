@@ -38,9 +38,16 @@ const navItems: NavItem[] = [
   },
 ]
 
-const Logo = () => (
+const Logo = ({ mobile = false }: { mobile?: boolean }) => (
   <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-    <img src="/header.svg" alt="NewPay" style={{ height: 100, marginLeft: 120 }} />
+    <img 
+      src="/header.svg" 
+      alt="SravniPay" 
+      style={{ 
+        height: mobile ? 40 : 100, 
+        marginLeft: mobile ? 0 : 120 
+      }} 
+    />
   </Link>
 )
 
@@ -160,7 +167,7 @@ if (!mounted) {
       {mobileOpen && (
         <div className={styles.mobileMenu}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-            <Logo />
+            <Logo mobile />
             <button 
               className={styles.hamburger}
               style={{ display: 'flex' }}
