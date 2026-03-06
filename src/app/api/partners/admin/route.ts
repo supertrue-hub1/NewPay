@@ -1,20 +1,45 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
+// Функция проверки существования таблицы
+async function checkTableExists(): Promise<boolean> {
+  try {
+    const checkTable = await query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'partners'
+      )
+    `)
+    return checkTable.rows[0].exists
+  } catch {
+    return false
+  }
+}
+
 // GET /api/partners/admin - Получить всех партнёров (включая неактивные)
 export async function GET() {
   try {
+    const tableExists = await checkTableExists()
+    if (!tableExists) {
+      return NextResponse.json([])
+    }
     const result = await query('SELECT * FROM partners ORDER BY sort_order ASC')
     return NextResponse.json(result.rows)
   } catch (error) {
     console.error('Error fetching partners:', error)
-    return NextResponse.json({ error: 'Failed to fetch partners' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch partners', details: String(error) }, { status: 500 })
   }
 }
 
 // POST /api/partners/admin - Добавить партнёра
 export async function POST(request: Request) {
   try {
+    const tableExists = await checkTableExists()
+    if (!tableExists) {
+      return NextResponse.json({ error: 'Таблица partners не существует. Создайте её через панель БД.' }, { status: 500 })
+    }
+
     const body = await request.json()
     const {
       name,
@@ -41,13 +66,18 @@ export async function POST(request: Request) {
     return NextResponse.json(result.rows[0], { status: 201 })
   } catch (error) {
     console.error('Error creating partner:', error)
-    return NextResponse.json({ error: 'Failed to create partner' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to create partner', details: String(error) }, { status: 500 })
   }
 }
 
 // PUT /api/partners/admin - Обновить партнёра
 export async function PUT(request: Request) {
   try {
+    const tableExists = await checkTableExists()
+    if (!tableExists) {
+      return NextResponse.json({ error: 'Таблица partners не существует' }, { status: 500 })
+    }
+
     const body = await request.json()
     const {
       id,
@@ -81,13 +111,18 @@ export async function PUT(request: Request) {
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error updating partner:', error)
-    return NextResponse.json({ error: 'Failed to update partner' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update partner', details: String(error) }, { status: 500 })
   }
 }
 
 // DELETE /api/partners/admin - Удалить партнёра
 export async function DELETE(request: Request) {
   try {
+    const tableExists = await checkTableExists()
+    if (!tableExists) {
+      return NextResponse.json({ error: 'Таблица partners не существует' }, { status: 500 })
+    }
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -104,6 +139,6 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ message: 'Partner deleted successfully' })
   } catch (error) {
     console.error('Error deleting partner:', error)
-    return NextResponse.json({ error: 'Failed to delete partner' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete partner', details: String(error) }, { status: 500 })
   }
 }
