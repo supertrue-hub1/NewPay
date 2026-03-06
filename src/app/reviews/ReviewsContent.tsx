@@ -202,8 +202,7 @@ export default function ReviewsContent() {
         <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
           Узнайте, что говорят наши клиенты о работе сервиса. Мы ценим каждый отзыв и постоянно работаем над улучшением.
         </Typography>
-      </Container>
-
+      <Container maxWidth="md">
       {/* Карусель отзывов */}
         <Box sx={{ mb: 8 }}>
           <ReviewSection />
@@ -320,6 +319,7 @@ export default function ReviewsContent() {
             />
           </Box>
         )}
+      </Container>
       </Container>
     </Box>
   )
