@@ -1,18 +1,20 @@
-import { generateAllPages, getPageBySlug } from '@/lib/seo-pages-generator'
+import { getSEOPageSlugs, getSEOPageConfig } from '@/lib/seo-pages-utils'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import SEOContent from './SEOContent'
+import SEOContentAggregator from './SEOContentAggregator'
+import SEOContentLanding from './SEOContentLanding'
+import SEOContentArticle from './SEOContentArticle'
 
 // Генерация всех путей при сборке
 export async function generateStaticParams() {
-  const pages = generateAllPages()
-  return pages.map((page) => ({ slug: page.slug }))
+  const slugs = getSEOPageSlugs()
+  return slugs.map((slug) => ({ slug }))
 }
 
 // Генерация метаданных для каждой страницы
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const page = getPageBySlug(slug)
+  const page = getSEOPageConfig(slug)
   
   if (!page) {
     return {
@@ -34,11 +36,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const page = getPageBySlug(slug)
+  const page = getSEOPageConfig(slug)
   
   if (!page) {
     notFound()
   }
   
-  return <SEOContent data={page} />
+  // Рендер в зависимости от шаблона
+  switch (page.template) {
+    case 'aggregator':
+      return <SEOContentAggregator data={page} />
+    case 'landing':
+      return <SEOContentLanding data={page} />
+    case 'article':
+      return <SEOContentArticle data={page} />
+    default:
+      return <SEOContentAggregator data={page} />
+  }
 }
