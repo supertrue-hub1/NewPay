@@ -17,47 +17,78 @@ const initialFAQ: FAQ[] = [
 export const useFAQData = () => {
   const [faqData, setFaqData] = useState<FAQ[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // Загрузка данных с сервера
+  const fetchFAQ = async () => {
+    try {
+      const res = await fetch('/api/faq')
+      if (res.ok) {
+        const data = await res.json()
+        setFaqData(data)
+      } else {
+        // Если сервер недоступен, используем статические данные
+        setFaqData(initialFAQ)
+        setError('Server unavailable, using static data')
+      }
+    } catch (err) {
+      console.error('Error fetching FAQ:', err)
+      setFaqData(initialFAQ)
+      setError('Connection failed, using static data')
+    }
+    setIsLoaded(true)
+  }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('faq')
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored)
-          setFaqData(parsed)
-        } catch {
-          setFaqData(initialFAQ)
-          localStorage.setItem('faq', JSON.stringify(initialFAQ))
-        }
-      } else {
-        setFaqData(initialFAQ)
-        localStorage.setItem('faq', JSON.stringify(initialFAQ))
-      }
-      setIsLoaded(true)
-    }
+    fetchFAQ()
   }, [])
 
-  const saveFAQ = (faq: FAQ[]) => {
-    localStorage.setItem('faq', JSON.stringify(faq))
-    setFaqData(faq)
+  const addFAQ = async (faq: Omit<FAQ, 'id'>) => {
+    try {
+      const res = await fetch('/api/faq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(faq),
+      })
+      if (res.ok) {
+        const newFAQ = await res.json()
+        setFaqData([...faqData, newFAQ])
+      }
+    } catch (err) {
+      console.error('Error adding FAQ:', err)
+    }
   }
 
-  const addFAQ = (faq: Omit<FAQ, 'id'>) => {
-    const newFAQ = { ...faq, id: Date.now() }
-    saveFAQ([...faqData, newFAQ])
+  const updateFAQ = async (faq: FAQ) => {
+    try {
+      const res = await fetch('/api/faq', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(faq),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setFaqData(faqData.map(f => f.id === faq.id ? updated : f))
+      }
+    } catch (err) {
+      console.error('Error updating FAQ:', err)
+    }
   }
 
-  const updateFAQ = (faq: FAQ) => {
-    saveFAQ(faqData.map(f => f.id === faq.id ? faq : f))
-  }
-
-  const deleteFAQ = (id: number) => {
-    saveFAQ(faqData.filter(f => f.id !== id))
+  const deleteFAQ = async (id: number) => {
+    try {
+      const res = await fetch(`/api/faq?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setFaqData(faqData.filter(f => f.id !== id))
+      }
+    } catch (err) {
+      console.error('Error deleting FAQ:', err)
+    }
   }
 
   const resetFAQ = () => {
-    saveFAQ(initialFAQ)
+    setFaqData(initialFAQ)
   }
 
-  return { faqData, addFAQ, updateFAQ, deleteFAQ, resetFAQ, isLoaded }
+  return { faqData, addFAQ, updateFAQ, deleteFAQ, resetFAQ, isLoaded, error, refetch: fetchFAQ }
 }

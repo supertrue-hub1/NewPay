@@ -10,6 +10,8 @@
 - Читать FAQ и статьи о финансах
 - Пользоваться админ-панелью для управления контентом
 
+Проект активно развивается и включает функции интернационализации для работы с аудиторией из стран СНГ.
+
 ---
 
 ## Технологический стек
@@ -25,6 +27,9 @@
 | **next-intl** | 4.8.3 | Интернационализация (i18n) |
 | **Leaflet** | 1.9.4 | Интерактивные карты |
 | **PM2** | — | Менеджер процессов для продакшена |
+| **next-seo** | 7.2.0 | SEO-оптимизация |
+| **Swiper** | 12.1.2 | Слайдеры и карусели |
+| **Lucide React** | 0.577.0 | Иконки |
 
 ---
 
@@ -42,30 +47,51 @@
 NewPay/
 ├── src/
 │   ├── app/                    # Next.js App Router страницы
+│   │   ├── about/              # О проекте
 │   │   ├── admin/              # Админ-панель
 │   │   ├── allmfo/             # Страница всех МФО с калькулятором
 │   │   ├── articles/           # Статьи
 │   │   ├── cards/              # Кредитные карты
+│   │   ├── complaint-cb/       # Жалобы и обращения
 │   │   ├── faq/                # FAQ страница
+│   │   ├── illegal-lenders/    # Чёрный список кредиторов
 │   │   ├── loans/              # Категории займов (динамические)
 │   │   │   └── [slug]/         # Динамические страницы займов
+│   │   ├── map/                # Карта МФО
 │   │   ├── mfo/                # Карточки отдельных МФО
 │   │   │   └── [slug]/         # Динамические страницы МФО
+│   │   ├── privacy/            # Политика конфиденциальности
+│   │   ├── promokody/          # Промокоды
 │   │   ├── reviews/            # Отзывы
 │   │   ├── sitemap/            # Карта сайта
+│   │   ├── terms/              # Условия использования
 │   │   ├── zaim/               # Главная страница займов
 │   │   ├── zajmy-online/       # Займы онлайн по городам
 │   │   ├── api/                # API роуты
 │   │   ├── HomeContent.tsx     # Компонент главной страницы
 │   │   └── layout.tsx          # Главный layout
 │   ├── components/             # Переиспользуемые React-компоненты
+│   │   ├── Header.tsx          # Верхняя навигация
+│   │   ├── Footer.tsx          # Подвал сайта
+│   │   ├── ClientLayout.tsx    # Клиентский layout
+│   │   ├── MfoModal.tsx        # Модальное окно МФО
+│   │   ├── MfoOverviewClient.tsx # Обзор МФО
+│   │   ├── Navigation.tsx      # Навигационное меню
+│   │   ├── Pagination.tsx      # Пагинация
+│   │   ├── ReviewSection.tsx   # Секция отзывов
+│   │   ├── ThemeRegistry.tsx   # Регистрация тем MUI
+│   │   └── ui/                 # UI компоненты
 │   ├── data/                   # Статические данные и хуки
 │   ├── hooks/                  # Кастомные React-хуки
-│   └── lib/                    # Утилиты и вспомогательные функции
+│   ├── lib/                    # Утилиты и вспомогательные функции
+│   │   ├── db.ts               # Подключение к БД
+│   │   └── utils.ts            # Утилиты
+│   └── types/                  # TypeScript типы
 ├── public/                     # Статические файлы (изображения, иконки)
 ├── db/                         # SQL-скрипты для базы данных
 │   ├── init.sql                # Начальная схема БД
-│   └── init-complete.sql       # Полная схема БД
+│   ├── init-complete.sql       # Полная схема БД
+│   └── add_info_modal.sql      # Дополнительные SQL-запросы
 ├── i18n/                       # Конфигурация интернационализации
 │   ├── request.ts              # Обработка запросов i18n
 │   └── routing.ts              # Маршрутизация i18n
@@ -80,7 +106,8 @@ NewPay/
 ├── ecosystem.config.js         # Конфигурация PM2 для продакшена
 ├── next-sitemap.config.js      # Конфигурация sitemap
 ├── middleware.ts               # Next.js middleware
-└── tailwind.config.ts          # Конфигурация Tailwind CSS
+├── tailwind.config.ts          # Конфигурация Tailwind CSS
+└── eslint.config.mjs           # Конфигурация ESLint
 ```
 
 ---
@@ -146,6 +173,13 @@ pm2 list
 | `/sitemap` | Карта сайта |
 | `/zaim` | Главная страница займов |
 | `/zajmy-online` | Займы онлайн по городам |
+| `/map` | Карта офисов МФО |
+| `/promokody` | Промокоды и акции |
+| `/about` | О проекте |
+| `/privacy` | Политика конфиденциальности |
+| `/terms` | Условия использования |
+| `/illegal-lenders` | Чёрный список нелегальных кредиторов |
+| `/complaint-cb` | Подать жалобу на МФО |
 
 ---
 
@@ -343,6 +377,12 @@ module.exports = {
 
 Переключение языков реализовано через `next-intl`.
 
+### Особенности рендеринга
+
+Проект настроен для статического экспорта:
+- `trailingSlash: true` — все URL имеют завершающий слэш
+- `unoptimized: true` для изображений — требуется для статического хостинга
+
 ---
 
 ## Устранение неполадок
@@ -399,25 +439,43 @@ pm2 restart all
 
 ---
 
-## TODO (текущие задачи)
+## Вспомогательные скрипты
 
-### Phase 1: Configuration Changes
+В проекте доступны дополнительные скрипты для удобства разработки и развёртывания:
 
-- [ ] 1. Update next.config.ts for static export (output: 'export')
-- [ ] 2. Configure next-intl for static export
-- [ ] 3. Update/fix middleware for static hosting
-- [ ] 4. Update routing for static export
+| Файл | Назначение |
+|------|------------|
+| `run-dev.bat` / `run-dev.ps1` | Запуск dev-сервера на Windows |
+| `start-dev.ps1` | Чистый запуск dev с очисткой кэша |
+| `build.ps1` | Сборка проекта |
+| `deploy.sh` | Скрипт деплоя на сервер |
+| `deploy-timeweb.sh` | Деплой на Timeweb |
+| `server-start.sh` | Запуск продакшен-сервера |
+| `setup-db.sh` | Настройка базы данных |
+| `setup-remote-db.ps1` | Настройка удалённой БД |
 
-### Phase 2: Build & Test
+---
 
-- [ ] 5. Test build locally with `npm run build`
-- [ ] 6. Verify static output in `out/` directory
+## Архитектура и паттерны
 
-### Phase 3: Deployment to Timeweb
+### Структура страниц (App Router)
 
-- [ ] 7. Upload files to Timeweb via FTP/SSH
-- [ ] 8. Configure .htaccess for proper routing
-- [ ] 9. Test the deployed site
+Проект использует Next.js App Router с следующими особенностями:
+- Динамические маршруты через `[slug]` директории
+- Server Components по умолчанию
+- Клиентские компоненты с `'use client'` директивой
+- API роуты в `src/app/api/`
+
+### Стилизация
+
+Проект использует гибридный подход к стилизации:
+- **MUI (Material UI)** — основные компоненты и дизайн-система
+- **Tailwind CSS** — утилитарные классы
+- **CSS Modules** — специфичные стили для отдельных компонентов
+
+### Типизация
+
+Проект полностью на TypeScript с строгой типизацией. Типы находятся в `src/types/`.
 
 ---
 
