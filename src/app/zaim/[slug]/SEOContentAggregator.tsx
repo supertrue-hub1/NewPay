@@ -86,58 +86,68 @@ export default function SEOContentAggregator({ data }: SEOContentAggregatorProps
         ) : (
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {mfoList.slice(0, 8).map((mfo) => (
-            <Grid size={{ xs: 6, sm: 6, md: 3 }} key={mfo.id}>
+            <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  width: '100%',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer', 
-                  transition: 'all 0.3s', 
-                  '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 8px 25px rgba(0,0,0,0.15)' },
-                  height: '100%'
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 20px 40px rgba(102, 126, 234, 0.3)',
+                  }
                 }}
               >
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <Logo logo={mfo.logo} size={40} />
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '0.9rem' }}>{mfo.name}</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Rating value={mfo.rating} size="small" readOnly precision={0.1} />
-                        <Typography variant="body2" color="text.secondary">
-                          ({mfo.reviews.toLocaleString()})
-                        </Typography>
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Logo logo={mfo.logo} size={50} />
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 700 }}>{mfo.name}</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Rating value={mfo.rating} precision={0.1} size="small" readOnly />
+                          <Typography variant="body2" color="text.secondary">
+                            ({mfo.reviews.toLocaleString()} отзывов)
+                          </Typography>
+                        </Box>
                       </Box>
                     </Box>
                     {mfo.badge && (
                       <Chip label={mfo.badge} color="success" size="small" />
                     )}
                   </Box>
-                  <Grid container spacing={1}>
+
+                  <Grid container spacing={2} sx={{ mb: 2 }}>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Сумма</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
                         {mfo.sumMin.toLocaleString()} - {mfo.sumMax.toLocaleString()} ₽
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Срок</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
-                        {mfo.termMin}-{mfo.termMax} дн.
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        {mfo.termMin}-{mfo.termMax} дней
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Ставка</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50', fontSize: '0.85rem' }}>
-                        {mfo.percent}%/день
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>
+                        {mfo.percent}% в день
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
-                      <Typography variant="body2" color="text.secondary">Одобрение</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
-                        Высокое
+                      <Typography variant="body2" color="text.secondary">Вероятность</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        Высокая
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+
+                  <Box sx={{ display: 'flex', gap: 1 }}>
                     {mfo.firstFree && <Chip label="Первый 0%" color="primary" size="small" />}
                     {mfo.instant && <Chip label="Мгновенно" size="small" />}
                   </Box>
@@ -149,7 +159,7 @@ export default function SEOContentAggregator({ data }: SEOContentAggregatorProps
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Получить
+                    Получить деньги
                   </Button>
                 </CardContent>
               </Card>
