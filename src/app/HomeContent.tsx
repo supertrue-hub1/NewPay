@@ -8,6 +8,7 @@ import { Close, Info, Description, CheckCircle, AccessTime, Info as InfoIcon, Me
 import { useTranslations } from 'next-intl'
 import Logo from '@/components/Logo'
 import ReviewSection from '@/components/ReviewSection'
+import PartnersCarousel from '@/components/partners/PartnersCarousel'
 import { mfoData as staticMfoData } from '@/data/mfo-data'
 import { faqData as staticFaqData } from '@/data/faq-data'
 import Link from 'next/link'
@@ -605,6 +606,11 @@ export default function HomeContent() {
         {/* Секция отзывов */}
         <Box sx={{ mt: 8 }}>
           <ReviewSection />
+        </Box>
+
+        {/* Блок "Надёжные компании" */}
+        <Box sx={{ mt: 8 }}>
+          <PartnersCarousel />
         </Box>
 
         {/* Модальное окно с детальной информацией */}
