@@ -99,9 +99,9 @@ export default function SEOContentLanding({ data }: SEOContentLandingProps) {
             <CircularProgress />
           </Box>
         ) : (
-        <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           {mfoList.slice(0, 4).map((mfo) => (
-            <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
+            <Grid size={{ xs: 12, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
                   height: '100%',

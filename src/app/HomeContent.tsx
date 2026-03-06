@@ -441,9 +441,9 @@ export default function HomeContent() {
             <CircularProgress />
           </Box>
         ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           {mfoData.slice(0, 8).map((mfo) => (
-            <Grid size={{ xs: 6, md: 3 }} key={mfo.id}>
+            <Grid size={{ xs: 12, md: 3 }} key={mfo.id}>
               <Card 
                 sx={{ 
                   height: '100%', 
