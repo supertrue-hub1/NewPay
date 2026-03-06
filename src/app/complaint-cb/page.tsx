@@ -1,7 +1,5 @@
 ﻿import { Metadata } from 'next'
 import { Container, Typography, Box, Paper, Grid } from '@mui/material'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Жалоба в ЦБ РФ | NewPay.ru',
@@ -11,8 +9,7 @@ export const metadata: Metadata = {
 export default function ComplaintCBPage() {
   return (
     <>
-      <Header />
-      <Container maxWidth="lg" sx={{ py: 4, mt: 8 }}>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h3" component="h1" sx={{ mb: 4, fontWeight: 700 }}>
           Как подать жалобу в ЦБ РФ
         </Typography>
@@ -116,7 +113,6 @@ export default function ComplaintCBPage() {
           </Grid>
         </Grid>
     </Container>
-    <Footer />
     </>
   )
 }

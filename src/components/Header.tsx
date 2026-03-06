@@ -82,15 +82,20 @@ export default function Header() {
   }
 
   // Prevent hydration mismatch - render placeholder until mounted
-  if (!mounted) {
-    return (
-      <header 
-        className={styles.header} 
-        suppressHydrationWarning
-        style={{ minHeight: 80, background: '#fff', borderBottom: '1px solid #e5e7eb' }}
-      />
-    )
-  }
+if (!mounted) {
+ return (
+ <header
+ className={styles.header}
+ suppressHydrationWarning
+ style={{
+ minHeight: 100,
+ background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%)',
+ borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+ }}
+ />
+ )
+ }
+
 
   return (
     <>
