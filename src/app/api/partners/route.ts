@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+  import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 // GET /api/partners - Получить всех партнёров
@@ -36,19 +36,19 @@ export async function POST(request: Request) {
       image_url,
       link,
       category,
+      license,
       is_active = true,
       sort_order = 0
     } = body
 
-    // Проверяем существование таблицы
-    const checkTable = await query(`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'partners'
-      )
+    const result = await query(
+      `INSERT INTO partners (name, slug, description, image_url, link, category, license, is_active, sort_order) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+       RETURNING *`,
+      [name, slug, description, image_url, link, category, license, is_active, sort_order]
+    )
     `)
-    
+
     if (!checkTable.rows[0].exists) {
       return NextResponse.json({ error: 'Таблица partners не существует. Создайте её через панель БД.' }, { status: 500 })
     }
@@ -79,6 +79,7 @@ export async function PUT(request: Request) {
       image_url,
       link,
       category,
+      license,
       is_active,
       sort_order
     } = body
@@ -86,10 +87,10 @@ export async function PUT(request: Request) {
     const result = await query(
       `UPDATE partners 
        SET name = $1, slug = $2, description = $3, image_url = $4, link = $5, 
-           category = $6, is_active = $7, sort_order = $8, updated_at = CURRENT_TIMESTAMP
-       WHERE id = $9 
+           category = $6, license = $7, is_active = $8, sort_order = $9, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $10 
        RETURNING *`,
-      [name, slug, description, image_url, link, category, is_active, sort_order, id]
+      [name, slug, description, image_url, link, category, license, is_active, sort_order, id]
     )
 
     if (result.rows.length === 0) {

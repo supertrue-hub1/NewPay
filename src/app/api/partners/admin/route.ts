@@ -20,15 +20,25 @@ async function checkTableExists(): Promise<boolean> {
 // GET /api/partners/admin - Получить всех партнёров (включая неактивные)
 export async function GET() {
   try {
+    console.log('DB config:', {
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME
+    })
+    
     const tableExists = await checkTableExists()
+    console.log('Table exists:', tableExists)
+    
     if (!tableExists) {
       return NextResponse.json([])
     }
     const result = await query('SELECT * FROM partners ORDER BY sort_order ASC')
+    console.log('Partners result:', result.rows)
     return NextResponse.json(result.rows)
   } catch (error) {
     console.error('Error fetching partners:', error)
-    return NextResponse.json({ error: 'Failed to fetch partners', details: String(error) }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch partners', details: String(error), stack: (error as Error).stack }, { status: 500 })
   }
 }
 

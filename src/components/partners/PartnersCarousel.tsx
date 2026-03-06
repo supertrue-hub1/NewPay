@@ -13,6 +13,7 @@ export interface Partner {
   image_url?: string
   link?: string
   category?: string
+  license?: string
   is_active?: boolean
   sort_order?: number
 }
@@ -82,6 +83,20 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
     setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
   }
 
+  // Автоплей слайдера
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => {
+        if (prev >= maxIndex) {
+          return 0
+        }
+        return prev + 1
+      })
+    }, 3000) // каждые 3 секунды
+
+    return () => clearInterval(interval)
+  }, [maxIndex])
+
   const visiblePartners = partners.slice(currentIndex, currentIndex + slidesPerView)
 
   return (
@@ -144,6 +159,11 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                   href={partner.link || '#'}
                   target={partner.link ? '_blank' : '_self'}
                   rel={partner.link ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => {
+                    if (!partner.link) {
+                      e.preventDefault()
+                    }
+                  }}
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -152,13 +172,16 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                     bgcolor: '#fff',
                     borderRadius: 2,
                     boxShadow: 1,
-                    textDecoration: 'none',
+                    textDecoration: 'none !important',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                     height: '100%',
                     '&:hover': {
                       transform: 'translateY(-4px)',
                       boxShadow: 3,
+                    },
+                    '&:hover *': {
+                      textDecoration: 'none !important',
                     }
                   }}
                 >
@@ -207,7 +230,7 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                   >
                     {partner.name}
                   </Typography>
-                  {partner.category && (
+                  {partner.license && (
                     <Typography 
                       variant="caption" 
                       sx={{ 
@@ -215,7 +238,7 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                         textAlign: 'center'
                       }}
                     >
-                      {partner.category}
+                      {partner.license}
                     </Typography>
                   )}
                 </Box>
