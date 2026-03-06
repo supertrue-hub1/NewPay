@@ -22,6 +22,7 @@ export const mfoData: MFO[] = [
     inn: '7714010336',
     ogrn: '1127746672160',
     license: 'ЦБ РФ № 2120177001838',
+    seoDescription: 'Первый займ 0% • Одобрение за 2 минуты',
   },
   {
     id: 2,
@@ -43,6 +44,7 @@ export const mfoData: MFO[] = [
     inn: '7702829787',
     ogrn: '1127746890521',
     license: 'ЦБ РФ № 2110177000409',
+    seoDescription: 'Автоматическое одобрение • Круглосуточно',
   },
   {
     id: 3,
@@ -63,6 +65,7 @@ export const mfoData: MFO[] = [
     inn: '7842431531',
     ogrn: '1117847745361',
     license: 'ЦБ РФ № 2110177000191',
+    seoDescription: 'Первый займ бесплатно • Без скрытых комиссий',
   },
   {
     id: 4,
@@ -84,6 +87,7 @@ export const mfoData: MFO[] = [
     inn: '7703427466',
     ogrn: '1187746887729',
     license: 'ЦБ РФ № 1903550009325',
+    seoDescription: 'Даже с просрочками • Мгновенная выдача',
   },
   {
     id: 5,
@@ -104,6 +108,7 @@ export const mfoData: MFO[] = [
     inn: '7702444160',
     ogrn: '1167746311620',
     license: 'ЦБ РФ № 2110177000187',
+    seoDescription: 'Ставка от 0,8% • Деньги за 5 минут',
   },
   {
     id: 6,
@@ -124,6 +129,7 @@ export const mfoData: MFO[] = [
     inn: '7703413904',
     ogrn: '1157746088152',
     license: 'ЦБ РФ № 2110177000783',
+    seoDescription: 'Первый 0% • Продление займа',
   },
   {
     id: 7,
@@ -144,6 +150,7 @@ export const mfoData: MFO[] = [
     inn: '7704035363',
     ogrn: '1157746758096',
     license: 'ЦБ РФ № 2110177000864',
+    seoDescription: 'Бесплатное продление • Cashback',
   },
   {
     id: 8,
@@ -164,5 +171,6 @@ export const mfoData: MFO[] = [
     inn: '7710942004',
     ogrn: '1147746872394',
     license: 'ЦБ РФ № 2110177000879',
+    seoDescription: 'Быстрое оформление • На любую карту',
   },
 ]

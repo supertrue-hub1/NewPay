@@ -17,6 +17,7 @@ export interface MFO {
   badge?: string
   siteUrl?: string
   infoModal?: string
+  seoDescription?: string
   clicks?: number
   conversions?: number
   // JSON-LD Schema данные
@@ -66,6 +67,7 @@ export const useMfoData = () => {
             ogrn: row.ogrn,
             license: row.license,
             infoModal: row.info_modal,
+            seoDescription: row.seo_description,
             clicks: row.clicks,
             conversions: row.conversions,
             pros: row.pros || [],
@@ -108,6 +110,7 @@ export const useMfoData = () => {
           ogrn: mfo.ogrn,
           license: mfo.license,
           info_modal: mfo.infoModal,
+          seo_description: mfo.seoDescription,
           pros: mfo.pros || [],
           cons: mfo.cons || [],
           risks: mfo.risks || [],
@@ -179,6 +182,7 @@ export const useMfoData = () => {
           ogrn: mfo.ogrn,
           license: mfo.license,
           info_modal: mfo.infoModal,
+          seo_description: mfo.seoDescription,
           pros: mfo.pros || [],
           cons: mfo.cons || [],
           risks: mfo.risks || [],
@@ -210,7 +214,8 @@ export const useMfoData = () => {
             inn: row.inn,
             ogrn: row.ogrn,
             license: row.license,
-            infoModal: row.info_modal,
+          infoModal: row.info_modal,
+            seoDescription: row.seo_description,
             pros: row.pros || [],
             cons: row.cons || [],
             risks: row.risks || [],

@@ -69,7 +69,7 @@ const ARTICLE_CATEGORIES = [
 const emptyMfo: Omit<MFO, 'id'> = {
   name: '', logo: '', rating: 4.5, reviews: 0,
   sumMin: 1000, sumMax: 30000, termMin: 5, termMax: 30,
-  percent: 0.8, firstFree: true, instant: true, badge: '', siteUrl: '', infoModal: '',
+  percent: 0.8, firstFree: true, instant: true, badge: '', siteUrl: '', infoModal: '', seoDescription: '',
   pros: [], cons: [], risks: []
 }
 
@@ -886,6 +886,7 @@ export default function AdminPage() {
                   <Grid size={{ xs: 6 }}><TextField fullWidth label="Бейдж" value={formData.badge} onChange={(e) => updateFormField('badge', e.target.value)} /></Grid>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="URL сайта" value={formData.siteUrl} onChange={(e) => updateFormField('siteUrl', e.target.value)} placeholder="https://example.com" InputProps={{ endAdornment: formData.siteUrl ? <Button size="small" href={formData.siteUrl} target="_blank" rel="noopener noreferrer">Открыть</Button> : null }} /></Grid>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="Описание" multiline rows={2} value={formData.infoModal} onChange={(e) => updateFormField('infoModal', e.target.value)} /></Grid>
+                  <Grid size={{ xs: 12 }}><TextField fullWidth label="SEO-подпись (для карточки)" value={formData.seoDescription || ''} onChange={(e) => updateFormField('seoDescription', e.target.value)} placeholder="Первый займ 0% • Одобрение за 2 минуты" helperText="Отображается под названием МФО вместо рейтинга и отзывов" /></Grid>
                   
                   {/* Дополнительные поля "О компании" */}
                   <Grid size={{ xs: 12 }}><Divider sx={{ my: 1 }} /><Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>О компании</Typography></Grid>

@@ -107,12 +107,11 @@ export default function SEOContentAggregator({ data }: SEOContentAggregatorProps
                       <Logo logo={mfo.logo} size={50} />
                       <Box>
                         <Typography variant="h6" sx={{ fontWeight: 700 }}>{mfo.name}</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Rating value={mfo.rating} precision={0.1} size="small" readOnly />
-                          <Typography variant="body2" color="text.secondary">
-                            ({mfo.reviews.toLocaleString()} отзывов)
+                        {mfo.seoDescription && (
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                            {mfo.seoDescription}
                           </Typography>
-                        </Box>
+                        )}
                       </Box>
                     </Box>
                     {mfo.badge && (

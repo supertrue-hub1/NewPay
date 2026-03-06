@@ -15,6 +15,7 @@ export interface MFO {
   badge?: string
   siteUrl?: string
   infoModal?: string
+  seoDescription?: string
   clicks?: number
   conversions?: number
   address?: string
