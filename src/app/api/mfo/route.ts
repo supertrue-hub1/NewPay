@@ -41,15 +41,16 @@ export async function POST(request: Request) {
       inn,
       ogrn,
       license,
-      info_modal
+      info_modal,
+      seo_description
     } = body
 
     const result = await query(
       `INSERT INTO mfo_companies 
-       (name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, badge, site_url, address, phone, inn, ogrn, license, info_modal) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) 
+       (name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, badge, site_url, address, phone, inn, ogrn, license, info_modal, seo_description) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) 
        RETURNING *`,
-      [name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, badge, site_url, address, phone, inn, ogrn, license, info_modal]
+      [name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, badge, site_url, address, phone, inn, ogrn, license, info_modal, seo_description]
     )
 
     return NextResponse.json(result.rows[0], { status: 201 })
@@ -84,6 +85,7 @@ export async function PUT(request: Request) {
       ogrn,
       license,
       info_modal,
+      seo_description,
       clicks,
       conversions
     } = body
@@ -93,11 +95,11 @@ export async function PUT(request: Request) {
        SET name = $1, logo = $2, rating = $3, reviews = $4, sum_min = $5, sum_max = $6, 
            term_min = $7, term_max = $8, percent = $9, first_free = $10, instant = $11, 
            badge = $12, site_url = $13, address = $14, phone = $15, inn = $16, ogrn = $17, 
-           license = $18, info_modal = $19, clicks = $20, conversions = $21, updated_at = CURRENT_TIMESTAMP
-       WHERE id = $22 
+           license = $18, info_modal = $19, seo_description = $20, clicks = $21, conversions = $22, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $23 
        RETURNING *`,
       [name, logo, rating, reviews, sum_min, sum_max, term_min, term_max, percent, first_free, instant, 
-       badge, site_url, address, phone, inn, ogrn, license, info_modal, clicks, conversions, id]
+       badge, site_url, address, phone, inn, ogrn, license, info_modal, seo_description, clicks, conversions, id]
     )
 
     if (result.rows.length === 0) {
