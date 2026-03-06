@@ -733,11 +733,68 @@ export default function HomeContent() {
                   {tabValue === 3 && (
                     <Box>
                       <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }}>О компании {selectedMfo.name}:</Typography>
-                      {selectedMfo.infoModal ? (
-                        <Typography variant="body1" sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: 'text.secondary' }}>
-                          {selectedMfo.infoModal}
-                        </Typography>
-                      ) : (
+                      
+                      {/* Описание компании */}
+                      {selectedMfo.infoModal && (
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="body1" sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: 'text.secondary' }}>
+                            {selectedMfo.infoModal}
+                          </Typography>
+                        </Box>
+                      )}
+                      
+                      {/* Реквизиты компании */}
+                      {(selectedMfo.inn || selectedMfo.ogrn || selectedMfo.license || selectedMfo.address || selectedMfo.phone) && (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: '#1a237e' }}>
+                            Реквизиты компании:
+                          </Typography>
+                          <Grid container spacing={1.5}>
+                            {selectedMfo.inn && (
+                              <Grid size={{ xs: 12 }}>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>ИНН:</Typography>
+                                  <Typography variant="body2">{selectedMfo.inn}</Typography>
+                                </Box>
+                              </Grid>
+                            )}
+                            {selectedMfo.ogrn && (
+                              <Grid size={{ xs: 12 }}>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>ОГРН:</Typography>
+                                  <Typography variant="body2">{selectedMfo.ogrn}</Typography>
+                                </Box>
+                              </Grid>
+                            )}
+                            {selectedMfo.license && (
+                              <Grid size={{ xs: 12 }}>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>Лицензия:</Typography>
+                                  <Typography variant="body2">{selectedMfo.license}</Typography>
+                                </Box>
+                              </Grid>
+                            )}
+                            {selectedMfo.address && (
+                              <Grid size={{ xs: 12 }}>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>Адрес:</Typography>
+                                  <Typography variant="body2">{selectedMfo.address}</Typography>
+                                </Box>
+                              </Grid>
+                            )}
+                            {selectedMfo.phone && (
+                              <Grid size={{ xs: 12 }}>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>Телефон:</Typography>
+                                  <Typography variant="body2">{selectedMfo.phone}</Typography>
+                                </Box>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </Box>
+                      )}
+                      
+                      {!selectedMfo.infoModal && !selectedMfo.inn && !selectedMfo.ogrn && !selectedMfo.license && !selectedMfo.address && !selectedMfo.phone && (
                         <Box sx={{ textAlign: 'center', py: 4, color: 'text.secondary' }}>
                           <InfoIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
                           <Typography variant="body1">Информация о МФО пока не добавлена</Typography>
