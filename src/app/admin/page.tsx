@@ -19,6 +19,7 @@ import { useLoansInfo } from '@/data/loansInfo'
 import { usePageData } from '@/data/pages'
 import AdminLayout from '@/components/AdminLayout'
 import Logo from '@/components/Logo'
+import UploadZone from '@/components/ui/UploadZone'
 
 // Константа пароля
 const ADMIN_PASSWORD = '546815hH'
@@ -815,16 +816,28 @@ export default function AdminPage() {
                 <>
                   <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Название" value={formData.name} onChange={(e) => updateFormField('name', e.target.value)} /></Grid>
                   <Grid size={{ xs: 12, md: 6 }}>
-                    <Box sx={{ border: '1px dashed #ccc', borderRadius: 1, p: 2, textAlign: 'center' }}>
-                      {formData.logo ? (
-                        <Box sx={{ mb: 2 }}>
-                          <Box sx={{ width: 60, height: 60, borderRadius: 2, bgcolor: '#1a237e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 24, mx: 'auto', mb: 1 }}>{formData.logo}</Box>
-                          <Typography variant="caption" display="block" color="text.secondary">{formData.logo}</Typography>
-                        </Box>
-                      ) : <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Логотип не загружен</Typography>}
-                      <Button variant="outlined" component="label" size="small">Загрузить лого<input type="file" accept="image/*" hidden onChange={(e) => { const file = (e.target as HTMLInputElement).files?.[0]; if (file) updateFormField('logo', file.name) }} /></Button>
-                    </Box>
-                    <TextField fullWidth label="Или загрузка лого по URL" size="small" sx={{ mt: 1 }} value={formData.logo?.startsWith('http') ? formData.logo : ''} onChange={(e) => updateFormField('logo', e.target.value)} placeholder="https://example.com/logo.png" />
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>Логотип МФО</Typography>
+                    {formData.logo && (
+                      <Box sx={{ mb: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box 
+                          component="img"
+                          src={formData.logo.startsWith('http') ? formData.logo : formData.logo}
+                          alt="Логотип"
+                          sx={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 1, bgcolor: '#fff' }}
+                          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                            e.currentTarget.style.display = 'none'
+                          }}
+                        />
+                        <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+                          {formData.logo.length > 40 ? formData.logo.substring(0, 40) + '...' : formData.logo}
+                        </Typography>
+                        <Button size="small" color="error" onClick={() => updateFormField('logo', '')}>Удалить</Button>
+                      </Box>
+                    )}
+                    <UploadZone 
+                      onUploadSuccess={(img) => updateFormField('logo', img.url)}
+                    />
+                    <TextField fullWidth label="Или URL лого" size="small" sx={{ mt: 1 }} value={formData.logo?.startsWith('http') ? formData.logo : ''} onChange={(e) => updateFormField('logo', e.target.value)} placeholder="https://example.com/logo.png" />
                   </Grid>
                   <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Рейтинг" type="number" inputProps={{ step: 0.1 }} value={formData.rating} onChange={(e) => updateFormField('rating', parseFloat(e.target.value))} /></Grid>
                   <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Отзывы" type="number" value={formData.reviews} onChange={(e) => updateFormField('reviews', parseInt(e.target.value))} /></Grid>
@@ -859,18 +872,28 @@ export default function AdminPage() {
                   
                   {/* Логотип карты - загрузка и URL */}
                   <Grid size={{ xs: 12, md: 6 }}>
-                    <Box sx={{ border: '1px dashed #ccc', borderRadius: 1, p: 2, textAlign: 'center' }}>
-                      {formData.logo ? (
-                        <Box sx={{ mb: 2 }}>
-                          <Box sx={{ width: 60, height: 40, borderRadius: 1, bgcolor: '#e53935', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 18, mx: 'auto', mb: 1 }}>
-                            {formData.logo}
-                          </Box>
-                          <Typography variant="caption" display="block" color="text.secondary">{formData.logo}</Typography>
-                        </Box>
-                      ) : <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Логотип не загружен</Typography>}
-                      <Button variant="outlined" component="label" size="small">Загрузить лого<input type="file" accept="image/*" hidden onChange={(e) => { const file = (e.target as HTMLInputElement).files?.[0]; if (file) updateFormField('logo', file.name) }} /></Button>
-                    </Box>
-                    <TextField fullWidth label="Или загрузка лого по URL" size="small" sx={{ mt: 1 }} value={formData.logo?.startsWith('http') ? formData.logo : ''} onChange={(e) => updateFormField('logo', e.target.value)} placeholder="https://example.com/logo.png" />
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>Логотип карты</Typography>
+                    {formData.logo && (
+                      <Box sx={{ mb: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box 
+                          component="img"
+                          src={formData.logo.startsWith('http') ? formData.logo : formData.logo}
+                          alt="Логотип"
+                          sx={{ width: 60, height: 40, objectFit: 'contain', borderRadius: 1, bgcolor: '#fff' }}
+                          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                            e.currentTarget.style.display = 'none'
+                          }}
+                        />
+                        <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+                          {formData.logo.length > 40 ? formData.logo.substring(0, 40) + '...' : formData.logo}
+                        </Typography>
+                        <Button size="small" color="error" onClick={() => updateFormField('logo', '')}>Удалить</Button>
+                      </Box>
+                    )}
+                    <UploadZone 
+                      onUploadSuccess={(img) => updateFormField('logo', img.url)}
+                    />
+                    <TextField fullWidth label="Или URL лого" size="small" sx={{ mt: 1 }} value={formData.logo?.startsWith('http') ? formData.logo : ''} onChange={(e) => updateFormField('logo', e.target.value)} placeholder="https://example.com/logo.png" />
                   </Grid>
                   
                   <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Рейтинг" type="number" inputProps={{ step: 0.1 }} value={formData.rating} onChange={(e) => updateFormField('rating', parseFloat(e.target.value))} /></Grid>
@@ -896,54 +919,26 @@ export default function AdminPage() {
                   {/* Загрузка обложки статьи */}
                   <Grid size={{ xs: 12 }}>
                     <Typography variant="h6" sx={{ mb: 2 }}>Обложка статьи</Typography>
-                    <Box sx={{ border: '2px dashed #1976d2', borderRadius: 2, p: 1, textAlign: 'center', bgcolor: '#f5f8ff', overflow: 'hidden' }}>
-                      {formData.image ? (
-                        <Box sx={{ width: '100%', maxWidth: 400, height: { xs: 120, sm: 160, md: 200 }, mx: 'auto', overflow: 'hidden', borderRadius: 1, bgcolor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Box 
-                            component="img"
-                            src={
-                              formData.image.startsWith('data:') ? formData.image :
-                              formData.image.startsWith('http') ? formData.image :
-                              `/images/${formData.image}`
-                            }
-                            alt="Обложка"
-                            sx={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain' }}
-                            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                              e.currentTarget.style.display = 'none'
-                            }}
-                          />
-                        </Box>
-                      ) : (
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                          Изображение не загружено
-                        </Typography>
-                      )}
-                      <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1, wordBreak: 'break-all' }}>
-                        {formData.image && typeof formData.image === 'string' && formData.image.length > 60 ? formData.image.substring(0, 60) + '...' : formData.image}
-                      </Typography>
-                      <Button 
-                        variant="contained" 
-                        component="label"
-                        startIcon={<Add />}
-                      >
-                        Загрузить изображение
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          hidden 
-                          onChange={(e) => {
-                            const file = (e.target as HTMLInputElement).files?.[0]
-                            if (file) {
-                              const reader = new FileReader()
-                              reader.onload = (event) => {
-                                updateFormField('image', event.target?.result as string)
-                              }
-                              reader.readAsDataURL(file)
-                            }
+                    {formData.image && (
+                      <Box sx={{ mb: 2, p: 2, bgcolor: '#f5f8ff', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box 
+                          component="img"
+                          src={formData.image.startsWith('data:') ? formData.image : formData.image.startsWith('http') ? formData.image : `/images/${formData.image}`}
+                          alt="Обложка"
+                          sx={{ width: 100, height: 70, objectFit: 'cover', borderRadius: 1 }}
+                          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                            e.currentTarget.style.display = 'none'
                           }}
                         />
-                      </Button>
-                    </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+                          {formData.image.length > 50 ? formData.image.substring(0, 50) + '...' : formData.image}
+                        </Typography>
+                        <Button size="small" color="error" onClick={() => updateFormField('image', '')}>Удалить</Button>
+                      </Box>
+                    )}
+                    <UploadZone 
+                      onUploadSuccess={(img) => updateFormField('image', img.url)}
+                    />
                     <TextField 
                       fullWidth 
                       label="Или URL изображения" 
