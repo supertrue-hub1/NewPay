@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { query } from '@/lib/db'
 import { Article, ArticlesApiResponse } from '@/types/article'
 import { articles as staticArticles, Article as StaticArticle } from '@/data/articles-data'
 
@@ -10,32 +11,90 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category')
   const slug = searchParams.get('slug')
 
+  // Пробуем получить из БД
   try {
-    // Пробуем подключиться к БД
-    const db = await connectToDatabase()
+    let whereClause = "WHERE status = 'PUBLISHED'"
+    const params: any[] = []
+    let paramIndex = 1
     
-    if (db) {
-      // Запрос из БД
-      let whereClause = "WHERE status = 'PUBLISHED'"
-      const params: any[] = []
+    if (slug) {
+      whereClause += ` AND slug = $${paramIndex}`
+      params.push(slug)
+      paramIndex++
+    } else if (category) {
+      whereClause += ` AND category = $${paramIndex}`
+      params.push(category)
+      paramIndex++
+    }
+    
+    const offset = (page - 1) * limit
+    
+    // Получаем общее количество
+    const countResult = await query(`SELECT COUNT(*) as total FROM articles ${whereClause}`, params)
+    const total = parseInt(countResult.rows[0]?.total || '0', 10)
+    
+    if (total > 0) {
+      // Есть статьи в БД
+      const dataQuery = `SELECT * FROM articles ${whereClause} ORDER BY views DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`
+      const dataResult = await query(dataQuery, [...params, limit, offset])
       
-      if (slug) {
-        whereClause += ' AND slug = $1'
-        params.push(slug)
-      } else if (category) {
-        whereClause += ' AND category = $1'
-        params.push(category)
+      const articles = dataResult.rows.map((row: any) => ({
+        id: row.id,
+        slug: row.slug,
+        title: row.title,
+        excerpt: row.excerpt,
+        content: row.content || row.excerpt,
+        coverImage: row.cover_image || row.coverImage,
+        category: row.category,
+        author: row.author,
+        status: row.status,
+        views: row.views || 0,
+        readingTime: row.reading_time || Math.ceil((row.content?.length || 200) / 1000),
+        createdAt: row.created_at || row.createdAt,
+        updatedAt: row.updated_at || row.updatedAt,
+        publishedAt: row.published_at || row.publishedAt,
+        tags: row.tags ? row.tags.split(',') : []
+      }))
+
+      // Получаем первую статью для featured
+      let featured = null
+      if (page === 1 && !slug) {
+        const featuredResult = await query(`SELECT * FROM articles WHERE status = 'PUBLISHED' ORDER BY views DESC LIMIT 1`)
+        if (featuredResult.rows[0]) {
+          const row = featuredResult.rows[0]
+          featured = {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            excerpt: row.excerpt,
+            content: row.content || row.excerpt,
+            coverImage: row.cover_image || row.coverImage,
+            category: row.category,
+            author: row.author,
+            status: row.status,
+            views: row.views || 0,
+            readingTime: row.reading_time || Math.ceil((row.content?.length || 200) / 1000),
+            createdAt: row.created_at,
+            updatedAt: row.updated_at,
+            publishedAt: row.published_at,
+            tags: row.tags ? row.tags.split(',') : []
+          }
+        }
+      }
+
+      const response: ArticlesApiResponse = {
+        success: true,
+        data: articles,
+        featured: featured || undefined,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
       }
       
-      const offset = (page - 1) * limit
-      const countQuery = `SELECT COUNT(*) as total FROM articles ${whereClause}`
-      const dataQuery = `SELECT * FROM articles ${whereClause} ORDER BY views DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`
-      
-      // Выполняем запросы...
-      // (код для работы с PostgreSQL)
+      return NextResponse.json(response)
     }
   } catch (error) {
-    console.log('Database not available, using static data')
+    console.log('Database not available, using static data:', error)
   }
   
   // Fallback: статические данные
@@ -126,9 +185,3 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(response)
 }
 
-// Вспомогательная функция для подключения к БД
-async function connectToDatabase() {
-  // Здесь будет подключение к PostgreSQL через pg или Prisma
-  // Для демонстрации возвращаем null - используем статические данные
-  return null
-}
