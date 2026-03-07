@@ -56,7 +56,7 @@ export async function GET() {
           cashback INTEGER DEFAULT 0,
           grace_period INTEGER DEFAULT 0,
           annual_fee INTEGER DEFAULT 0,
-          limit INTEGER DEFAULT 0,
+          "limit" INTEGER DEFAULT 0,
           percent DECIMAL(5,2) DEFAULT 0,
           badge VARCHAR(255),
           features TEXT[],

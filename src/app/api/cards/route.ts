@@ -37,7 +37,7 @@ async function createCardsTable() {
       cashback INTEGER DEFAULT 0,
       grace_period INTEGER DEFAULT 0,
       annual_fee INTEGER DEFAULT 0,
-      limit INTEGER DEFAULT 0,
+      "limit" INTEGER DEFAULT 0,
       percent DECIMAL(5,2) DEFAULT 0,
       badge VARCHAR(255),
       features TEXT[],
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     } = body
 
     const result = await query(
-      `INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, limit, percent, badge, features, site_url)
+      `INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, "limit", percent, badge, features, site_url)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
       [name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, limit, percent, badge, features, site_url]
     )
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
         const { name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, limit, percent, badge, features, site_url } = body
         
         const result = await query(
-          `INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, limit, percent, badge, features, site_url)
+          `INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, "limit", percent, badge, features, site_url)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
           [name, bank, logo, rating || 0, reviews || 0, cashback || 0, grace_period || 0, annual_fee || 0, limit || 0, percent || 0, badge, features, site_url]
         )
@@ -159,7 +159,7 @@ export async function PUT(request: NextRequest) {
     const result = await query(
       `UPDATE credit_cards 
        SET name = $1, bank = $2, logo = $3, rating = $4, reviews = $5, cashback = $6, 
-           grace_period = $7, annual_fee = $8, limit = $9, percent = $10, badge = $11, 
+           grace_period = $7, annual_fee = $8, "limit" = $9, percent = $10, badge = $11, 
            features = $12, site_url = $13, updated_at = CURRENT_TIMESTAMP
        WHERE id = $14 
        RETURNING *`,
