@@ -12,6 +12,7 @@ import PartnersCarousel from '@/components/partners/PartnersCarousel'
 import { mfoData as staticMfoData } from '@/data/mfo-data'
 import { faqData as staticFaqData } from '@/data/faq-data'
 import Link from 'next/link'
+import BlogSection from '@/components/BlogSection'
 
 const STORAGE_KEY_MFO = 'mfo'
 const STORAGE_KEY_FAQ = 'faq'
@@ -816,6 +817,9 @@ export default function HomeContent() {
             Перейти ко всем предложениям
           </Button>
         </Box>
+
+        {/* Секция блога */}
+        <BlogSection />
 
         <Box sx={{ mt: 8 }}>
           <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
