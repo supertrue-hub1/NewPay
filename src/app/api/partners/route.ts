@@ -1,4 +1,4 @@
-  import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 // GET /api/partners - Получить всех партнёров
@@ -41,12 +41,13 @@ export async function POST(request: Request) {
       sort_order = 0
     } = body
 
-    const result = await query(
-      `INSERT INTO partners (name, slug, description, image_url, link, category, license, is_active, sort_order) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
-       RETURNING *`,
-      [name, slug, description, image_url, link, category, license, is_active, sort_order]
-    )
+    // Проверяем существование таблицы
+    const checkTable = await query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'partners'
+      )
     `)
 
     if (!checkTable.rows[0].exists) {
@@ -54,10 +55,10 @@ export async function POST(request: Request) {
     }
 
     const result = await query(
-      `INSERT INTO partners (name, slug, description, image_url, link, category, is_active, sort_order) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      `INSERT INTO partners (name, slug, description, image_url, link, category, license, is_active, sort_order) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
        RETURNING *`,
-      [name, slug, description, image_url, link, category, is_active, sort_order]
+      [name, slug, description, image_url, link, category, license, is_active, sort_order]
     )
 
     return NextResponse.json(result.rows[0], { status: 201 })
@@ -126,3 +127,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Failed to delete partner' }, { status: 500 })
   }
 }
+
