@@ -803,8 +803,7 @@ export default function AdminPage() {
               (editingItem ? 'Редактирование' : 'Добавление') + ' ' + (
                 activeTab === 'mfo' ? 'МФО' : 
                 activeTab === 'cards' ? 'карты' : 
-                activeTab === 'blog' ? 'статьи' : 
-                activeTab === 'promokody' ? 'промокода' : 'FAQ'
+                activeTab === 'blog' ? 'статьи' : 'FAQ'
               )
             }
             <IconButton onClick={() => setOpenDialog(false)}><Close /></IconButton>
@@ -1016,76 +1015,6 @@ export default function AdminPage() {
                 <>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="Вопрос" value={formData.question} onChange={(e) => updateFormField('question', e.target.value)} /></Grid>
                   <Grid size={{ xs: 12 }}><TextField fullWidth label="Ответ" multiline rows={4} value={formData.answer} onChange={(e) => updateFormField('answer', e.target.value)} /></Grid>
-                </>
-              )}
-
-              {/* Промокоды */}
-              {activeTab === 'promokody' && (
-                <>
-                  {/* Загрузка логотипа */}
-                  <Grid size={{ xs: 12 }}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Логотип МФО</Typography>
-                    <Box sx={{ border: '2px dashed #4f46e5', borderRadius: 2, p: 3, textAlign: 'center', bgcolor: '#f5f8ff' }}>
-                      {formData.logo ? (
-                        <Box sx={{ mb: 2 }}>
-                          <Box 
-                            component="img"
-                            src={formData.logo.startsWith('data:') ? formData.logo : formData.logo.startsWith('http') ? formData.logo : `/images/${formData.logo}`}
-                            alt="Логотип"
-                            sx={{ width: 80, height: 80, borderRadius: 2, mx: 'auto', objectFit: 'contain', bgcolor: 'white', p: 1 }}
-                            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                              e.currentTarget.style.display = 'none'
-                            }}
-                          />
-                          <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
-                            {typeof formData.logo === 'string' && formData.logo.length > 50 ? formData.logo.substring(0, 50) + '...' : formData.logo}
-                          </Typography>
-                        </Box>
-                      ) : (
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                          Логотип не загружен
-                        </Typography>
-                      )}
-                      <Button 
-                        variant="contained" 
-                        component="label"
-                        startIcon={<Add />}
-                      >
-                        Загрузить логотип
-                        <input 
-                          type="file" 
-                          accept="image/*,.svg" 
-                          hidden 
-                          onChange={(e) => {
-                            const file = (e.target as HTMLInputElement).files?.[0]
-                            if (file) {
-                              const reader = new FileReader()
-                              reader.onload = (event) => {
-                                updateFormField('logo', event.target?.result as string)
-                              }
-                              reader.readAsDataURL(file)
-                            }
-                          }}
-                        />
-                      </Button>
-                    </Box>
-                    <TextField 
-                      fullWidth 
-                      label="Или URL логотипа" 
-                      size="small" 
-                      sx={{ mt: 2 }}
-                      value={formData.logo?.startsWith('http') ? formData.logo : ''} 
-                      onChange={(e) => updateFormField('logo', e.target.value)} 
-                      placeholder="https://example.com/logo.png или https://example.com/logo.svg"
-                    />
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Название МФО" value={formData.mfoName || ''} onChange={(e) => updateFormField('mfoName', e.target.value)} /></Grid>
-                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Промокод" value={formData.promoCode || ''} onChange={(e) => updateFormField('promoCode', e.target.value)} /></Grid>
-                  <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Скидка" value={formData.discount || ''} onChange={(e) => updateFormField('discount', e.target.value)} placeholder="Например: 1000₽ или 50%" /></Grid>
-                  <Grid size={{ xs: 12 }}><TextField fullWidth label="Условия" multiline rows={3} value={formData.conditions || ''} onChange={(e) => updateFormField('conditions', e.target.value)} /></Grid>
-                  <Grid size={{ xs: 12 }}><TextField fullWidth label="URL сайта" value={formData.siteUrl || ''} onChange={(e) => updateFormField('siteUrl', e.target.value)} placeholder="https://example.com" /></Grid>
-                  <Grid size={{ xs: 12 }}><FormControlLabel control={<Switch checked={formData.isExclusive || false} onChange={(e) => updateFormField('isExclusive', e.target.checked)} />} label="Эксклюзивный промокод" /></Grid>
                 </>
               )}
 
