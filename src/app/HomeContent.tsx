@@ -546,35 +546,6 @@ export default function HomeContent() {
                     Сравнить все МФО
                   </Button>
                 </Box>
-
-                {/* Статистика */}
-                <Box sx={{ display: 'flex', gap: 3, justifyContent: { xs: 'center', lg: 'flex-start' }, flexWrap: 'wrap' }}>
-                  {[
-                    { icon: '🏦', value: '50+', label: 'МФО' },
-                    { icon: '⏱️', value: '5 мин', label: 'одобрение' },
-                    { icon: '💰', value: '98%', label: 'на карту' },
-                  ].map((stat, idx) => (
-                    <Box
-                      key={idx}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1,
-                        px: 2,
-                        py: 1,
-                        bgcolor: 'rgba(255,255,255,0.7)',
-                        borderRadius: 2,
-                        border: '1px solid #e0f2fe',
-                      }}
-                    >
-                      <span style={{ fontSize: 20 }}>{stat.icon}</span>
-                      <Box>
-                        <Box sx={{ fontWeight: 700, color: '#111827', fontSize: 16 }}>{stat.value}</Box>
-                        <Box sx={{ fontSize: 12, color: '#6b7280' }}>{stat.label}</Box>
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
               </Box>
             </Grid>
 
