@@ -13,7 +13,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
  <ThemeRegistry>
  <Header />
  <UpperFooter />
- <Box sx={{ pt: '100px' }}>
+ <Box sx={{ pt: { xs: '90px', md: '80px' } }}>
  {children}
  </Box>
  <Footer />

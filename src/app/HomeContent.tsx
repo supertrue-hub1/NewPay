@@ -387,32 +387,12 @@ export default function HomeContent() {
  <>
 <Box sx={{ minHeight: '100vh', py: 4 }}>
  <Container maxWidth="lg">
-      {/* Hero секция - новый дизайн */}
+      {/* Hero секция */}
       <Box
         sx={{
-          position: 'relative',
-          mb: 8,
-          py: { xs: 4, md: 6 },
+          mb: 6,
+          py: { xs: 2, md: 3 },
           px: { xs: 2, md: 4 },
-          borderRadius: 4,
-          overflow: 'hidden',
-          background: 'linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 50%, #ffffff 100%)',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.15), transparent 50%), radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.1), transparent 40%)',
-            pointerEvents: 'none',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'radial-gradient(rgba(14, 165, 233, 0.3) 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-            opacity: 0.4,
-            pointerEvents: 'none',
-          },
         }}
       >
         <Box sx={{ position: 'relative', zIndex: 1 }}>
