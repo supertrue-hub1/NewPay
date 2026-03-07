@@ -1,331 +1,458 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react';
 import { 
-  Container, Typography, Box, Card, CardContent, Grid, Chip, Button, 
-  Avatar, Stack, Pagination
-} from '@mui/material'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Article } from '@/types/article'
-import { articles as staticArticles, Article as StaticArticle } from '@/data/articles-data'
-import StarIcon from '@mui/icons-material/Star'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+  Container, Typography, Box, Card, CardContent, Grid, Chip, 
+  Stack, TextField, InputAdornment, Divider, CircularProgress
+} from '@mui/material';
+import Link from 'next/link';
+import { Article, ArticlesApiResponse } from '@/types/article';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import SearchIcon from '@mui/icons-material/Search';
 
-// Преобразование статей
-function getArticles(page: number, limit: number) {
-  const articles: Article[] = staticArticles
-    .filter((a: StaticArticle) => a.status === 'PUBLISHED')
-    .map((a: StaticArticle) => ({
-      id: a.id,
-      slug: a.slug,
-      title: a.title,
-      excerpt: a.excerpt,
-      content: a.content || a.excerpt,
-      coverImage: a.image,
-      category: a.category,
-      author: a.author,
-      status: a.status as 'DRAFT' | 'PUBLISHED',
-      views: a.views || 0,
-      readingTime: Math.ceil((a.content?.length || 200) / 1000),
-      createdAt: new Date(a.date),
-      updatedAt: new Date(a.date),
-      publishedAt: new Date(a.date),
-      tags: a.tags
-    }))
+// Цвета для категорий
+const CATEGORY_COLORS: Record<string, string> = {
+  'Советы': '#10b981',
+  'Новости МФО': '#6366f1',
+  'Финансы': '#0ea5e9',
+  'Законодательство': '#f59e0b',
+  'Акции': '#ec4899',
+  'Рейтинги': '#8b5cf6',
+};
 
-  const featured = page === 1 ? articles[0] : null
-  const totalPages = Math.ceil(articles.length / limit)
-  const paginatedArticles = page === 1 ? articles.slice(1, limit + 1) : articles.slice((page - 1) * limit, page * limit)
-
-  return { articles: paginatedArticles, featured, total: articles.length, totalPages }
+function PostCard({ article }: { article: Article }) {
+  const color = CATEGORY_COLORS[article.category] || '#10b981';
+  
+  return (
+    <Card
+      elevation={0}
+      sx={{
+        height: '100%',
+        borderRadius: 3,
+        border: '1px solid #e2e8f0',
+        transition: 'all 0.2s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        '&:hover': {
+          boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
+          borderColor: 'transparent',
+          transform: 'translateY(-2px)',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: 4,
+          bgcolor: color,
+          borderRadius: '12px 12px 0 0',
+        }}
+      />
+      <CardContent sx={{ p: 2.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Chip
+          label={article.category}
+          size="small"
+          sx={{
+            alignSelf: 'flex-start',
+            bgcolor: `${color}15`,
+            color: color,
+            fontWeight: 500,
+            fontSize: '0.7rem',
+            height: 22,
+            mb: 1.5,
+          }}
+        />
+        <Typography
+          component={Link}
+          href={`/articles/${article.slug}`}
+          sx={{
+            fontWeight: 600,
+            fontSize: '1rem',
+            color: '#0f172a',
+            mb: 1,
+            lineHeight: 1.4,
+            textDecoration: 'none',
+            '&:hover': {
+              color: '#10b981',
+            },
+          }}
+        >
+          {article.title}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: '0.8rem',
+            color: '#64748b',
+            lineHeight: 1.5,
+            mb: 2,
+            flex: 1,
+          }}
+        >
+          {article.excerpt}
+        </Typography>
+        <Divider sx={{ my: 1.5, borderColor: '#f1f5f9' }} />
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+            {typeof article.views === 'number' ? article.views.toLocaleString() : '0'} просмотров
+          </Typography>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <AccessTimeIcon sx={{ fontSize: 14, color: '#94a3b8' }} />
+            <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+              {article.readingTime || 5} мин
+            </Typography>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
 }
 
-// Категории
-function getCategories() {
-  const categories: Record<string, number> = {}
-  staticArticles
-    .filter((a: StaticArticle) => a.status === 'PUBLISHED')
-    .forEach((a: StaticArticle) => {
-      categories[a.category] = (categories[a.category] || 0) + 1
-    })
-  return Object.entries(categories).map(([name, count]) => ({ name, count }))
-}
-
-// Популярные статьи
-function getPopularArticles() {
-  return [...staticArticles]
-    .filter((a: StaticArticle) => a.status === 'PUBLISHED')
-    .sort((a: StaticArticle, b: StaticArticle) => (b.views || 0) - (a.views || 0))
-    .slice(0, 5)
+interface ArticlesData {
+  articles: Article[];
+  featured: Article | null;
+  total: number;
+  totalPages: number;
+  categories: Record<string, number>;
 }
 
 export default function ArticlesPage() {
-  const [page, setPage] = useState(1)
-  const [data, setData] = useState<{ articles: Article[], featured: Article | null, total: number, totalPages: number } | null>(null)
+  const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [data, setData] = useState<ArticlesData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchArticles = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.set('page', page.toString());
+      params.set('limit', '9');
+      if (selectedCategory) {
+        params.set('category', selectedCategory);
+      }
+
+      const response = await fetch(`/api/articles?${params.toString()}`);
+      const result: ArticlesApiResponse = await response.json();
+
+      if (result.success) {
+        // Получаем категории из всех статей
+        const categoriesResponse = await fetch('/api/articles?page=1&limit=100');
+        const categoriesResult: ArticlesApiResponse = await categoriesResponse.json();
+        
+        const categories: Record<string, number> = {};
+        if (categoriesResult.data) {
+          categoriesResult.data.forEach((article: Article) => {
+            categories[article.category] = (categories[article.category] || 0) + 1;
+          });
+        }
+
+        setData({
+          articles: result.data || [],
+          featured: result.featured || null,
+          total: result.total || 0,
+          totalPages: result.totalPages || 1,
+          categories
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, selectedCategory]);
 
   useEffect(() => {
-    setData(getArticles(page, 9))
-  }, [page])
+    fetchArticles();
+  }, [fetchArticles]);
 
-  const categories = getCategories()
-  const popularArticles = getPopularArticles()
+  // Фильтрация по поиску на клиенте (для статических данных)
+  const filteredArticles = data?.articles?.filter(article => 
+    searchQuery ? article.title.toLowerCase().includes(searchQuery.toLowerCase()) : true
+  ) || [];
 
-  if (!data) return null
+  if (!data && loading) {
+    return (
+      <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const total = data?.total || 0;
+  const categories = data?.categories || {};
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 6, pt: 4 }}>
-
+    <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', pb: 6, pt: 4 }}>
       <Container maxWidth="lg">
-        <Typography variant="h3" component="h1" sx={{ fontWeight: 800, mb: 1 }}>
-          Статьи о займах и финансах
-        </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 4, fontWeight: 400 }}>
-          Полезные материалы о микрозаймах, кредитных картах и управлении личными финансами
-        </Typography>
+        {/* Page Header */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: '1.75rem', md: '2.25rem' },
+              color: '#0f172a',
+              letterSpacing: '-0.03em',
+              mb: 1,
+            }}
+          >
+            Блог
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '0.9rem',
+              color: '#64748b',
+              maxWidth: 500,
+            }}
+          >
+            Полезные статьи о микрофинансах, советы заемщикам и новости рынка
+          </Typography>
+        </Box>
 
-        <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 8 }}>
-            {/* Featured Article - Герой дня */}
-            {data.featured && page === 1 && (
-              <Box sx={{ mb: 4 }}>
-                <Typography variant="h5" sx={{ fontWeight: 700, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 4, height: 24, bgcolor: '#667eea', borderRadius: 1 }} />
-                  Герой дня
-                </Typography>
-                <Card 
-                  component={Link}
-                  href={`/articles/${data.featured.slug}`}
+        {/* Search & Categories */}
+        <Card
+          elevation={0}
+          sx={{
+            p: { xs: 2, md: 3 },
+            mb: 4,
+            bgcolor: 'white',
+            borderRadius: 3,
+            border: '1px solid #e2e8f0',
+          }}
+        >
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="stretch">
+            <TextField
+              placeholder="Поиск статей..."
+              size="small"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{
+                maxWidth: { md: 300 },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  bgcolor: '#f8fafc',
+                  '& fieldset': { borderColor: '#e2e8f0' },
+                  '&:hover fieldset': { borderColor: '#cbd5e1' },
+                  '&.Mui-focused fieldset': { borderColor: '#10b981' },
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: '#94a3b8', fontSize: 20 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+              <Chip
+                label={`Все статьи (${total})`}
+                onClick={() => { setSelectedCategory(null); setPage(1); }}
+                sx={{
+                  bgcolor: !selectedCategory ? '#0f172a' : '#f1f5f9',
+                  color: !selectedCategory ? 'white' : '#475569',
+                  fontWeight: 500,
+                  fontSize: '0.8rem',
+                  height: 32,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                }}
+              />
+              {Object.entries(categories).map(([name, count]) => (
+                <Chip
+                  key={name}
+                  label={`${name} (${count})`}
+                  onClick={() => { setSelectedCategory(name); setPage(1); }}
                   sx={{ 
-                    textDecoration: 'none',
+                    bgcolor: selectedCategory === name ? '#0f172a' : '#f1f5f9',
+                    color: selectedCategory === name ? 'white' : '#475569',
+                    fontWeight: 500,
+                    fontSize: '0.8rem',
+                    height: 32,
                     borderRadius: 2, 
-                    overflow: 'hidden',
-                    transition: 'all 0.3s',
-                    '&:hover': { transform: 'translateY(-4px)', boxShadow: 6 }
+                    cursor: 'pointer',
                   }}
-                >
-                  <Grid container>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Box sx={{ position: 'relative', height: { xs: 200, md: 280 } }}>
-                        {data.featured.coverImage ? (
-                          <Image src={data.featured.coverImage} alt={data.featured.title} fill style={{ objectFit: 'cover' }} />
-                        ) : (
-                          <Box sx={{ height: '100%', bgcolor: '#667eea', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography variant="h1" sx={{ color: 'white', fontWeight: 700 }}>{data.featured.category.charAt(0)}</Typography>
-                          </Box>
-                        )}
-                        <Chip label={data.featured.category} size="small" sx={{ position: 'absolute', top: 12, left: 12, bgcolor: '#667eea', color: 'white' }} />
-                      </Box>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', p: 3 }}>
-                        <Typography variant="h5" component="h2" sx={{ fontWeight: 700, mb: 2, color: '#1a237e' }}>
-                          {data.featured.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }}>
-                          {data.featured.excerpt}
-                        </Typography>
-                        <Stack direction="row" spacing={2} sx={{ color: 'text.secondary', fontSize: 14 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <VisibilityIcon sx={{ fontSize: 16 }} />
-                            {data.featured.views.toLocaleString()}
-                          </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <AccessTimeIcon sx={{ fontSize: 16 }} />
-                            {data.featured.readingTime} мин
-                          </Box>
-                        </Stack>
-                      </CardContent>
-                    </Grid>
-                  </Grid>
-                </Card>
-              </Box>
-            )}
+                />
+              ))}
+            </Stack>
+          </Stack>
+        </Card>
 
-            {/* Все статьи */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 4, height: 24, bgcolor: '#667eea', borderRadius: 1 }} />
-                Все статьи
-              </Typography>
-            </Box>
-
-            <Grid container spacing={3}>
-              {data.articles.map((article) => (
-                <Grid size={{ xs: 12, md: 6 }} key={article.id}>
-                  <Card 
-                    component={Link}
-                    href={`/articles/${article.slug}`}
-                    sx={{ 
-                      textDecoration: 'none',
-                      height: '100%', 
-                      display: 'flex', 
-                      flexDirection: 'column',
-                      borderRadius: 2,
-                      transition: 'all 0.3s',
-                      '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 }
+        {/* Featured Post */}
+        {data?.featured && page === 1 && !selectedCategory && !searchQuery && (
+          <Link href={`/articles/${data.featured.slug}`} style={{ textDecoration: 'none', display: 'block', marginBottom: 4 }}>
+            <Card
+              elevation={0}
+              sx={{
+                p: { xs: 3, md: 4 },
+                bgcolor: 'white',
+                borderRadius: 3,
+                border: '1px solid #e2e8f0',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+                  borderColor: 'transparent',
+                  transform: 'translateY(-2px)',
+                },
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: 4,
+                  height: '100%',
+                  background: 'linear-gradient(180deg, #10b981 0%, #059669 100%)',
+                },
+              }}
+            >
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-start">
+                <Box sx={{ flex: 1 }}>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                    <Chip
+                      label={data.featured.category}
+                      size="small"
+                      sx={{
+                        bgcolor: '#dcfce7',
+                        color: '#059669',
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        height: 24,
+                      }}
+                    />
+                    <Chip
+                      label="Избранное"
+                      size="small"
+                      sx={{
+                        bgcolor: '#fef3c7',
+                        color: '#b45309',
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        height: 24,
+                      }}
+                    />
+                  </Stack>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: { xs: '1.25rem', md: '1.5rem' },
+                      color: '#0f172a',
+                      letterSpacing: '-0.02em',
+                      mb: 1,
+                      lineHeight: 1.3,
                     }}
                   >
-                    <Box sx={{ position: 'relative', height: 160 }}>
-                      {article.coverImage ? (
-                        <Image src={article.coverImage} alt={article.title} fill style={{ objectFit: 'cover' }} />
-                      ) : (
-                        <Box sx={{ height: '100%', bgcolor: '#667eea', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Typography variant="h2" sx={{ color: 'white', fontWeight: 700 }}>{article.category.charAt(0)}</Typography>
-                        </Box>
-                      )}
-                      <Chip label={article.category} size="small" sx={{ position: 'absolute', top: 8, left: 8, bgcolor: 'rgba(255,255,255,0.9)', fontSize: 11 }} />
-                    </Box>
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, lineHeight: 1.4, color: '#212121' }}>
-                        {article.title}
+                    {data.featured.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: '0.9rem',
+                      color: '#64748b',
+                      lineHeight: 1.6,
+                      mb: 2,
+                      maxWidth: 600,
+                    }}
+                  >
+                    {data.featured.excerpt}
+                  </Typography>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+                      <VisibilityIcon sx={{ fontSize: 16, color: '#94a3b8' }} />
+                      <Typography sx={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                        {typeof data.featured.views === 'number' ? data.featured.views.toLocaleString() : '0'}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        {article.excerpt}
+                    </Stack>
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+                      <AccessTimeIcon sx={{ fontSize: 16, color: '#94a3b8' }} />
+                      <Typography sx={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                        {data.featured.readingTime || 5} мин
                       </Typography>
-                      <Stack direction="row" spacing={2} sx={{ color: 'text.secondary', fontSize: 13 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <VisibilityIcon sx={{ fontSize: 14 }} />
-                          {article.views.toLocaleString()}
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <AccessTimeIcon sx={{ fontSize: 14 }} />
-                          {article.readingTime} мин
-                        </Box>
-                      </Stack>
-                    </CardContent>
-                  </Card>
+                    </Stack>
+                  </Stack>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    color: '#10b981',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  Читать
+                  <ArrowForwardIcon sx={{ fontSize: 18 }} />
+                </Box>
+              </Stack>
+            </Card>
+          </Link>
+        )}
+
+        {/* Posts Grid */}
+        <Typography
+          sx={{
+            fontWeight: 600,
+            fontSize: '1.1rem',
+            color: '#0f172a',
+            mb: 2,
+          }}
+        >
+          Все статьи
+        </Typography>
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <Grid container spacing={3}>
+              {filteredArticles.map((article) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={article.id}>
+                  <PostCard article={article} />
                 </Grid>
               ))}
             </Grid>
 
-            {/* Пагинация */}
-            {data.totalPages > 1 && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                <Pagination 
-                  count={data.totalPages} 
-                  page={page} 
-                  onChange={(_, value) => setPage(value)}
-                  color="primary"
-                  size="large"
-                />
+            {/* Pagination */}
+            {data && data.totalPages > 1 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+                <Stack direction="row" spacing={1}>
+                  {[...Array(data.totalPages)].map((_, i) => (
+                    <Box
+                      key={i}
+                      onClick={() => setPage(i + 1)}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 2,
+                        border: 'none',
+                        bgcolor: page === i + 1 ? '#0f172a' : 'transparent',
+                        color: page === i + 1 ? 'white' : '#475569',
+                        fontWeight: 500,
+                        fontSize: '0.875rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          bgcolor: page === i + 1 ? '#0f172a' : '#f1f5f9',
+                        },
+                      }}
+                    >
+                      {i + 1}
+                    </Box>
+                  ))}
+                </Stack>
               </Box>
             )}
-          </Grid>
-
-          {/* Сайдбар */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Stack spacing={3}>
-              {/* CTA */}
-              <Card sx={{ bgcolor: '#fff3e0', border: '2px solid #ff9800', borderRadius: 2, p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Срочно нужны деньги?</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Получите займ за 5 минут без проверки кредитной истории</Typography>
-                <Button variant="contained" fullWidth component={Link} href="/allmfo" sx={{ bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' }, py: 1.5 }}>Получить деньги</Button>
-              </Card>
-
-              {/* Категории */}
-              <Card sx={{ borderRadius: 2, p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>Рубрики</Typography>
-                <Stack spacing={1}>
-                  {categories.map((cat) => (
-                    <Box 
-                      key={cat.name}
-                      component={Link}
-                      href={`/articles?category=${encodeURIComponent(cat.name)}`}
-                      sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center',
-                        textDecoration: 'none',
-                        p: 1.5,
-                        borderRadius: 1,
-                        transition: 'all 0.2s',
-                        '&:hover': { bgcolor: '#f5f5f5' }
-                      }}
-                    >
-                      <Typography variant="body2" sx={{ color: '#424242' }}>{cat.name}</Typography>
-                      <Chip label={cat.count} size="small" sx={{ bgcolor: '#e8eaf6', color: '#667eea', fontSize: 12 }} />
-                    </Box>
-                  ))}
-                </Stack>
-              </Card>
-
-              {/* Популярные статьи */}
-              <Card sx={{ borderRadius: 2, p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>Популярные статьи</Typography>
-                <Stack spacing={2}>
-                  {popularArticles.map((article, index) => (
-                    <Box 
-                      key={article.id}
-                      component={Link}
-                      href={`/articles/${article.slug}`}
-                      sx={{ textDecoration: 'none', '&:hover .article-title': { color: '#667eea' } }}
-                    >
-                      <Box sx={{ display: 'flex', gap: 1.5 }}>
-                        <Typography sx={{ fontSize: 24, fontWeight: 700, color: '#e8eaf6', lineHeight: 1 }}>{index + 1}</Typography>
-                        <Box>
-                          <Typography className="article-title" variant="body2" sx={{ fontWeight: 600, color: '#212121', transition: 'color 0.2s', lineHeight: 1.4 }}>
-                            {article.title}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">{article.views?.toLocaleString()} просмотров</Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  ))}
-                </Stack>
-              </Card>
-
-              {/* Топ МФО */}
-              <Card sx={{ borderRadius: 2, p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>Топ МФО</Typography>
-                <Stack spacing={2}>
-                  {[
-                    { name: 'Екапуста', rating: 4.8, reviews: 45000 },
-                    { name: 'Займер', rating: 4.7, reviews: 38000 },
-                    { name: 'MoneyMan', rating: 4.6, reviews: 32000 },
-                    { name: 'Lime-zaim', rating: 4.5, reviews: 28000 }
-                  ].map((mfo) => (
-                    <Box 
-                      key={mfo.name}
-                      component={Link}
-                      href="/allmfo"
-                      sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center',
-                        textDecoration: 'none',
-                        p: 1,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#f5f5f5' }
-                      }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <Avatar sx={{ width: 32, height: 32, bgcolor: '#667eea', fontSize: 14, fontWeight: 700 }}>{mfo.name.charAt(0)}</Avatar>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#212121' }}>{mfo.name}</Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <StarIcon sx={{ color: '#ff9800', fontSize: 16 }} />
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>{mfo.rating}</Typography>
-                      </Box>
-                    </Box>
-                  ))}
-                </Stack>
-                <Button 
-                  fullWidth 
-                  component={Link} 
-                  href="/allmfo" 
-                  endIcon={<ArrowForwardIcon />}
-                  sx={{ mt: 2, color: '#667eea', fontWeight: 600 }}
-                >
-                  Все МФО
-                </Button>
-              </Card>
-            </Stack>
-          </Grid>
-        </Grid>
+          </>
+        )}
       </Container>
     </Box>
-  )
+  );
 }
