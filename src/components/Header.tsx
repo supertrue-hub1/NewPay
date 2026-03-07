@@ -3,8 +3,28 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, Close, KeyboardArrowDown } from '@mui/icons-material'
+import { Menu, Close, KeyboardArrowDown, LocationOn, MyLocation, Check, Close as CloseIcon } from '@mui/icons-material'
+import { Snackbar, Alert } from '@mui/material'
 import styles from './Header.module.css'
+
+// Список популярных городов России
+const POPULAR_CITIES = [
+  { name: 'Москва', region: 'Москва и область', slug: 'moskva' },
+  { name: 'Санкт-Петербург', region: 'Ленинградская область', slug: 'sankt-peterburg' },
+  { name: 'Новосибирск', region: 'Новосибирская область', slug: 'novosibirsk' },
+  { name: 'Екатеринбург', region: 'Свердловская область', slug: 'ekaterinburg' },
+  { name: 'Казань', region: 'Республика Татарстан', slug: 'kazan' },
+  { name: 'Нижний Новгород', region: 'Нижегородская область', slug: 'nizhny_novgorod' },
+  { name: 'Челябинск', region: 'Челябинская область', slug: 'chelyabinsk' },
+  { name: 'Самара', region: 'Самарская область', slug: 'samara' },
+  { name: 'Омск', region: 'Омская область', slug: 'omsk' },
+  { name: 'Ростов-на-Дону', region: 'Ростовская область', slug: 'rostov_na_donu' },
+  { name: 'Уфа', region: 'Республика Башкортостан', slug: 'ufa' },
+  { name: 'Воронеж', region: 'Воронежская область', slug: 'voronezh' },
+  { name: 'Пермь', region: 'Пермский край', slug: 'perm' },
+  { name: 'Волгоград', region: 'Волгоградская область', slug: 'volgograd' },
+  { name: 'Красноярск', region: 'Красноярский край', slug: 'krasnoyarsk' },
+]
 
 interface NavItem {
   label: string
@@ -45,9 +65,68 @@ export default function Header() {
   const [mounted, setMounted] = useState(false)
   const [dropdownTimeout, setDropdownTimeout] = useState<ReturnType<typeof setTimeout> | null>(null)
 
+  // Город
+  const [selectedCity, setSelectedCity] = useState<{ name: string; region: string; slug: string } | null>(null)
+  const [cityModalOpen, setCityModalOpen] = useState(false)
+  const [isDetecting, setIsDetecting] = useState(false)
+  const [toast, setToast] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ open: false, message: '', severity: 'success' })
+
+  // Загрузка города из localStorage
   useEffect(() => {
+    const savedCity = localStorage.getItem('selectedCity')
+    if (savedCity) {
+      try {
+        setSelectedCity(JSON.parse(savedCity))
+      } catch (e) {
+        console.error('Error parsing city:', e)
+      }
+    }
     setMounted(true)
   }, [])
+
+  // Сохранение города в localStorage
+  const handleCitySelect = (city: { name: string; region: string; slug: string }) => {
+    setSelectedCity(city)
+    localStorage.setItem('selectedCity', JSON.stringify(city))
+    setCityModalOpen(false)
+    setToast({ open: true, message: `Город изменён на ${city.name}`, severity: 'success' })
+  }
+
+  // Автоматическое определение города по IP
+  const detectCity = async () => {
+    setIsDetecting(true)
+    try {
+      const response = await fetch('https://ipapi.co/json/')
+      if (response.ok) {
+        const data = await response.json()
+        const cityName = data.city || data.region || 'Москва'
+        
+        // Ищем город в списке или создаём новый
+        const foundCity = POPULAR_CITIES.find(c => c.name.toLowerCase() === cityName.toLowerCase())
+        const newCity = foundCity || { name: cityName, region: data.region || '', slug: cityName.toLowerCase().replace(/\s+/g, '_') }
+        
+        setSelectedCity(newCity)
+        localStorage.setItem('selectedCity', JSON.stringify(newCity))
+        setToast({ open: true, message: `Город определён: ${newCity.name}`, severity: 'success' })
+      } else {
+        throw new Error('Failed to fetch')
+      }
+    } catch (error) {
+      console.error('Error detecting city:', error)
+      setToast({ open: true, message: 'Не удалось определить город', severity: 'error' })
+    } finally {
+      setIsDetecting(false)
+      setCityModalOpen(false)
+    }
+  }
+
+  const showToast = (message: string, severity: 'success' | 'error' = 'success') => {
+    setToast({ open: true, message, severity })
+  }
+
+  const handleCloseToast = () => {
+    setToast(prev => ({ ...prev, open: false }))
+  }
 
   useEffect(() => {
     if (mobileOpen) {
@@ -141,9 +220,14 @@ export default function Header() {
 
           {/* Actions */}
           <div className={styles.actions}>
-            <Link href="/admin" className={styles.btnLogin}>
-              Войти
-            </Link>
+            {/* Кнопка выбора города */}
+            <button 
+              className={styles.cityButton}
+              onClick={() => setCityModalOpen(true)}
+            >
+              <LocationOn sx={{ fontSize: 18, color: '#10b981' }} />
+              <span>{selectedCity ? selectedCity.name : 'Выбрать город'}</span>
+            </button>
             <Link href="/mfo" className={styles.btnStart}>
               Сравнить займ
             </Link>
@@ -195,15 +279,83 @@ export default function Header() {
           </nav>
 
           <div className={styles.mobileActions}>
-            <Link href="/admin" className={styles.mobileBtnLogin} onClick={() => setMobileOpen(false)}>
-              Войти
-            </Link>
+            <button 
+              className={styles.mobileBtnLogin}
+              onClick={() => { setCityModalOpen(true); setMobileOpen(false); }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            >
+              <LocationOn sx={{ fontSize: 18 }} />
+              {selectedCity ? selectedCity.name : 'Выбрать город'}
+            </button>
             <Link href="/mfo" className={styles.mobileBtnStart} onClick={() => setMobileOpen(false)}>
               Сравнить займ
             </Link>
           </div>
         </div>
       )}
+
+      {/* Модальное окно выбора города */}
+      {cityModalOpen && (
+        <div className={styles.cityModalOverlay} onClick={() => setCityModalOpen(false)}>
+          <div className={styles.cityModal} onClick={e => e.stopPropagation()}>
+            <div className={styles.cityModalHeader}>
+              <h3>Выберите город</h3>
+              <button className={styles.cityModalClose} onClick={() => setCityModalOpen(false)}>
+                <CloseIcon />
+              </button>
+            </div>
+            
+            <button 
+              className={styles.detectButton}
+              onClick={detectCity}
+              disabled={isDetecting}
+            >
+              <MyLocation sx={{ fontSize: 20, animation: isDetecting ? 'spin 1s linear infinite' : 'none' }} />
+              <span>{isDetecting ? 'Определяем...' : 'Определить автоматически'}</span>
+            </button>
+
+            <div className={styles.cityList}>
+              <div className={styles.cityListTitle}>Популярные города</div>
+              {POPULAR_CITIES.map((city) => (
+                <button
+                  key={city.slug}
+                  className={`${styles.cityItem} ${selectedCity?.slug === city.slug ? styles.cityItemActive : ''}`}
+                  onClick={() => handleCitySelect(city)}
+                >
+                  <div className={styles.cityItemInfo}>
+                    <span className={styles.cityItemName}>{city.name}</span>
+                    <span className={styles.cityItemRegion}>{city.region}</span>
+                  </div>
+                  {selectedCity?.slug === city.slug && (
+                    <Check sx={{ fontSize: 20, color: '#10b981' }} />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast уведомления */}
+      <Snackbar 
+        open={toast.open} 
+        autoHideDuration={3000} 
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseToast} 
+          severity={toast.severity} 
+          sx={{ 
+            bgcolor: toast.severity === 'success' ? '#10b981' : '#ef4444',
+            color: 'white',
+            fontWeight: 600,
+            '& .MuiAlert-icon': { color: 'white' }
+          }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </>
   )
 }

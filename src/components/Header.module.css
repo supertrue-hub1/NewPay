@@ -214,6 +214,207 @@
   transform: translateY(0);
 }
 
+/* Кнопка выбора города */
+.cityButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cityButton:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.cityButton span {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Модальное окно выбора города */
+.cityModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cityModal {
+  background: #1f2937;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cityModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cityModalHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.cityModalClose {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.cityModalClose:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+/* Кнопка определения города */
+.detectButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 24px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.detectButton:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+}
+
+.detectButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Список городов */
+.cityList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 20px;
+}
+
+.cityListTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 8px 12px;
+}
+
+.cityItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  font-family: inherit;
+  margin-bottom: 4px;
+}
+
+.cityItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cityItemActive {
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+.cityItemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cityItemName {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.cityItemRegion {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .hamburger {
   display: none;
   width: 44px;
