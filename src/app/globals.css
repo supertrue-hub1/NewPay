@@ -6,6 +6,19 @@
   margin: 0;
 }
 
+/* Lazy loading для всех изображений */
+img {
+  loading: lazy;
+  decoding: async;
+}
+
+/* Fallback для браузеров без поддержки loading="lazy" */
+@supports not (background-image: -webkit-image-set(image-set(...))) {
+  img[loading="lazy"] {
+    /* fallback если нужно */
+  }
+}
+
 html,
 body {
   max-width: 100vw;
