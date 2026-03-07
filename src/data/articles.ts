@@ -311,42 +311,4 @@ const initialArticles: Article[] = [
   },
 ]
 
-export const useArticlesData = () => {
-  const [articlesData, setArticlesData] = useState<Article[]>(initialArticles)
 
-  useEffect(() => {
-    const stored = localStorage.getItem('articles')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        setArticlesData(parsed)
-      } catch {
-        // ignore parse error
-      }
-    }
-  }, [])
-
-  const saveArticles = (articles: Article[]) => {
-    localStorage.setItem('articles', JSON.stringify(articles))
-    setArticlesData(articles)
-  }
-
-  const addArticle = (article: Omit<Article, 'id'>) => {
-    const newArticle = { ...article, id: Date.now() }
-    saveArticles([...articlesData, newArticle])
-  }
-
-  const updateArticle = (article: Article) => {
-    saveArticles(articlesData.map(a => a.id === article.id ? article : a))
-  }
-
-  const deleteArticle = (id: number) => {
-    saveArticles(articlesData.filter(a => a.id !== id))
-  }
-
-  const resetArticles = () => {
-    saveArticles(initialArticles)
-  }
-
-  return { articlesData, addArticle, updateArticle, deleteArticle, resetArticles }
-}
