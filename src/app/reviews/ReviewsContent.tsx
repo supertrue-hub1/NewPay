@@ -308,13 +308,8 @@ export default function ReviewsContent() {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 height: '100%'
               }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <Avatar
-                    src={review.userPhoto}
-                    alt={review.userName}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                  <Box sx={{ flexGrow: 1 }}>
+<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box>
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       {review.userName}
                     </Typography>

@@ -3,7 +3,7 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Autoplay } from 'swiper/modules'
-import { Box, Typography, Avatar, Container } from '@mui/material'
+import { Box, Typography, Container } from '@mui/material'
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import 'swiper/css'
@@ -497,26 +497,17 @@ export default function ReviewSection() {
                     }
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                    <Avatar
-                      src={review.userPhoto}
-                      alt={review.userName}
-                      sx={{ width: 48, height: 48 }}
-                    />
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <Box>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#111827' }}>
-                            {review.userName}
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: '#6b7280' }}>
-                            {review.location}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          {renderStars(review.rating)}
-                        </Box>
-                      </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#111827' }}>
+                        {review.userName}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#6b7280' }}>
+                        {review.location}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      {renderStars(review.rating)}
                     </Box>
                   </Box>
 
