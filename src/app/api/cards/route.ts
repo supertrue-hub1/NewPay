@@ -24,6 +24,30 @@ const transliterate = (text: string): string => {
     .toLowerCase()
 }
 
+// Функция создания таблицы карт
+async function createCardsTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS credit_cards (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      bank VARCHAR(255),
+      logo VARCHAR(255),
+      rating DECIMAL(3,2) DEFAULT 0,
+      reviews INTEGER DEFAULT 0,
+      cashback INTEGER DEFAULT 0,
+      grace_period INTEGER DEFAULT 0,
+      annual_fee INTEGER DEFAULT 0,
+      limit INTEGER DEFAULT 0,
+      percent DECIMAL(5,2) DEFAULT 0,
+      badge VARCHAR(255),
+      features TEXT[],
+      site_url VARCHAR(500),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `)
+}
+
 // GET /api/cards - получить все карты
 export async function GET() {
   try {
@@ -33,8 +57,20 @@ export async function GET() {
     }
     // Если данных нет в БД
     return NextResponse.json([])
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching cards:', error)
+    
+    // Если таблицы нет - создаём
+    if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
+      try {
+        await createCardsTable()
+        return NextResponse.json([])
+      } catch (createError) {
+        console.error('Error creating cards table:', createError)
+        return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 })
+      }
+    }
+    
     return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 })
   }
 }
@@ -72,26 +108,7 @@ export async function POST(request: NextRequest) {
     // Если таблицы нет - создаём и пробуем снова
     if (error instanceof Error && error.message?.includes('relation') && error.message?.includes('does not exist')) {
       try {
-        await query(`
-          CREATE TABLE IF NOT EXISTS credit_cards (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            bank VARCHAR(255),
-            logo VARCHAR(255),
-            rating DECIMAL(3,2) DEFAULT 0,
-            reviews INTEGER DEFAULT 0,
-            cashback INTEGER DEFAULT 0,
-            grace_period INTEGER DEFAULT 0,
-            annual_fee INTEGER DEFAULT 0,
-            limit INTEGER DEFAULT 0,
-            percent DECIMAL(5,2) DEFAULT 0,
-            badge VARCHAR(255),
-            features TEXT[],
-            site_url VARCHAR(500),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        `)
+        await createCardsTable()
         
         // Повторяем вставку
         const body = await request.json()
