@@ -195,7 +195,7 @@ export default function ArticlesPage() {
 
   if (!data && loading) {
     return (
-      <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <CircularProgress />
       </Box>
     );
@@ -205,7 +205,7 @@ export default function ArticlesPage() {
   const categories = data?.categories || {};
 
   return (
-    <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', pb: 6, pt: 4 }}>
+    <Box sx={{ minHeight: '100vh', pb: 6, pt: 4 }}>
       <Container maxWidth="lg">
         {/* Page Header */}
         <Box sx={{ mb: 4 }}>

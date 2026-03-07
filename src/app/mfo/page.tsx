@@ -133,7 +133,7 @@ export default function MfoComparePage() {
   }
 
   return (
-    <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="xl">
         <Box sx={{ mb: 4 }}>
           <Typography 
