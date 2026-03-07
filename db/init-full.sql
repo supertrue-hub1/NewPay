@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS credit_cards (
     cashback INTEGER DEFAULT 0,
     grace_period INTEGER DEFAULT 0,
     annual_fee INTEGER DEFAULT 0,
-    limit INTEGER DEFAULT 0,
+    credit_limit INTEGER DEFAULT 0,
     percent DECIMAL(5,2) DEFAULT 0,
     badge VARCHAR(255),
     features TEXT[],
@@ -309,7 +309,7 @@ INSERT INTO loan_categories (slug, name, description, icon, order_num) VALUES
 -- ДАННЫЕ КРЕДИТНЫХ КАРТ
 -- =============================================
 
-INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, limit, percent, badge, features, site_url, clicks) VALUES
+INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_period, annual_fee, credit_limit, percent, badge, features, site_url, clicks) VALUES
 ('Tinkoff Platinum', 'Тинькофф Банк', 'T', 4.8, 12000, 3, 55, 0, 300000, 12.9, 'Бесплатное обслуживание', ARRAY['Кэшбэк на всё', 'Мили на Travel', 'Apple Pay'], 'https://tinkoff.ru/cards/credit-cards/platinum/', 4500),
 ('Alfa-Bank Travel', 'Альфа-Банк', 'A', 4.7, 9500, 5, 60, 9900, 500000, 11.99, 'Для путешествий', ARRAY['Мили за покупки', 'Бесплатная страховка', 'Priority Pass'], 'https://alfabank.ru/make-card/travel/', 3800),
 ('Raiffeisen Travel', 'Райффайзен Банк', 'R', 4.6, 7200, 3, 55, 8900, 400000, 14.9, 'Премиум', ARRAY['Мили на всё', 'Консьерж-сервис', 'Бесплатная страховка'], 'https://raiffeisen.ru/retail/creditcards/travel/', 2900),
@@ -319,10 +319,10 @@ INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_per
 -- ДАННЫЕ ПАРТНЁРОВ
 -- =============================================
 
-INSERT INTO partners (name, logo, description, license, site_url, is_active) VALUES
-('Сбербанк', 'С', 'Крупнейший банк России', 'ЦБ РФ № 1481', 'https://sberbank.ru', true),
-('Тинькофф', 'Т', 'Онлайн-банк №1', 'ЦБ РФ № 2673', 'https://tinkoff.ru', true),
-('Альфа-Банк', 'А', 'Ведущий частный банк', 'ЦБ РФ № 1326', 'https://alfabank.ru', true);
+INSERT INTO partners (name, description, license, site_url, is_active) VALUES
+('Сбербанк', 'Крупнейший банк России', 'ЦБ РФ № 1481', 'https://sberbank.ru', true),
+('Тинькофф', 'Онлайн-банк №1', 'ЦБ РФ № 2673', 'https://tinkoff.ru', true),
+('Альфа-Банк', 'Ведущий частный банк', 'ЦБ РФ № 1326', 'https://alfabank.ru', true);
 
 -- =============================================
 -- КОМАНДЫ ДЛЯ ВЫПОЛНЕНИЯ
