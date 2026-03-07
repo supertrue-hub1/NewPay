@@ -44,14 +44,14 @@ export interface FooterData {
 }
 
 const defaultFooterData: FooterData = {
-  about: 'Zaymy MFO - servis podbora luchshikh microzaymov ot proverkennykh finansovykh organizatsiy. My pomogaem poluchit dengi na kartu bystro i vygodno.',
+  about: 'SravniPay — сервис подбора лучших микрозаймов от проверенных финансовых организаций. Мы помогаем получить деньги на карту быстро и выгодно.',
   phone: '+7 (495) 123-45-67',
-  email: 'info@zaim-mfo.ru',
-  address: 'Moscow, ul. Primernaya, d. 1',
-  privacyPolicy: 'Politika konfidentsialnosti',
-  privacyContent: 'Nastoyashchaya Politika konfidentsialnosti opredelyaet poriadok obrabotki i zashchity personalnykh dannykh polzovateley servisa Zaim-MFO.ru.',
-  offer: 'Oferta',
-  cookieInfo: 'My ispolzuem cookie dlya uluchsheniya raboty sayta i analiza traffika.',
+  email: 'info@sravnipay.ru',
+  address: 'г. Москва, ул. Примерная, д. 1',
+  privacyPolicy: 'Политика конфиденциальности',
+  privacyContent: 'Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сервиса SravniPay.',
+  offer: 'Оферта',
+  cookieInfo: 'Мы используем cookie для улучшения работы сайта и анализа трафика.',
   socialLinks: {}
 }
 
@@ -222,7 +222,7 @@ export default function Footer() {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              Zaymy MFO
+              SravniPay
             </Typography>
             <Typography 
               variant="body2" 
@@ -273,56 +273,56 @@ export default function Footer() {
           {/* Products */}
           <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 2.5, color: 'white', fontSize: '1rem' }}>
-              Produkty
+              Продукты
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <FooterLink href="/mfo">Vse MFO</FooterLink>
-              <FooterLink href="/allmfo">Sravnit</FooterLink>
-              <FooterLink href="/zaim">Zaymy</FooterLink>
-              <FooterLink href="/cards">Kreditnye karty</FooterLink>
-              <FooterLink href="/promokody">Promokody</FooterLink>
+              <FooterLink href="/mfo">Все МФО</FooterLink>
+              <FooterLink href="/allmfo">Сравнить</FooterLink>
+              <FooterLink href="/zaim">Займы</FooterLink>
+              <FooterLink href="/cards">Кредитные карты</FooterLink>
+              <FooterLink href="/promokody">Промокоды</FooterLink>
             </Box>
           </Grid>
 
           {/* Information */}
           <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 2.5, color: 'white', fontSize: '1rem' }}>
-              Informatsiya
+              Информация
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <FooterLink href="/about">O nas</FooterLink>
-              <FooterLink href="/faq">Voprosy</FooterLink>
-              <FooterLink href="/reviews">Otzyvy</FooterLink>
-              <FooterLink href="/articles">Stati</FooterLink>
-              <FooterLink href="/sitemap">Karta sayta</FooterLink>
+              <FooterLink href="/about">О нас</FooterLink>
+              <FooterLink href="/faq">Вопросы</FooterLink>
+              <FooterLink href="/reviews">Отзывы</FooterLink>
+              <FooterLink href="/articles">Статьи</FooterLink>
+              <FooterLink href="/sitemap">Карта сайта</FooterLink>
             </Box>
           </Grid>
 
           {/* Legal */}
           <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 2.5, color: 'white', fontSize: '1rem' }}>
-              Yuridicheskaya
+              Юридическая
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <FooterLink href="/privacy">Politika konfidentsialnosti</FooterLink>
-              <FooterLink href="/terms">Polzovatelskoe soglashenie</FooterLink>
-              <FooterLink href="/map">Karta MFO</FooterLink>
-              <FooterLink href="/illegal-lenders">Cherny spisok</FooterLink>
+              <FooterLink href="/privacy">Политика конфиденциальности</FooterLink>
+              <FooterLink href="/terms">Пользовательское соглашение</FooterLink>
+              <FooterLink href="/map">Карта МФО</FooterLink>
+              <FooterLink href="/illegal-lenders">Чёрный список</FooterLink>
             </Box>
           </Grid>
 
           {/* Newsletter */}
           <Grid size={{ xs: 12, sm: 3, md: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 2.5, color: 'white', fontSize: '1rem' }}>
-              Rassylka
+              Рассылка
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2 }}>
-              Podpishites na novosti i luchshie predlozheniya
+              Подпишитесь на новости и лучшие предложения
             </Typography>
             <Box component="form" onSubmit={handleSubscribe} sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <TextField
                 size="small"
-                placeholder="Vash email"
+                placeholder="Ваш email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 sx={{
@@ -354,14 +354,14 @@ export default function Footer() {
             </Box>
             {subscribed && (
               <Typography variant="body2" sx={{ color: '#81c784', fontSize: '0.8rem' }}>
-                Spasibo za podpisku!
+                Спасибо за подписку!
               </Typography>
             )}
 
             {/* Social Links */}
             <Box sx={{ mt: 3 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 1.5 }}>
-                My v sotssetyakh
+                Мы в соцсетях
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <SocialButton href={footerData.socialLinks?.facebook || '#'} icon={<Facebook sx={{ fontSize: 18 }} />} />
@@ -384,20 +384,20 @@ export default function Footer() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                 <Security sx={{ fontSize: 16, color: 'rgba(255,255,255,0.6)' }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-                  Bezopasnye platezhi
+                  Безопасные платежи
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                 <VerifiedUser sx={{ fontSize: 16, color: 'rgba(255,255,255,0.6)' }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-                  litsenziya CB RF
+                  лицензия ЦБ РФ
                 </Typography>
               </Box>
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.85rem' }}>
-              {new Date().getFullYear()} Zaim-MFO.ru. Vse prava zashchishcheny.
+              {new Date().getFullYear()} SravniPay.ru. Все права защищены.
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.75rem', mt: 0.5 }}>
               {footerData.cookieInfo}
