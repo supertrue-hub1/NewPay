@@ -172,15 +172,7 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
             {visiblePartners.map((partner) => (
               <Grid size={{ xs: 6, sm: 4, md: 2.4 }} key={partner.id}>
                 <Box
-                  component="a"
-                  href={partner.link || '#'}
-                  target={partner.link ? '_blank' : '_self'}
-                  rel={partner.link ? 'noopener noreferrer' : undefined}
-                  onClick={(e) => {
-                    if (!partner.link) {
-                      e.preventDefault()
-                    }
-                  }}
+                  onClick={() => partner.link && window.open(partner.link, '_blank')}
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -191,16 +183,13 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                     boxShadow: 1,
                     textDecoration: 'none',
                     transition: 'all 0.3s ease',
-                    cursor: 'pointer',
+                    cursor: partner.link ? 'pointer' : 'default',
                     height: '100%',
                     color: '#333',
                     '&:hover': {
                       transform: 'translateY(-4px)',
                       boxShadow: 3,
                       color: '#333',
-                    },
-                    '&:hover::after': {
-                      display: 'none',
                     }
                   }}
                 >
