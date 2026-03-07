@@ -68,24 +68,12 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
     loadPartners()
   }, [loadPartners])
 
-  // Скрыть блок если нет данных
-  if (!isLoaded || partners.length === 0) {
-    return null
-  }
-
+  // Вычисляем maxIndex до раннего return
   const maxIndex = Math.max(0, partners.length - slidesPerView)
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1))
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
-  }
-
-  // Автоплей слайдера
+  // Автоплей слайдера - ВСЕГДА вызывается, даже если данных нет
   useEffect(() => {
-    if (partners.length === 0 || slidesPerView === 0) return
+    if (!isLoaded || partners.length === 0 || slidesPerView === 0) return
     
     const currentMaxIndex = Math.max(0, partners.length - slidesPerView)
     
@@ -99,9 +87,22 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
     }, 3000)
 
     return () => clearInterval(interval)
-  }, [partners.length, slidesPerView])
+  }, [isLoaded, partners.length, slidesPerView])
+
+  // Скрыть блок если нет данных
+  if (!isLoaded || partners.length === 0) {
+    return null
+  }
 
   const visiblePartners = partners.slice(currentIndex, currentIndex + slidesPerView)
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1))
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
+  }
 
   return (
     <Box sx={{ py: 6, bgcolor: '#f5f5f5' }}>
