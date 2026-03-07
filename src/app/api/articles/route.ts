@@ -25,6 +25,29 @@ const transliterate = (text: string): string => {
     .toLowerCase()
 }
 
+// Функция создания таблицы статей
+async function createArticlesTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS articles (
+      id SERIAL PRIMARY KEY,
+      slug VARCHAR(255) UNIQUE NOT NULL,
+      title VARCHAR(500) NOT NULL,
+      excerpt TEXT,
+      content TEXT,
+      cover_image VARCHAR(500),
+      category VARCHAR(100) DEFAULT 'Советы',
+      author VARCHAR(100) DEFAULT 'Редакция',
+      status VARCHAR(20) DEFAULT 'PUBLISHED' CHECK (status IN ('DRAFT', 'PUBLISHED')),
+      views INTEGER DEFAULT 0,
+      reading_time INTEGER DEFAULT 5,
+      tags VARCHAR(500),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `)
+}
+
 // GET /api/articles - получить все статьи с пагинацией
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -125,8 +148,32 @@ export async function GET(request: NextRequest) {
       page,
       totalPages: 0
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching articles:', error)
+    
+    // Если таблицы нет - создаём и пробуем снова
+    if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
+      try {
+        await createArticlesTable()
+        
+        // Повторяем запрос после создания таблицы
+        const countResult = await query(`SELECT COUNT(*) as total FROM articles WHERE status = 'PUBLISHED'`, [])
+        const total = parseInt(countResult.rows[0]?.total || '0', 10)
+        
+        return NextResponse.json({
+          success: true,
+          data: [],
+          featured: undefined,
+          total,
+          page,
+          totalPages: Math.ceil(total / limit)
+        })
+      } catch (createError) {
+        console.error('Error creating table:', createError)
+        return NextResponse.json({ success: false, error: 'Database error' }, { status: 500 })
+      }
+    }
+    
     return NextResponse.json({ success: false, error: 'Database error' }, { status: 500 })
   }
 }
@@ -165,25 +212,7 @@ export async function POST(request: NextRequest) {
     // Если таблицы нет - создаём и пробуем снова
     if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
       try {
-        await query(`
-          CREATE TABLE IF NOT EXISTS articles (
-            id SERIAL PRIMARY KEY,
-            slug VARCHAR(255) UNIQUE NOT NULL,
-            title VARCHAR(500) NOT NULL,
-            excerpt TEXT,
-            content TEXT,
-            cover_image VARCHAR(500),
-            category VARCHAR(100) DEFAULT 'Советы',
-            author VARCHAR(100) DEFAULT 'Редакция',
-            status VARCHAR(20) DEFAULT 'PUBLISHED' CHECK (status IN ('DRAFT', 'PUBLISHED')),
-            views INTEGER DEFAULT 0,
-            reading_time INTEGER DEFAULT 5,
-            tags VARCHAR(500),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        `)
+        await createArticlesTable()
         
         // Повторяем вставку
         const body = await request.json()
@@ -202,7 +231,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, error: 'Failed to create article' }, { status: 500 })
       }
     }
-    
+
     return NextResponse.json({ success: false, error: 'Failed to create article' }, { status: 500 })
   }
 }
