@@ -32,7 +32,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
 }
 
 .logo {
@@ -40,7 +39,8 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  margin-right: auto;
+  margin-left: auto;
+  order: 3;
 }
 
 .logoIcon {
@@ -72,6 +72,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .navItem {
@@ -167,6 +170,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  order: 1;
 }
 
 .btnLogin {
