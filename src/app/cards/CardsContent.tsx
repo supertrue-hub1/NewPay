@@ -97,7 +97,7 @@ export default function CardsContent() {
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
           Кредитные карты
