@@ -33,7 +33,6 @@ const menuItems: MenuItemType[] = [
   { label: 'Кредитные карты', icon: <CreditCard />, tabId: 'cards' },
   { label: 'Блог', icon: <Article />, tabId: 'blog' },
   { label: 'FAQ', icon: <HelpOutline />, tabId: 'faq' },
-  { label: 'Промокоды', icon: <LocalOffer />, tabId: 'promokody' },
   { label: 'Партнёры', icon: <Handshake />, tabId: 'partners' },
   { label: 'Футер', icon: <Settings />, tabId: 'footer' },
   { 

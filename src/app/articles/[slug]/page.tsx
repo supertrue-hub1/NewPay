@@ -8,7 +8,6 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { Article } from '@/types/article'
-import { articles as staticArticles, Article as StaticArticle } from '@/data/articles-data'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -24,40 +23,96 @@ interface MfoCompany {
   reviews: number
 }
 
-function getArticle(slug: string): Article | null {
-  const staticArticle = staticArticles.find((a: StaticArticle) => a.slug === slug)
-  if (!staticArticle) return null
-
-  return {
-    id: staticArticle.id,
-    slug: staticArticle.slug,
-    title: staticArticle.title,
-    excerpt: staticArticle.excerpt,
-    content: staticArticle.content || staticArticle.excerpt,
-    coverImage: staticArticle.image,
-    category: staticArticle.category,
-    author: staticArticle.author,
-    status: staticArticle.status as 'DRAFT' | 'PUBLISHED',
-    views: staticArticle.views || 0,
-    readingTime: Math.ceil((staticArticle.content?.length || 200) / 1000),
-    createdAt: new Date(staticArticle.date),
-    updatedAt: new Date(staticArticle.date),
-    publishedAt: new Date(staticArticle.date),
-    tags: staticArticle.tags
+// Функция для получения статьи из API (БД)
+async function fetchArticle(slug: string): Promise<Article | null> {
+  try {
+    const response = await fetch(`/api/articles?slug=${encodeURIComponent(slug)}`)
+    if (response.ok) {
+      const data = await response.json()
+      if (data.data && data.data.length > 0) {
+        const row = data.data[0]
+        return {
+          id: row.id,
+          slug: row.slug,
+          title: row.title,
+          excerpt: row.excerpt,
+          content: row.content || row.excerpt,
+          coverImage: row.coverImage || row.cover_image,
+          category: row.category,
+          author: row.author || 'Редакция',
+          status: row.status || 'PUBLISHED',
+          views: row.views || 0,
+          readingTime: row.readingTime || row.reading_time || Math.ceil((row.content?.length || 200) / 1000),
+          createdAt: row.createdAt || row.created_at ? new Date(row.createdAt || row.created_at) : new Date(),
+          updatedAt: row.updatedAt || row.updated_at ? new Date(row.updatedAt || row.updated_at) : new Date(),
+          publishedAt: row.publishedAt || row.published_at ? new Date(row.publishedAt || row.published_at) : new Date(),
+          tags: row.tags || []
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching article:', error)
   }
+  return null
+}
+
+// Функция для получения всех статей (для related articles)
+async function fetchAllArticles(): Promise<Article[]> {
+  try {
+    const response = await fetch('/api/articles?page=1&limit=100')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.data) {
+        return data.data.map((row: any) => ({
+          id: row.id,
+          slug: row.slug,
+          title: row.title,
+          excerpt: row.excerpt,
+          content: row.content,
+          coverImage: row.coverImage || row.cover_image,
+          category: row.category,
+          author: row.author,
+          status: row.status,
+          views: row.views || 0,
+          readingTime: row.readingTime || row.reading_time,
+          createdAt: row.createdAt || row.created_at,
+          updatedAt: row.updatedAt || row.updated_at,
+          publishedAt: row.publishedAt || row.published_at,
+          tags: row.tags || []
+        }))
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching all articles:', error)
+  }
+  return []
 }
 
 export default function ArticleDetailPage() {
   const params = useParams()
   const slug = params?.slug as string
   const [article, setArticle] = useState<Article | null>(null)
+  const [allArticles, setAllArticles] = useState<Article[]>([])
   const [topMfo, setTopMfo] = useState<MfoCompany[]>([])
+  const [loadingArticle, setLoadingArticle] = useState(true)
   const [loadingMfo, setLoadingMfo] = useState(true)
 
+  // Загружаем статью из БД
   useEffect(() => {
-    if (slug) {
-      setArticle(getArticle(slug))
+    async function loadArticle() {
+      if (slug) {
+        setLoadingArticle(true)
+        const fetchedArticle = await fetchArticle(slug)
+        setArticle(fetchedArticle)
+        
+        // Также загружаем все статьи для related articles
+        const articles = await fetchAllArticles()
+        setAllArticles(articles)
+        
+        setLoadingArticle(false)
+      }
     }
+    loadArticle()
   }, [slug])
 
   useEffect(() => {
@@ -79,6 +134,14 @@ export default function ArticleDetailPage() {
     fetchTopMfo()
   }, [])
 
+  if (loadingArticle) {
+    return (
+      <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', py: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
   if (!article) {
     return (
       <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', py: 4 }}>
@@ -89,15 +152,16 @@ export default function ArticleDetailPage() {
     )
   }
 
-  const relatedArticles = staticArticles
-    .filter((a: StaticArticle) => a.slug !== slug && a.status === 'PUBLISHED')
+  // Related articles из БД
+  const relatedArticles = allArticles
+    .filter((a) => a.slug !== slug && a.status === 'PUBLISHED')
     .slice(0, 3)
-    .map((a: StaticArticle) => ({
+    .map((a) => ({
       id: a.id,
       slug: a.slug,
       title: a.title,
       category: a.category,
-      coverImage: a.image
+      coverImage: a.coverImage
     }))
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || ''
@@ -307,11 +371,11 @@ export default function ArticleDetailPage() {
               <Card sx={{ borderRadius: 3, p: 3, border: '1px solid #e2e8f0' }}>
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: '#0f172a' }}>Популярное</Typography>
                 <Stack spacing={2}>
-                  {staticArticles
-                    .filter((a: StaticArticle) => a.status === 'PUBLISHED')
-                    .sort((a: StaticArticle, b: StaticArticle) => (b.views || 0) - (a.views || 0))
+                  {allArticles
+                    .filter((a) => a.status === 'PUBLISHED')
+                    .sort((a, b) => (b.views || 0) - (a.views || 0))
                     .slice(0, 5)
-                    .map((a: StaticArticle) => (
+                    .map((a) => (
                       <Box key={a.id} component={Link} href={`/articles/${a.slug}`} sx={{ textDecoration: 'none', '&:hover .article-title': { color: '#10b981' } }}>
                         <Typography className="article-title" variant="body2" sx={{ fontWeight: 600, color: '#212121', transition: 'color 0.2s', lineHeight: 1.4 }}>{a.title}</Typography>
                         <Typography variant="caption" color="text.secondary">{a.views?.toLocaleString()} просмотров</Typography>

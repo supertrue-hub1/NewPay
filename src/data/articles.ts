@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export interface Article {
   id: number
@@ -15,6 +15,132 @@ export interface Article {
   seoTitle?: string
   seoDescription?: string
   seoOgImage?: string
+  cover_image?: string
+  status?: string
+  reading_time?: number
+  tags?: string[]
+}
+
+// Хук работает ТОЛЬКО с БД через API
+export const useArticlesData = () => {
+  const [articlesData, setArticlesData] = useState<Article[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // Загрузка данных из API
+  const fetchArticles = useCallback(async () => {
+    try {
+      const res = await fetch('/api/articles?page=1&limit=100')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.data) {
+          const formattedData = data.data.map((row: any) => ({
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            excerpt: row.excerpt,
+            content: row.content || row.excerpt,
+            cover_image: row.cover_image || row.coverImage,
+            category: row.category,
+            author: row.author || 'Редакция',
+            date: row.published_at || row.created_at || new Date().toISOString(),
+            views: row.views || 0,
+            status: row.status,
+            reading_time: row.reading_time || row.readingTime,
+            tags: row.tags || [],
+            seoTitle: row.seo_title || row.seoTitle,
+            seoDescription: row.seo_description || row.seoDescription,
+            seoOgImage: row.seo_og_image || row.seoOgImage,
+          }))
+          setArticlesData(formattedData)
+        }
+      }
+    } catch (err) {
+      console.error('Error loading articles:', err)
+      setError('Ошибка при загрузке статей')
+    }
+    setIsLoaded(true)
+  }, [])
+
+  useEffect(() => {
+    fetchArticles()
+  }, [fetchArticles])
+
+  const addArticle = async (article: Omit<Article, 'id'>) => {
+    try {
+      const res = await fetch('/api/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: article.title,
+          slug: article.slug,
+          excerpt: article.excerpt,
+          content: article.content,
+          cover_image: article.cover_image || article.image,
+          category: article.category,
+          author: article.author,
+          status: article.status || 'PUBLISHED',
+          views: article.views || 0,
+          reading_time: article.reading_time,
+          tags: article.tags,
+        }),
+      })
+      if (res.ok) {
+        // Перезагружаем данные
+        fetchArticles()
+      }
+    } catch (err) {
+      console.error('Error adding article:', err)
+      setError('Ошибка при добавлении статьи')
+    }
+  }
+
+  const updateArticle = async (article: Article) => {
+    try {
+      const res = await fetch('/api/articles', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          excerpt: article.excerpt,
+          content: article.content,
+          cover_image: article.cover_image || article.image,
+          category: article.category,
+          author: article.author,
+          status: article.status,
+          views: article.views,
+          reading_time: article.reading_time,
+          tags: article.tags,
+        }),
+      })
+      if (res.ok) {
+        // Перезагружаем данные
+        fetchArticles()
+      }
+    } catch (err) {
+      console.error('Error updating article:', err)
+      setError('Ошибка при обновлении статьи')
+    }
+  }
+
+  const deleteArticle = async (id: number) => {
+    try {
+      const res = await fetch(`/api/articles?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        // Удаляем из локального состояния
+        setArticlesData(prev => prev.filter(a => a.id !== id))
+      }
+    } catch (err) {
+      console.error('Error deleting article:', err)
+      setError('Ошибка при удалении статьи')
+    }
+  }
+
+  // Убрал resetArticles - данные берутся только из БД
+
+  return { articlesData, addArticle, updateArticle, deleteArticle, isLoaded, error, refetch: fetchArticles }
 }
 
 const initialArticles: Article[] = [

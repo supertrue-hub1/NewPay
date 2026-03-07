@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export interface CreditCard {
   id: number
@@ -14,134 +14,129 @@ export interface CreditCard {
   percent: number
   badge?: string
   features: string[]
+  siteUrl?: string
 }
 
-const initialCards: CreditCard[] = [
-  {
-    id: 1,
-    name: 'Тинькофф Платинум',
-    bank: 'Тинькофф Банк',
-    logo: 'Т',
-    rating: 4.8,
-    reviews: 25000,
-    cashback: 5,
-    gracePeriod: 55,
-    annualFee: 0,
-    limit: 300000,
-    percent: 12.9,
-    badge: 'Хит продаж',
-    features: ['Кэшбэк 5%', '55 дней грейс-период', 'Без годовой платы'],
-  },
-  {
-    id: 2,
-    name: 'Альфа-Стандарт',
-    bank: 'Альфа-Банк',
-    logo: 'А',
-    rating: 4.7,
-    reviews: 18000,
-    cashback: 3,
-    gracePeriod: 60,
-    annualFee: 590,
-    limit: 500000,
-    percent: 11.99,
-    features: ['Кэшбэк 3%', '60 дней грейс-период', 'Мили на Travel'],
-  },
-  {
-    id: 3,
-    name: 'СберКарта',
-    bank: 'СберБанк',
-    logo: 'С',
-    rating: 4.6,
-    reviews: 42000,
-    cashback: 4,
-    gracePeriod: 50,
-    annualFee: 0,
-    limit: 300000,
-    percent: 13.9,
-    badge: 'Выбор клиентов',
-    features: ['Кэшбэк 4%', '50 дней грейс-период', 'Без годовой платы'],
-  },
-  {
-    id: 4,
-    name: 'ВТБ Классическая',
-    bank: 'ВТБ',
-    logo: 'В',
-    rating: 4.5,
-    reviews: 15000,
-    cashback: 2,
-    gracePeriod: 50,
-    annualFee: 0,
-    limit: 200000,
-    percent: 14.9,
-    features: ['Кэшбэк 2%', '50 дней грейс-период', 'Без годовой платы'],
-  },
-  {
-    id: 5,
-    name: 'Почта Банк В垫',
-    bank: 'Почта Банк',
-    logo: 'П',
-    rating: 4.3,
-    reviews: 8000,
-    cashback: 3,
-    gracePeriod: 60,
-    annualFee: 0,
-    limit: 150000,
-    percent: 14.9,
-    features: ['Кэшбэк 3%', '60 дней грейс-период', 'Без годовой платы'],
-  },
-  {
-    id: 6,
-    name: 'Росбанк 120 дней',
-    bank: 'Росбанк',
-    logo: 'Р',
-    rating: 4.4,
-    reviews: 6500,
-    cashback: 5,
-    gracePeriod: 120,
-    annualFee: 890,
-    limit: 400000,
-    percent: 11.5,
-    badge: 'Лучший грейс',
-    features: ['Кэшбэк 5%', '120 дней грейс-период', 'Премиальная поддержка'],
-  },
-]
-
+// Хук работает ТОЛЬКО с БД через API
 export const useCardsData = () => {
-  const [cardsData, setCardsData] = useState<CreditCard[]>(initialCards)
+  const [cardsData, setCardsData] = useState<CreditCard[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const stored = localStorage.getItem('cards')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        setCardsData(parsed)
-      } catch {
-        // ignore parse error
+  // Загрузка данных из API
+  const fetchCards = useCallback(async () => {
+    try {
+      const res = await fetch('/api/cards')
+      if (res.ok) {
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          const formattedData = data.map((row: any) => ({
+            id: row.id,
+            name: row.name,
+            bank: row.bank,
+            logo: row.logo,
+            rating: parseFloat(row.rating || 0),
+            reviews: row.reviews || 0,
+            cashback: row.cashback || 0,
+            gracePeriod: row.grace_period || row.gracePeriod || 0,
+            annualFee: row.annual_fee || row.annualFee || 0,
+            limit: row.limit || 0,
+            percent: parseFloat(row.percent || 0),
+            badge: row.badge,
+            features: row.features || [],
+            siteUrl: row.site_url || row.siteUrl,
+          }))
+          setCardsData(formattedData)
+        }
       }
+    } catch (err) {
+      console.error('Error loading cards:', err)
+      setError('Ошибка при загрузке карт')
     }
+    setIsLoaded(true)
   }, [])
 
-  const saveCards = (cards: CreditCard[]) => {
-    localStorage.setItem('cards', JSON.stringify(cards))
-    setCardsData(cards)
+  useEffect(() => {
+    fetchCards()
+  }, [fetchCards])
+
+  const addCard = async (card: Omit<CreditCard, 'id'>) => {
+    try {
+      const res = await fetch('/api/cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: card.name,
+          bank: card.bank,
+          logo: card.logo,
+          rating: card.rating,
+          reviews: card.reviews,
+          cashback: card.cashback,
+          grace_period: card.gracePeriod,
+          annual_fee: card.annualFee,
+          limit: card.limit,
+          percent: card.percent,
+          badge: card.badge,
+          features: card.features,
+          site_url: card.siteUrl,
+        }),
+      })
+      if (res.ok) {
+        // Перезагружаем данные
+        fetchCards()
+      }
+    } catch (err) {
+      console.error('Error adding card:', err)
+      setError('Ошибка при добавлении карты')
+    }
   }
 
-  const addCard = (card: Omit<CreditCard, 'id'>) => {
-    const newCard = { ...card, id: Date.now() }
-    saveCards([...cardsData, newCard])
+  const updateCard = async (card: CreditCard) => {
+    try {
+      const res = await fetch('/api/cards', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: card.id,
+          name: card.name,
+          bank: card.bank,
+          logo: card.logo,
+          rating: card.rating,
+          reviews: card.reviews,
+          cashback: card.cashback,
+          grace_period: card.gracePeriod,
+          annual_fee: card.annualFee,
+          limit: card.limit,
+          percent: card.percent,
+          badge: card.badge,
+          features: card.features,
+          site_url: card.siteUrl,
+        }),
+      })
+      if (res.ok) {
+        // Перезагружаем данные
+        fetchCards()
+      }
+    } catch (err) {
+      console.error('Error updating card:', err)
+      setError('Ошибка при обновлении карты')
+    }
   }
 
-  const updateCard = (card: CreditCard) => {
-    saveCards(cardsData.map(c => c.id === card.id ? card : c))
+  const deleteCard = async (id: number) => {
+    try {
+      const res = await fetch(`/api/cards?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        // Удаляем из локального состояния
+        setCardsData(prev => prev.filter(c => c.id !== id))
+      }
+    } catch (err) {
+      console.error('Error deleting card:', err)
+      setError('Ошибка при удалении карты')
+    }
   }
 
-  const deleteCard = (id: number) => {
-    saveCards(cardsData.filter(c => c.id !== id))
-  }
+  // Убрал resetCards - данные берутся только из БД
 
-  const resetCards = () => {
-    saveCards(initialCards)
-  }
-
-  return { cardsData, addCard, updateCard, deleteCard, resetCards }
+  return { cardsData, addCard, updateCard, deleteCard, isLoaded, error, refetch: fetchCards }
 }

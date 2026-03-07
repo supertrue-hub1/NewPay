@@ -17,7 +17,6 @@ import { useAnalytics } from '@/data/analytics'
 import { useFooterData } from '@/components/Footer'
 import { useLoansInfo } from '@/data/loansInfo'
 import { usePageData } from '@/data/pages'
-import { usePromoCodesData, PromoCode } from '@/data/promokody'
 import AdminLayout from '@/components/AdminLayout'
 import Logo from '@/components/Logo'
 
@@ -52,7 +51,7 @@ const transliterate = (text: string): string => {
     .toLowerCase()
 }
 
-type TabType = 'mfo' | 'mfoOverview' | 'cards' | 'blog' | 'faq' | 'promokody' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms'
+type TabType = 'mfo' | 'mfoOverview' | 'cards' | 'blog' | 'faq' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms'
 
 // Категории статей
 const ARTICLE_CATEGORIES = [
@@ -87,10 +86,6 @@ const emptyArticle: Omit<Article, 'id'> = {
 
 const emptyFaq: Omit<FAQ, 'id'> = {
   question: '', answer: ''
-}
-
-const emptyPromoCode: Omit<PromoCode, 'id'> = {
-  mfoName: '', logo: '', promoCode: '', discount: '', conditions: '', siteUrl: '', isExclusive: false
 }
 
 export default function AdminPage() {
@@ -133,14 +128,16 @@ export default function AdminPage() {
 
   // ВСЕ хуки должны вызываться ПЕРЕД условными return!
   const { mfoData, addMfo, updateMfo, deleteMfo } = useMfoData()
-  const { cardsData, addCard, updateCard, deleteCard, resetCards } = useCardsData()
-  const { articlesData, addArticle, updateArticle, deleteArticle, resetArticles } = useArticlesData()
+  const { cardsData, addCard, updateCard, deleteCard } = useCardsData()
+  const { articlesData, addArticle, updateArticle, deleteArticle } = useArticlesData()
   const { faqData, addFAQ, updateFAQ, deleteFAQ, resetFAQ } = useFAQData()
   const { footerData, updateFooterData, resetFooterData, isLoaded: footerLoaded } = useFooterData()
   const { loansInfo, updateLoansInfo, resetLoansInfo, isLoaded: loansInfoLoaded } = useLoansInfo()
   const { pageData, updateAbout, updateTerms, resetPageData } = usePageData()
   const { analytics, getConversionRate, resetAnalytics } = useAnalytics()
-  const { promoCodes, addPromoCode, updatePromoCode, deletePromoCode, resetPromoCodes, isLoaded: promoLoaded } = usePromoCodesData()
+  const { promoCodes, addPromoCode, updatePromoCode, deletePromoCode } = usePromoCodesData()
+
+  const { promoCodes, addPromoCode, updatePromoCode, deletePromoCode, isLoaded: promoLoaded } = usePromoCodesData()
 
   // Показываем лоадер пока проверяем авторизацию
   if (isAuthenticated === null) {
@@ -256,14 +253,12 @@ export default function AdminPage() {
   }
 
   const handleReset = () => {
-    if (activeTab === 'cards') resetCards()
-    else if (activeTab === 'blog') resetArticles()
-    else if (activeTab === 'faq') resetFAQ()
-    else if (activeTab === 'promokody') resetPromoCodes()
-    else if (activeTab === 'footer') resetFooterData()
+    // Сброс данных работает только для тех сущностей, где есть API и поддерживается сброс
+    if (activeTab === 'footer') resetFooterData()
     else if (activeTab === 'loansInfo') resetLoansInfo()
     else if (activeTab === 'analytics') resetAnalytics()
     else if (activeTab === 'about' || activeTab === 'terms') resetPageData()
+    // Примечание: сброс статей, карт и промокодов теперь недоступен - данные берутся только из БД
   }
 
   const updateFormField = (field: string, value: any) => {
