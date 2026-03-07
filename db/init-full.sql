@@ -165,7 +165,8 @@ INSERT INTO mfo_companies (name, logo, rating, reviews, sum_min, sum_max, term_m
 ('CreditPlus', 'C', 4.2, 15000, 2000, 20000, 5, 25, 0.9, true, true, NULL, 'https://creditplus.ru', 4800, 1100),
 ('Pay P.S.', 'P', 4.1, 12000, 1000, 15000, 5, 20, 1, false, true, NULL, 'https://payps.ru', 4100, 950),
 ('Быстроденьги', 'Б', 4.0, 9500, 1000, 30000, 7, 30, 0.9, true, true, NULL, 'https://bistrodengi.ru', 3500, 800),
-('Турбозайм', 'Т', 3.9, 7500, 3000, 20000, 7, 14, 1, true, true, NULL, 'https://turbozaym.ru', 2900, 650);
+('Турбозайм', 'Т', 3.9, 7500, 3000, 20000, 7, 14, 1, true, true, NULL, 'https://turbozaym.ru', 2900, 650)
+ON CONFLICT DO NOTHING;
 
 -- =============================================
 -- ДАННЫЕ СТАТЕЙ
@@ -277,7 +278,8 @@ CURRENT_TIMESTAMP),
 'Безопасность', 'Специалист по безопасности', 'PUBLISHED', 543, 4, ARRAY['безопасность', 'мошенничество', 'онлайн-заявки'],
 'Безопасность онлайн-заявок на займ - как не стать жертвой мошенников',
 'Как безопасно оформить займ через интернет. Признаки мошенничества и правила проверки МФО.',
-CURRENT_TIMESTAMP);
+CURRENT_TIMESTAMP)
+ON CONFLICT DO NOTHING;
 
 -- =============================================
 -- ДАННЫЕ FAQ
@@ -303,7 +305,8 @@ INSERT INTO loan_categories (slug, name, description, icon, order_num) VALUES
 ('pervyj_zajm_besplatno', 'Первый займ бесплатно', 'Новым клиентам — займ под 0%', 'star', 5),
 ('zaim_srochno', 'Срочный займ', 'Деньги за 5 минут', 'bolt', 6),
 ('zaim_bez_procentov', 'Без процентов', 'Займы под 0% годовых', 'percent', 7),
-('zaim_na_kivi', 'На QIWI кошелёк', 'Перевод на электронный кошелёк QIWI', 'wallet', 8);
+('zaim_na_kivi', 'На QIWI кошелёк', 'Перевод на электронный кошелёк QIWI', 'wallet', 8)
+ON CONFLICT DO NOTHING;
 
 -- =============================================
 -- ДАННЫЕ КРЕДИТНЫХ КАРТ
@@ -317,12 +320,11 @@ INSERT INTO credit_cards (name, bank, logo, rating, reviews, cashback, grace_per
 
 -- =============================================
 -- ДАННЫЕ ПАРТНЁРОВ
--- =============================================
-
-INSERT INTO partners (name, description, license, site_url, is_active) VALUES
-('Сбербанк', 'Крупнейший банк России', 'ЦБ РФ № 1481', 'https://sberbank.ru', true),
-('Тинькофф', 'Онлайн-банк №1', 'ЦБ РФ № 2673', 'https://tinkoff.ru', true),
-('Альфа-Банк', 'Ведущий частный банк', 'ЦБ РФ № 1326', 'https://alfabank.ru', true);
+-- (раскомментируйте после проверки структуры таблицы)
+-- INSERT INTO partners (name, description, license, is_active) VALUES
+-- ('Сбербанк', 'Крупнейший банк России', 'ЦБ РФ № 1481', true),
+-- ('Тинькофф', 'Онлайн-банк №1', 'ЦБ РФ № 2673', true),
+-- ('Альфа-Банк', 'Ведущий частный банк', 'ЦБ РФ № 1326', true);
 
 -- =============================================
 -- КОМАНДЫ ДЛЯ ВЫПОЛНЕНИЯ
