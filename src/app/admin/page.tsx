@@ -135,9 +135,6 @@ export default function AdminPage() {
   const { loansInfo, updateLoansInfo, resetLoansInfo, isLoaded: loansInfoLoaded } = useLoansInfo()
   const { pageData, updateAbout, updateTerms, resetPageData } = usePageData()
   const { analytics, getConversionRate, resetAnalytics } = useAnalytics()
-  const { promoCodes, addPromoCode, updatePromoCode, deletePromoCode } = usePromoCodesData()
-
-  const { promoCodes, addPromoCode, updatePromoCode, deletePromoCode, isLoaded: promoLoaded } = usePromoCodesData()
 
   // Показываем лоадер пока проверяем авторизацию
   if (isAuthenticated === null) {
@@ -208,7 +205,6 @@ export default function AdminPage() {
       case 'cards': setFormData(emptyCard); break
       case 'blog': setFormData(emptyArticle); break
       case 'faq': setFormData(emptyFaq); break
-      case 'promokody': setFormData(emptyPromoCode); break
       case 'footer': setFormData(footerData); break
       case 'loansInfo': setFormData(loansInfo); break
       case 'about': setFormData(pageData.about); break
@@ -237,9 +233,6 @@ export default function AdminPage() {
     } else if (activeTab === 'faq') {
       if (editingItem) updateFAQ({ ...formData, id: editingItem.id })
       else addFAQ(formData)
-    } else if (activeTab === 'promokody') {
-      if (editingItem) updatePromoCode({ ...formData, id: editingItem.id })
-      else addPromoCode(formData)
     } else if (activeTab === 'footer') {
       updateFooterData(formData)
     } else if (activeTab === 'loansInfo') {
@@ -505,44 +498,7 @@ export default function AdminPage() {
           </>
         )}
 
-        {/* === Промокоды === */}
-        {activeTab === 'promokody' && (
-          <>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, gap: 1 }}>
-              <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>Добавить промокод</Button>
-              <Button variant="outlined" color="warning" onClick={handleReset}>Сбросить</Button>
-            </Box>
-            <Card>
-              <CardContent>
-                <TableContainer>
-                  <Table>
-                    <TableHead><TableRow>
-                      <TableCell>МФО</TableCell><TableCell>Лого</TableCell>
-                      <TableCell>Промокод</TableCell><TableCell>Скидка</TableCell>
-                      <TableCell>Условия</TableCell><TableCell>URL</TableCell><TableCell>Действия</TableCell>
-                    </TableRow></TableHead>
-                    <TableBody>
-                      {promoCodes.map((promo) => (
-                        <TableRow key={promo.id}>
-                          <TableCell>{promo.mfoName}</TableCell>
-                          <TableCell>{promo.logo}</TableCell>
-                          <TableCell><Chip label={promo.promoCode} size="small" color="primary" /></TableCell>
-                          <TableCell>{promo.discount}</TableCell>
-                          <TableCell sx={{ maxWidth: 300 }}>{promo.conditions}</TableCell>
-                          <TableCell>{promo.siteUrl}</TableCell>
-                          <TableCell>
-                            <IconButton onClick={() => handleEdit(promo)}><Edit /></IconButton>
-                            <IconButton onClick={() => deletePromoCode(promo.id)} color="error"><Delete /></IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </>
-        )}
+
 
         {/* === Footer === */}
         {activeTab === 'footer' && (
