@@ -1,15 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Typography, Button, Chip } from '@mui/material'
 import Link from 'next/link'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-// Импорт статических данных статей
-import { articles as staticArticles, Article as StaticArticle } from '@/data/articles-data'
-
-// Тип статьи
+// Тип статьи из API
 interface Article {
   id: number
   title: string
@@ -22,39 +19,16 @@ interface Article {
   featured?: boolean
 }
 
-// Преобразование статической статьи в формат компонента
-const mapStaticArticle = (article: StaticArticle): Article => ({
-  id: article.id,
-  title: article.title,
-  slug: article.slug,
-  excerpt: article.excerpt,
-  category: article.category,
-  author: article.author,
-  views: article.views || 0,
-  readingTime: 5,
-  featured: article.id === 1,
-})
-
-// Все статьи (статические данные)
-const allArticles: Article[] = staticArticles
-  .filter(a => a.status === 'PUBLISHED')
-  .map(mapStaticArticle)
-
-// Категории с иконками и цветами
-const CATEGORIES = [
-  { id: 'all', label: 'Все', icon: '📚' },
-  { id: 'Советы', label: 'Советы', icon: '💡' },
-  { id: 'Безопасность', label: 'Предупреждения', icon: '⚠️' },
-  { id: 'Сравнение', label: 'Аналитика', icon: '📊' },
-  { id: 'Образование', label: 'Новости', icon: '📰' },
-]
-
 // Цвета для категорий
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   Советы: { bg: '#d1fae5', text: '#047857', border: '#10b981' },
+  Предупреждения: { bg: '#fee2e2', text: '#b91c1c', border: '#ef4444' },
+  Аналитика: { bg: '#dbeafe', text: '#1d4ed8', border: '#3b82f6' },
+  Новости: { bg: '#cffafe', text: '#0e7490', border: '#06b6d4' },
+  'Новости МФО': { bg: '#cffafe', text: '#0e7490', border: '#06b6d4' },
+  Образование: { bg: '#cffafe', text: '#0e7490', border: '#06b6d4' },
   Безопасность: { bg: '#fee2e2', text: '#b91c1c', border: '#ef4444' },
   Сравнение: { bg: '#dbeafe', text: '#1d4ed8', border: '#3b82f6' },
-  Образование: { bg: '#cffafe', text: '#0e7490', border: '#06b6d4' },
 }
 
 function ArticleCard({ article }: { article: Article }) {
@@ -173,15 +147,27 @@ function ArticleCard({ article }: { article: Article }) {
 }
 
 export default function BlogSection() {
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Фильтрация статей по категории
-  const filteredArticles = activeCategory === 'all'
-    ? allArticles
-    : allArticles.filter(article => article.category === activeCategory)
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch('/api/articles?page=1&limit=4')
+        const result = await response.json()
+        
+        if (result.success && result.data) {
+          setArticles(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching articles:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  // Показываем только 8 статей
-  const displayArticles = filteredArticles.slice(0, 8)
+    fetchArticles()
+  }, [])
 
   return (
     <Box sx={{ mt: 10, mb: 6 }}>
@@ -204,46 +190,12 @@ export default function BlogSection() {
         </Typography>
       </Box>
 
-      {/* Фильтры по категориям */}
-      <Box sx={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        gap: 1, 
-        justifyContent: 'center',
-        mb: 4 
-      }}>
-        {CATEGORIES.map((cat) => (
-          <Button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            variant={activeCategory === cat.id ? 'contained' : 'outlined'}
-            sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 0.75,
-              px: 2.5,
-              py: 0.75,
-              borderRadius: '50px',
-              fontSize: 13,
-              fontWeight: 600,
-              textTransform: 'none',
-              borderColor: '#e5e7eb',
-              color: activeCategory === cat.id ? 'white' : '#4b5563',
-              bgcolor: activeCategory === cat.id ? '#111827' : 'transparent',
-              '&:hover': {
-                bgcolor: activeCategory === cat.id ? '#1f2937' : '#f3f4f6',
-                borderColor: activeCategory === cat.id ? '#111827' : '#d1d5db',
-              },
-            }}
-          >
-            <span style={{ fontSize: 14 }}>{cat.icon}</span>
-            {cat.label}
-          </Button>
-        ))}
-      </Box>
-
       {/* Сетка статей */}
-      {displayArticles.length > 0 ? (
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <Typography>Загрузка...</Typography>
+        </Box>
+      ) : articles.length > 0 ? (
         <Box
           sx={{
             display: 'grid',
@@ -255,7 +207,7 @@ export default function BlogSection() {
             gap: 3,
           }}
         >
-          {displayArticles.map((article) => (
+          {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
         </Box>
@@ -267,31 +219,6 @@ export default function BlogSection() {
         </Box>
       )}
 
-      {/* Ссылка на все статьи */}
-      {displayArticles.length > 0 && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Button
-            component={Link}
-            href="/articles"
-            variant="outlined"
-            endIcon={<ArrowForwardIcon />}
-            sx={{
-              borderColor: '#10b981',
-              color: '#10b981',
-              fontWeight: 600,
-              px: 4,
-              py: 1,
-              borderRadius: '50px',
-              '&:hover': {
-                bgcolor: '#ecfdf5',
-                borderColor: '#059669',
-              },
-            }}
-          >
-            Все статьи
-          </Button>
-        </Box>
-      )}
     </Box>
   )
 }
