@@ -466,34 +466,45 @@ export default function HomeContent() {
                   {' '}и переводом на любую карту за 2 минуты
                 </Typography>
 
-                {/* Пиллы с преимуществами */}
+                {/* Пиллы с преимуществами - кнопки */}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, justifyContent: { xs: 'center', lg: 'flex-start' }, mb: 4 }}>
                   {[
-                    { icon: '⚡', text: 'За 2 минуты' },
-                    { icon: '✅', text: 'Без отказа' },
-                    { icon: '💳', text: 'На любую карту' },
-                    { icon: '🎯', text: 'Одобрено 98%' },
+                    { icon: '⚡', text: 'За 2 минуты', href: '/allmfo' },
+                    { icon: '✅', text: 'Без отказа', href: '/loans/zaim_bez_otkaza' },
+                    { icon: '💳', text: 'На любую карту', href: '/loans/zaim_na_kartu' },
+                    { icon: '🎯', text: 'Одобрено 98%', href: '/allmfo' },
                   ].map((item, idx) => (
-                    <Box
+                    <Button
                       key={idx}
+                      component={Link}
+                      href={item.href}
+                      variant="outlined"
                       sx={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: 0.75,
-                        px: 2,
+                        px: 2.5,
                         py: 1,
                         bgcolor: 'white',
                         borderRadius: '50px',
                         fontSize: 14,
-                        fontWeight: 500,
+                        fontWeight: 600,
                         color: '#374151',
+                        borderColor: '#e5e7eb',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        border: '1px solid #e5e7eb',
+                        textTransform: 'none',
+                        '&:hover': {
+                          bgcolor: '#f0fdf4',
+                          borderColor: '#10b981',
+                          color: '#10b981',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)',
+                        },
                       }}
                     >
                       <span>{item.icon}</span>
                       {item.text}
-                    </Box>
+                    </Button>
                   ))}
                 </Box>
 
