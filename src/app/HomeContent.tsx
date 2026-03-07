@@ -482,19 +482,19 @@ export default function HomeContent() {
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Сумма</Typography>
                       <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                        {mfo.sumMin.toLocaleString()} - {mfo.sumMax.toLocaleString()} ₽
+                        {mfo.sumMin ? mfo.sumMin.toLocaleString() : '—'} - {mfo.sumMax ? mfo.sumMax.toLocaleString() : '—'} ₽
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Срок</Typography>
                       <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                        {mfo.termMin}-{mfo.termMax} дней
+                        {mfo.termMin || '—'}-{mfo.termMax || '—'} дней
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant="body2" color="text.secondary">Ставка</Typography>
                       <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>
-                        {mfo.percent}% в день
+                        {mfo.percent || '—'}% в день
                       </Typography>
                     </Grid>
                     <Grid size={{ xs: 6 }}>
@@ -634,9 +634,9 @@ export default function HomeContent() {
                   <Box>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{selectedMfo.name}</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Rating value={selectedMfo.rating} precision={0.1} size="small" readOnly />
+                      <Rating value={selectedMfo.rating || 0} precision={0.1} size="small" readOnly />
                       <Typography variant="body2" color="text.secondary">
-                        ({selectedMfo.reviews.toLocaleString()} отзывов)
+                        ({selectedMfo.reviews ? selectedMfo.reviews.toLocaleString() : 0} отзывов)
                       </Typography>
                     </Box>
                   </Box>
@@ -667,15 +667,15 @@ export default function HomeContent() {
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 6 }}>
                         <Typography variant="body2" color="text.secondary">Сумма</Typography>
-                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{selectedMfo.sumMin.toLocaleString()} - {selectedMfo.sumMax.toLocaleString()} ₽</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{selectedMfo.sumMin ? selectedMfo.sumMin.toLocaleString() : '—'} - {selectedMfo.sumMax ? selectedMfo.sumMax.toLocaleString() : '—'} ₽</Typography>
                       </Grid>
                       <Grid size={{ xs: 6 }}>
                         <Typography variant="body2" color="text.secondary">Срок</Typography>
-                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{selectedMfo.termMin}-{selectedMfo.termMax} дней</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{selectedMfo.termMin || '—'}-{selectedMfo.termMax || '—'} дней</Typography>
                       </Grid>
                       <Grid size={{ xs: 6 }}>
                         <Typography variant="body2" color="text.secondary">Ставка</Typography>
-                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>{selectedMfo.percent}% в день</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#4caf50' }}>{selectedMfo.percent || '—'}% в день</Typography>
                       </Grid>
                       <Grid size={{ xs: 6 }}>
                         <Typography variant="body2" color="text.secondary">Вероятность одобрения</Typography>
