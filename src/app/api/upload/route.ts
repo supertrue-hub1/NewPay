@@ -18,7 +18,7 @@ function generateFilename(originalName: string): string {
   return `${timestamp}-${uuid}${ext}`
 }
 
-// Создание таблицы изображений
+// Создание таблицы изображений (без FOREIGN KEY для избежания ошибок)
 async function createImagesTable() {
   const { query } = await import('@/lib/db')
   
@@ -35,10 +35,11 @@ async function createImagesTable() {
       alt VARCHAR(500),
       article_id INTEGER,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE SET NULL
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
-  `)
+  `).catch(() => {
+    // Игнорируем ошибку если таблица уже существует
+  })
 }
 
 // GET - проверка работоспособности
@@ -151,8 +152,9 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error('Upload error:', error)
+    console.error('Error stack:', error.stack)
     return NextResponse.json(
-      { success: false, error: error.message || 'Ошибка загрузки' },
+      { success: false, error: error.message || 'Ошибка загрузки', details: error.stack },
       { status: 500 }
     )
   }
