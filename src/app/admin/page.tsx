@@ -52,7 +52,7 @@ const transliterate = (text: string): string => {
     .toLowerCase()
 }
 
-type TabType = 'mfo' | 'mfoOverview' | 'cards' | 'blog' | 'faq' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms'
+type TabType = 'mfo' | 'mfoOverview' | 'cards' | 'blog' | 'faq' | 'footer' | 'loansInfo' | 'analytics' | 'about' | 'terms' | 'misc'
 
 // Категории статей
 const ARTICLE_CATEGORIES = [

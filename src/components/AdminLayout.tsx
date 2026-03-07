@@ -9,7 +9,7 @@ import {
 import { 
   Dashboard, AccountBalance, CreditCard, Article, HelpOutline, 
   Analytics, Menu as MenuIcon, ChevronLeft,
-  Settings, Logout, Person, Notifications, Info, ExpandLess, ExpandMore, Description, LocalOffer, Handshake, OpenInNew
+  Settings, Logout, Person, Notifications, Info, ExpandLess, ExpandMore, Description, LocalOffer, Handshake, OpenInNew, Tune
 } from '@mui/icons-material'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -37,9 +37,10 @@ const menuItems: MenuItemType[] = [
   { label: 'Футер', icon: <Settings />, tabId: 'footer' },
   { 
     label: 'Разное', 
-    icon: <Info />, 
+    icon: <Tune />, 
     tabId: 'misc',
     subItems: [
+      { label: 'Настройки popup', tabId: 'misc', icon: <Tune /> },
       { label: 'О нас', tabId: 'about', icon: <Description /> },
       { label: 'Пользовательское соглашение', tabId: 'terms', icon: <Description /> },
       { label: 'О займах', tabId: 'loansInfo', icon: <Info /> },
@@ -71,9 +72,14 @@ export default function AdminLayout({ children, activeTab = 'mfo', onTabChange }
   }
 
   const handleMenuClick = (tabId: string) => {
-    // Для партнёров используем отдельную страницу
+    // Для партнёров и разного используем отдельные страницы
     if (tabId === 'partners') {
       router.push('/admin/partners')
+      setMobileOpen(false)
+      return
+    }
+    if (tabId === 'misc') {
+      router.push('/admin/misc')
       setMobileOpen(false)
       return
     }
