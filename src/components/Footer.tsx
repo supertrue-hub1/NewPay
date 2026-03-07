@@ -44,12 +44,12 @@ export interface FooterData {
 }
 
 const defaultFooterData: FooterData = {
-  about: 'SravniPay — сервис подбора лучших микрозаймов от проверенных финансовых организаций. Мы помогаем получить деньги на карту быстро и выгодно.',
+  about: 'CashPeek — сервис подбора лучших микрозаймов от проверенных финансовых организаций. Мы помогаем получить деньги на карту быстро и выгодно.',
   phone: '+7 (495) 123-45-67',
-  email: 'info@sravnipay.ru',
+  email: 'info@cashpeek.ru',
   address: 'г. Москва, ул. Примерная, д. 1',
   privacyPolicy: 'Политика конфиденциальности',
-  privacyContent: 'Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сервиса SravniPay.',
+  privacyContent: 'Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сервиса CashPeek.',
   offer: 'Оферта',
   cookieInfo: 'Мы используем cookie для улучшения работы сайта и анализа трафика.',
   socialLinks: {}
@@ -222,7 +222,7 @@ export default function Footer() {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              SravniPay
+              CashPeek
             </Typography>
             <Typography 
               variant="body2" 
@@ -397,7 +397,7 @@ export default function Footer() {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.85rem' }}>
-              {new Date().getFullYear()} SravniPay.ru. Все права защищены.
+              {new Date().getFullYear()} CashPeek.ru. Все права защищены.
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.75rem', mt: 0.5 }}>
               {footerData.cookieInfo}

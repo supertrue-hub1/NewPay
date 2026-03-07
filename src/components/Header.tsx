@@ -42,7 +42,7 @@ const Logo = ({ mobile = false }: { mobile?: boolean }) => (
   <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
     <img 
       src="/logo.svg" 
-      alt="SravniPay" 
+      alt="CashPeek" 
       style={{ 
         height: mobile ? 40 : 100, 
         marginLeft: mobile ? 0 : 120 

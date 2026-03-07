@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://sravnipay.ru',
+  siteUrl: process.env.SITE_URL || 'https://cashpeek.ru',
   generateRobotsTxt: true,
   outDir: './public',
   generateIndexSitemap: false,
