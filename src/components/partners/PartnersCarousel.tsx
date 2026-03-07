@@ -85,17 +85,21 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
 
   // Автоплей слайдера
   useEffect(() => {
+    if (partners.length === 0 || slidesPerView === 0) return
+    
+    const currentMaxIndex = Math.max(0, partners.length - slidesPerView)
+    
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
-        if (prev >= maxIndex) {
+        if (prev >= currentMaxIndex) {
           return 0
         }
         return prev + 1
       })
-    }, 3000) // каждые 3 секунды
+    }, 3000)
 
     return () => clearInterval(interval)
-  }, [maxIndex])
+  }, [partners.length, slidesPerView])
 
   const visiblePartners = partners.slice(currentIndex, currentIndex + slidesPerView)
 
