@@ -387,55 +387,365 @@ export default function HomeContent() {
  <>
 <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py:4 }}>
  <Container maxWidth="lg">
-      {/* Hero секция */}
- <Box
- sx={{
- textAlign: 'center',
- mb:6,
- py:6,
- px:4,
- borderRadius:4,
- overflow: 'hidden',
- position: 'relative',
- bgcolor: '#667eea',
- backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
- boxShadow: '0 16px 40px rgba(102, 126, 234, 0.28)',
- color: '#fff',
- '&::before': {
- content: '""',
- position: 'absolute',
- inset: 0,
- background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 45%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.16), transparent 40%)',
- pointerEvents: 'none',
- zIndex:0,
- },
- '& > *': {
- position: 'relative',
- zIndex:1,
- },
- }}
- >
-          <Typography 
-            variant="h2" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 800, 
-              mb: 2,
-              color: '#fff',
-            }}
-          >
-            🔥 Лучшие предложения от проверенных МФО
-          </Typography>
-          <Typography variant="h5" sx={{ mb: 4, color: 'rgba(255,255,255,0.9)' }}>
-            {t('title')}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', color: 'rgba(255,255,255,0.85)' }}>
-            {t('description')}
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 600, color: '#fff' }}>
-            Займы на карту без отказа — Мгновенный подбор лучших МФО
-          </Typography>
+      {/* Hero секция - новый дизайн */}
+      <Box
+        sx={{
+          position: 'relative',
+          mb: 8,
+          py: { xs: 4, md: 6 },
+          px: { xs: 2, md: 4 },
+          borderRadius: 4,
+          overflow: 'hidden',
+          background: 'linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 50%, #ffffff 100%)',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.15), transparent 50%), radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.1), transparent 40%)',
+            pointerEvents: 'none',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(rgba(14, 165, 233, 0.3) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+            opacity: 0.4,
+            pointerEvents: 'none',
+          },
+        }}
+      >
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Grid container spacing={4} alignItems="center">
+            {/* Левая колонка - контент */}
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Box sx={{ textAlign: { xs: 'center', lg: 'left' } }}>
+                {/* Бейдж с огнём */}
+                <Box
+                  sx={{ 
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    px: 2,
+                    py: 0.75,
+                    bgcolor: '#f97316',
+                    borderRadius: '50px',
+                    color: 'white',
+                    fontWeight: 600,
+                    fontSize: 14,
+                    mb: 3,
+                    animation: 'float 3s ease-in-out infinite',
+                    '@keyframes float': {
+                      '0%, 100%': { transform: 'translateY(0)' },
+                      '50%': { transform: 'translateY(-5px)' },
+                    },
+                  }}
+                >
+                  <span style={{ fontSize: 16 }}>🔥</span>
+                  Лучшие предложения
+                </Box>
+
+                {/* Заголовок */}
+                <Typography
+                  variant="h2"
+                  component="h1"
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: { xs: '2rem', md: '2.75rem' },
+                    lineHeight: 1.2,
+                    mb: 2,
+                    color: '#111827',
+                  }}
+                >
+                  Лучшие предложения от{' '}
+                  <Box
+                    component="span"
+                    sx={{
+                      background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    проверенных МФО
+                  </Box>
+                </Typography>
+
+                {/* Подзаголовок */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: '#4b5563',
+                    mb: 3,
+                    fontWeight: 400,
+                    fontSize: { xs: '1rem', md: '1.125rem' },
+                  }}
+                >
+                  Мгновенный подбор лучших займов с{' '}
+                  <Box component="span" sx={{ color: '#0ea5e9', fontWeight: 600 }}>99% одобрения</Box>
+                  {' '}и переводом на любую карту за 2 минуты
+                </Typography>
+
+                {/* Пиллы с преимуществами */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, justifyContent: { xs: 'center', lg: 'flex-start' }, mb: 4 }}>
+                  {[
+                    { icon: '⚡', text: 'За 2 минуты' },
+                    { icon: '✅', text: 'Без отказа' },
+                    { icon: '💳', text: 'На любую карту' },
+                    { icon: '🎯', text: 'Одобрено 98%' },
+                  ].map((item, idx) => (
+                    <Box
+                      key={idx}
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 0.75,
+                        px: 2,
+                        py: 1,
+                        bgcolor: 'white',
+                        borderRadius: '50px',
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: '#374151',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                        border: '1px solid #e5e7eb',
+                      }}
+                    >
+                      <span>{item.icon}</span>
+                      {item.text}
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* CTA кнопки */}
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: { xs: 'center', lg: 'flex-start' }, mb: 5, flexWrap: 'wrap' }}>
+                  <Button
+                    variant="contained"
+                    href="/mfo"
+                    sx={{
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: 'white',
+                      fontWeight: 700,
+                      fontSize: 16,
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: '50px',
+                      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.35)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                        boxShadow: '0 12px 35px rgba(16, 185, 129, 0.45)',
+                        transform: 'translateY(-2px)',
+                      },
+                    }}
+                  >
+                    <span style={{ marginRight: 8 }}>⭐</span>
+                    Найти лучший займ
+                    <span style={{ marginLeft: 8 }}>→</span>
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    href="/allmfo"
+                    sx={{
+                      borderColor: '#0ea5e9',
+                      color: '#0ea5e9',
+                      fontWeight: 600,
+                      fontSize: 16,
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: '50px',
+                      borderWidth: 2,
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        borderWidth: 2,
+                        bgcolor: 'rgba(14, 165, 233, 0.08)',
+                        borderColor: '#0284c7',
+                      },
+                    }}
+                  >
+                    Сравнить все МФО
+                  </Button>
+                </Box>
+
+                {/* Статистика */}
+                <Box sx={{ display: 'flex', gap: 3, justifyContent: { xs: 'center', lg: 'flex-start' }, flexWrap: 'wrap' }}>
+                  {[
+                    { icon: '🏦', value: '50+', label: 'МФО' },
+                    { icon: '⏱️', value: '5 мин', label: 'одобрение' },
+                    { icon: '💰', value: '98%', label: 'на карту' },
+                  ].map((stat, idx) => (
+                    <Box
+                      key={idx}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        px: 2,
+                        py: 1,
+                        bgcolor: 'rgba(255,255,255,0.7)',
+                        borderRadius: 2,
+                        border: '1px solid #e0f2fe',
+                      }}
+                    >
+                      <span style={{ fontSize: 20 }}>{stat.icon}</span>
+                      <Box>
+                        <Box sx={{ fontWeight: 700, color: '#111827', fontSize: 16 }}>{stat.value}</Box>
+                        <Box sx={{ fontSize: 12, color: '#6b7280' }}>{stat.label}</Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
+
+            {/* Правая колонка - карточки МФО */}
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Box sx={{ position: 'relative', height: { xs: 280, md: 350 }, display: { xs: 'none', lg: 'block' } }}>
+                {/* Главная карточка */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%) rotate(-2deg)',
+                    width: 280,
+                    bgcolor: 'white',
+                    borderRadius: 3,
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+                    p: 2.5,
+                    transition: 'all 0.4s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'translate(-50%, -55%) rotate(0deg) scale(1.02)',
+                      boxShadow: '0 25px 60px rgba(0,0,0,0.2)',
+                    },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#0ea5e9', fontSize: 18 }}>
+                      МК
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography sx={{ fontWeight: 700, color: '#111827' }}>МигКредит</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <span style={{ color: '#f59e0b' }}>⭐</span>
+                        <Typography sx={{ fontSize: 14, color: '#4b5563' }}>4.8 (2.3k)</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ bgcolor: '#dcfce7', color: '#16a34a', px: 1.5, py: 0.5, borderRadius: 1, fontSize: 12, fontWeight: 600 }}>
+                      98%
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
+                    <Box>
+                      <Typography sx={{ fontSize: 12, color: '#6b7280' }}>Сумма</Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#111827' }}>до 100 000 ₽</Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'right' }}>
+                      <Typography sx={{ fontSize: 12, color: '#6b7280' }}>Ставка</Typography>
+                      <Typography sx={{ fontWeight: 700, color: '#10b981' }}>от 0%</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ bgcolor: '#f0f9ff', borderRadius: 2, p: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                    <span>🎯</span>
+                    <Typography sx={{ fontSize: 13, color: '#0284c7', fontWeight: 500 }}>Одобрение за 2 минуты</Typography>
+                  </Box>
+                </Box>
+
+                {/* Вторая карточка */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '15%',
+                    right: '5%',
+                    transform: 'rotate(5deg)',
+                    width: 240,
+                    bgcolor: 'white',
+                    borderRadius: 3,
+                    boxShadow: '0 15px 40px rgba(0,0,0,0.12)',
+                    p: 2,
+                    transition: 'all 0.4s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotate(2deg) scale(1.02)',
+                    },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#f59e0b', fontSize: 14 }}>
+                      ЕЗ
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontWeight: 600, color: '#111827', fontSize: 14 }}>Езайм</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <span style={{ color: '#f59e0b', fontSize: 12 }}>⭐</span>
+                        <Typography sx={{ fontSize: 12, color: '#6b7280' }}>4.6</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Typography sx={{ fontSize: 13, color: '#374151', mb: 1 }}>до 30 000 ₽</Typography>
+                  <Typography sx={{ fontSize: 12, color: '#10b981', fontWeight: 600 }}>Первый займ 0%</Typography>
+                </Box>
+
+                {/* Третья карточка */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: '10%',
+                    left: '0%',
+                    transform: 'rotate(-4deg)',
+                    width: 230,
+                    bgcolor: 'white',
+                    borderRadius: 3,
+                    boxShadow: '0 15px 40px rgba(0,0,0,0.12)',
+                    p: 2,
+                    transition: 'all 0.4s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotate(-1deg) scale(1.02)',
+                    },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#3b82f6', fontSize: 14 }}>
+                      ЗМ
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontWeight: 600, color: '#111827', fontSize: 14 }}>Займер</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <span style={{ color: '#f59e0b', fontSize: 12 }}>⭐</span>
+                        <Typography sx={{ fontSize: 12, color: '#6b7280' }}>4.7</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Typography sx={{ fontSize: 13, color: '#374151', mb: 1 }}>до 50 000 ₽</Typography>
+                  <Typography sx={{ fontSize: 12, color: '#10b981', fontWeight: 600 }}>Мгновенно</Typography>
+                </Box>
+              </Box>
+
+              {/* Мобильная версия - упрощённая */}
+              <Box sx={{ display: { xs: 'flex', lg: 'none' }, justifyContent: 'center', gap: 2, py: 2 }}>
+                {['МигКредит', 'Езайм', 'Займер'].map((name, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      bgcolor: 'white',
+                      borderRadius: 2,
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                      p: 2,
+                      minWidth: 140,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 700, color: '#111827', mb: 0.5 }}>{name}</Box>
+                    <Box sx={{ color: '#10b981', fontWeight: 600, fontSize: 14 }}>до {idx === 0 ? '100к' : idx === 1 ? '30к' : '50к'} ₽</Box>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
+      </Box>
 
         {/* Карточки МФО */}
         {!isLoaded ? (
