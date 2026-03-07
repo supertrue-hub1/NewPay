@@ -8,7 +8,7 @@ interface LogoProps {
   color?: string
 }
 
-export default function Logo({ logo, size = 50, color = '#1a237e' }: LogoProps) {
+export default function Logo({ logo, size = 60, color = '#1a237e' }: LogoProps) {
   // Check if logo is a URL (http/https) or data URI (base64)
   const isImage = logo && (logo.startsWith('http') || logo.startsWith('https') || logo.startsWith('data:'))
 
