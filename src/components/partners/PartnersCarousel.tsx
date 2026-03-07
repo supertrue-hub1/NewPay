@@ -105,7 +105,19 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
   }
 
   return (
-    <Box sx={{ py: 6, bgcolor: '#f5f5f5' }}>
+    <Box 
+      sx={{ 
+        py: 6, 
+        bgcolor: '#f5f5f5',
+        '& a': {
+          textDecoration: 'none !important',
+          color: 'inherit',
+        },
+        '& a:hover': {
+          textDecoration: 'none !important',
+        }
+      }}
+    >
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 2 }}>
         <Typography 
           variant="h4" 
@@ -177,16 +189,18 @@ export default function PartnersCarousel({ title = 'Надёжные компа�
                     bgcolor: '#fff',
                     borderRadius: 2,
                     boxShadow: 1,
-                    textDecoration: 'none !important',
+                    textDecoration: 'none',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                     height: '100%',
+                    color: '#333',
                     '&:hover': {
                       transform: 'translateY(-4px)',
                       boxShadow: 3,
+                      color: '#333',
                     },
-                    '&:hover *': {
-                      textDecoration: 'none !important',
+                    '&:hover::after': {
+                      display: 'none',
                     }
                   }}
                 >
