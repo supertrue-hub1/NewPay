@@ -32,6 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .logo {
@@ -39,8 +40,7 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  margin-left: auto;
-  order: 3;
+  margin-right: 32px;
 }
 
 .logoIcon {
@@ -170,7 +170,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  order: 1;
 }
 
 .btnLogin {
