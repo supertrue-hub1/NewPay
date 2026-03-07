@@ -12,12 +12,15 @@ export async function GET(
     const { path: filePath } = await params
     const relativePath = filePath.join('/')
     
-    // Безопасный путь - только images/articles
-    if (!relativePath.startsWith('images/articles/')) {
+    // Безопасный путь - только изображения
+    // Путь может быть /api/images/filename или просто filename
+    if (relativePath.includes('..') || relativePath.includes('~')) {
       return NextResponse.json({ error: 'Invalid path' }, { status: 403 })
     }
 
-    const fullPath = path.join(process.cwd(), 'public', relativePath)
+    // Файл хранится в public/images/articles/
+    const actualPath = `images/articles/${filePath[filePath.length - 1]}`
+    const fullPath = path.join(process.cwd(), 'public', actualPath)
 
     if (!existsSync(fullPath)) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 })

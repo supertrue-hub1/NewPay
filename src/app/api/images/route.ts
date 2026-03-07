@@ -64,21 +64,25 @@ export async function GET(request: NextRequest) {
       [...params, limit, offset]
     )
 
-    const images = dataResult.rows.map((row: any) => ({
-      id: row.id,
-      filename: row.filename,
-      originalName: row.original_name,
-      path: row.path,
-      url: row.path,
-      mimeType: row.mime_type,
-      size: row.size,
-      width: row.width,
-      height: row.height,
-      alt: row.alt,
-      articleId: row.article_id,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-    }))
+    const images = dataResult.rows.map((row: any) => {
+      // Конвертируем путь /images/articles/ в /api/images/ для корректного отображения
+      const apiPath = row.path.replace('/images/articles/', '/api/images/')
+      return {
+        id: row.id,
+        filename: row.filename,
+        originalName: row.original_name,
+        path: row.path,
+        url: apiPath,
+        mimeType: row.mime_type,
+        size: row.size,
+        width: row.width,
+        height: row.height,
+        alt: row.alt,
+        articleId: row.article_id,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+      }
+    })
 
     return NextResponse.json({
       success: true,
