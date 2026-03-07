@@ -6,16 +6,6 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 const nextConfig: NextConfig = {
   // i18n configuration for static export
   
-  // Rewrites для раздачи загруженных изображений через /api/images/*
-  async rewrites() {
-    return [
-      {
-        source: '/api/images/:filename',
-        destination: '/images/articles/:filename',
-      },
-    ]
-  },
-  
   // Оптимизация изображений
   images: {
     formats: ['image/avif', 'image/webp'],

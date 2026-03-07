@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Проксирование /images/articles/* через Next.js
+  if (pathname.startsWith('/images/articles/')) {
+    const filename = pathname.split('/images/articles/')[1]
+    
+    // Пробуем отдать файл напрямую через rewrite
+    return NextResponse.rewrite(new URL(pathname, request.url))
+  }
+  
   return NextResponse.next();
 }
 

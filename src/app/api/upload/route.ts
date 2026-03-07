@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const dbPath = `/images/articles/${filename}`
+    const dbPath = `/api/serve-image/${filename}`
     
     const result = await query(
       `INSERT INTO images (filename, original_name, path, mime_type, size, width, height)
