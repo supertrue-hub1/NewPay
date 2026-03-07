@@ -817,37 +817,83 @@ export default function HomeContent() {
           </Button>
         </Box>
 
+        {/* Полезные статьи */}
         <Box sx={{ mt: 8 }}>
-          <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
-            Как это работает
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+            <Typography variant="h4" component="h2" sx={{ fontWeight: 700 }}>
+              Полезные статьи
+            </Typography>
+            <Button 
+              component={Link}
+              href="/articles"
+              sx={{ color: '#10b981', fontWeight: 600 }}
+            >
+              Все статьи →
+            </Button>
+          </Box>
           
           <Grid container spacing={3}>
             {[
-              { step: '1', title: 'Выберите сумму и срок', desc: 'Используйте калькулятор для подбора оптимальных условий' },
-              { step: '2', title: 'Заполните заявку', desc: 'Понадобятся только паспортные данные и номер карты' },
-              { step: '3', title: 'Получите деньги', desc: 'Деньги поступят на карту в течение 5-15 минут' },
-            ].map((item) => (
-              <Grid size={{ xs: 12, md: 4 }} key={item.step}>
-                <Card sx={{ height: '100%', textAlign: 'center', p: 3 }}>
-                  <Box sx={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: '50%',
-                    bgcolor: '#1a237e',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 24,
-                    fontWeight: 700,
-                    mx: 'auto',
-                    mb: 2,
-                  }}>
-                    {item.step}
-                  </Box>
-                  <Typography variant="h6" gutterBottom>{item.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">{item.desc}</Typography>
+              { 
+                slug: 'kak-vybrat-luchshij-mikrozajm',
+                title: 'Как выбрать лучший микрозайм', 
+                excerpt: 'Полное руководство по выбору МФО: на что обратить внимание и как не переплатить.',
+                category: 'Советы',
+                color: '#10b981'
+              },
+              { 
+                slug: 'kak-uluchshit-kreditnuyu-istoriju',
+                title: 'Как улучшить кредитную историю', 
+                excerpt: 'Эффективные способы восстановления и улучшения кредитной истории.',
+                category: 'Советы',
+                color: '#10b981'
+              },
+              { 
+                slug: 'bezopasnost-pri-onlajn-zayavkah',
+                title: 'Безопасность при онлайн-заявках', 
+                excerpt: 'Как защитить свои данные и деньги при оформлении займа через интернет.',
+                category: 'Безопасность',
+                color: '#f59e0b'
+              },
+            ].map((article) => (
+              <Grid size={{ xs: 12, md: 4 }} key={article.slug}>
+                <Card 
+                  component={Link}
+                  href={`/articles/${article.slug}`}
+                  sx={{ 
+                    height: '100%', 
+                    textDecoration: 'none',
+                    borderRadius: 3,
+                    border: '1px solid #e5e7eb',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+                      borderColor: '#10b981',
+                    }
+                  }}
+                >
+                  <Box sx={{ height: 4, bgcolor: article.color, borderRadius: '12px 12px 0 0' }} />
+                  <CardContent sx={{ p: 3 }}>
+                    <Chip 
+                      label={article.category} 
+                      size="small" 
+                      sx={{ 
+                        bgcolor: `${article.color}15`, 
+                        color: article.color,
+                        fontWeight: 500,
+                        fontSize: '0.7rem',
+                        height: 22,
+                        mb: 1.5,
+                      }} 
+                    />
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#111827' }}>
+                      {article.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {article.excerpt}
+                    </Typography>
+                  </CardContent>
                 </Card>
               </Grid>
             ))}
