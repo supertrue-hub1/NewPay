@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   { label: 'Кредитные карты', href: '/cards' },
   { label: 'Статьи', href: '/articles' },
   { label: 'FAQ', href: '/faq' },
-{ 
+  { 
     label: 'Ещё', 
     href: '#',
     subitems: [
@@ -37,19 +37,6 @@ const navItems: NavItem[] = [
     ]
   },
 ]
-
-const Logo = ({ mobile = false }: { mobile?: boolean }) => (
-  <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-    <img 
-      src="/logo.svg" 
-      alt="CashPeek" 
-      style={{ 
-        height: mobile ? 40 : 100, 
-        marginLeft: mobile ? 0 : 120 
-      }} 
-    />
-  </Link>
-)
 
 export default function Header() {
   const pathname = usePathname() ?? '/'
@@ -89,29 +76,30 @@ export default function Header() {
   }
 
   // Prevent hydration mismatch - render placeholder until mounted
-if (!mounted) {
- return (
- <header
- className={styles.header}
- suppressHydrationWarning
- style={{
- minHeight: 100,
- background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%)',
- borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
- }}
- />
- )
- }
-
+  if (!mounted) {
+    return (
+      <header
+        className={styles.header}
+        suppressHydrationWarning
+        style={{
+          minHeight: 80,
+          background: 'linear-gradient(180deg, #0a0f1c 0%, #111827 50%, #0f172a 100%)',
+        }}
+      />
+    )
+  }
 
   return (
     <>
       <header className={styles.header} suppressHydrationWarning>
         <div className={styles.container}>
           {/* Logo */}
-          <div style={{ position: 'absolute', left: 24 }}>
-            <Logo />
-          </div>
+          <Link href="/" className={styles.logo}>
+            <div className={styles.logoIcon}>C</div>
+            <span className={styles.logoText}>
+              Cash<span>Peek</span>
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className={styles.nav}>
@@ -151,14 +139,23 @@ if (!mounted) {
             ))}
           </nav>
 
+          {/* Actions */}
+          <div className={styles.actions}>
+            <Link href="/admin" className={styles.btnLogin}>
+              Войти
+            </Link>
+            <Link href="/allmfo" className={styles.btnStart}>
+              Начать
+            </Link>
+          </div>
+
           {/* Mobile Hamburger */}
           <button 
             className={styles.hamburger}
-            style={{ position: 'absolute', right: 24 }}
             onClick={() => setMobileOpen(true)}
             aria-label="Открыть меню"
           >
-            <Menu sx={{ fontSize: 24, color: '#374151' }} />
+            <Menu sx={{ fontSize: 24 }} />
           </button>
         </div>
       </header>
@@ -166,15 +163,20 @@ if (!mounted) {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className={styles.mobileMenu}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-            <Logo mobile />
+          <div className={styles.mobileMenuHeader}>
+            <Link href="/" className={styles.mobileLogo} onClick={() => setMobileOpen(false)}>
+              <div className={styles.logoIcon}>C</div>
+              <span className={styles.logoText}>
+                Cash<span>Peek</span>
+              </span>
+            </Link>
             <button 
               className={styles.hamburger}
               style={{ display: 'flex' }}
               onClick={() => setMobileOpen(false)}
               aria-label="Закрыть меню"
             >
-              <Close sx={{ fontSize: 24, color: '#374151' }} />
+              <Close sx={{ fontSize: 24 }} />
             </button>
           </div>
 
@@ -184,13 +186,22 @@ if (!mounted) {
                 key={item.href}
                 href={item.href}
                 className={styles.mobileNavItem}
-                style={pathname === item.href ? { color: '#4f46e5', fontWeight: 600 } : {}}
+                style={pathname === item.href ? { color: '#10b981', fontWeight: 600 } : {}}
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
           </nav>
+
+          <div className={styles.mobileActions}>
+            <Link href="/admin" className={styles.mobileBtnLogin} onClick={() => setMobileOpen(false)}>
+              Войти
+            </Link>
+            <Link href="/allmfo" className={styles.mobileBtnStart} onClick={() => setMobileOpen(false)}>
+              Начать
+            </Link>
+          </div>
         </div>
       )}
     </>
