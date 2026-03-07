@@ -385,7 +385,7 @@ export default function HomeContent() {
 
  return (
  <>
-<Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py:4 }}>
+<Box sx={{ minHeight: '100vh', py: 4 }}>
  <Container maxWidth="lg">
       {/* Hero секция - новый дизайн */}
       <Box
