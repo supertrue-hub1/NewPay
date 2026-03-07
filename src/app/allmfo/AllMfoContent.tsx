@@ -128,7 +128,7 @@ export default function AllMfoContent({ pageTitle }: AllMfoContentProps) {
   }, [])
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800 }}>
           {pageTitle || 'Все МФО'} — займы онлайн на карту без отказа
