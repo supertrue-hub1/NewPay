@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
         filename: image.filename,
         originalName: image.original_name,
         path: image.path,
-        url: dbPath,
+        url: image.path,
         mimeType: image.mime_type,
         size: image.size,
         width: image.width,
