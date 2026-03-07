@@ -425,7 +425,7 @@ export default function ArticleDetailPage() {
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                           <StarIcon sx={{ color: '#fbbf24', fontSize: 18 }} />
-                          <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>{mfo.rating?.toFixed(1) || '0.0'}</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>{typeof mfo.rating === 'number' ? mfo.rating.toFixed(1) : '0.0'}</Typography>
                         </Box>
                       </Box>
                     ))}
