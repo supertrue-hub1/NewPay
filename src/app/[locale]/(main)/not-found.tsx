@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Home, ArrowLeft, Search } from 'lucide-react'
 
-export default function NotFound() {
+export default function NotFoundPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white p-4">
       <div className="text-center">
@@ -11,7 +11,7 @@ export default function NotFound() {
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Страница не найдена</h2>
         <p className="text-slate-400 mb-8 text-lg">Вы попали в неизведанную территорию</p>
         
-        <div className="text-6xl md:text-8xl mb-8">
+        <div className="text-6xl md:text-8xl mb-8 animate-bounce">
           👨‍🚀
         </div>
 
