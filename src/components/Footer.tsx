@@ -163,7 +163,7 @@ export default function Footer() {
       <Box 
         component="footer" 
         sx={{ 
-          bgcolor: '#1a237e', 
+          bgcolor: '#0a0f1c', 
           color: 'white', 
           py: 8, 
           mt: 'auto', 
@@ -182,7 +182,7 @@ export default function Footer() {
         overflow: 'hidden'
       }}
     >
-      {/* Gradient Background */}
+      {/* Gradient Background - dark theme */}
       <Box
         sx={{
           position: 'absolute',
@@ -190,7 +190,7 @@ export default function Footer() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #303f9f 100%)'
+          background: 'linear-gradient(180deg, #0a0f1c 0%, #111827 50%, #0f172a 100%)'
         }}
       />
 
@@ -216,13 +216,13 @@ export default function Footer() {
               sx={{ 
                 fontWeight: 800, 
                 mb: 2,
-                background: 'linear-gradient(135deg, #fff 0%, #90caf9 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
+                fontSize: '1.5rem',
+                color: 'white',
+                letterSpacing: '-0.5px',
+                textTransform: 'lowercase'
               }}
             >
-              CashPeek
+              cashpeek
             </Typography>
             <Typography 
               variant="body2" 
@@ -240,7 +240,7 @@ export default function Footer() {
               {footerData.phone && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: '8px', p: 0.75, display: 'flex' }}>
-                    <Phone sx={{ fontSize: 18, color: '#90caf9' }} />
+                    <Phone sx={{ fontSize: 18, color: '#10b981' }} />
                   </Box>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
                     {footerData.phone}
@@ -250,7 +250,7 @@ export default function Footer() {
               {footerData.email && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: '8px', p: 0.75, display: 'flex' }}>
-                    <Email sx={{ fontSize: 18, color: '#90caf9' }} />
+                    <Email sx={{ fontSize: 18, color: '#10b981' }} />
                   </Box>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
                     {footerData.email}
@@ -260,7 +260,7 @@ export default function Footer() {
               {footerData.address && (
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                   <Box sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: '8px', p: 0.75, display: 'flex', mt: 0.25 }}>
-                    <LocationOn sx={{ fontSize: 18, color: '#90caf9' }} />
+                    <LocationOn sx={{ fontSize: 18, color: '#10b981' }} />
                   </Box>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
                     {footerData.address}
@@ -333,7 +333,7 @@ export default function Footer() {
                     borderRadius: '8px',
                     '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
                     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.4)' },
-                    '&.Mui-focused fieldset': { borderColor: '#90caf9' },
+                    '&.Mui-focused fieldset': { borderColor: '#10b981' },
                     '& input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1 }
                   }
                 }}
@@ -342,18 +342,22 @@ export default function Footer() {
                 type="submit"
                 variant="contained"
                 sx={{
-                  bgcolor: '#4caf50',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                   borderRadius: '8px',
                   minWidth: 'auto',
                   px: 1.5,
-                  '&:hover': { bgcolor: '#43a047' }
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)',
+                  '&:hover': { 
+                    background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                    boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)'
+                  }
                 }}
               >
                 <Send sx={{ fontSize: 18 }} />
               </Button>
             </Box>
             {subscribed && (
-              <Typography variant="body2" sx={{ color: '#81c784', fontSize: '0.8rem' }}>
+              <Typography variant="body2" sx={{ color: '#10b981', fontSize: '0.8rem' }}>
                 Спасибо за подписку!
               </Typography>
             )}
@@ -397,7 +401,7 @@ export default function Footer() {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.85rem' }}>
-              {new Date().getFullYear()} CashPeek.ru. Все права защищены.
+              {new Date().getFullYear()} cashpeek.ru. Все права защищены.
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', textAlign: { xs: 'left', md: 'right' }, fontSize: '0.75rem', mt: 0.5 }}>
               {footerData.cookieInfo}

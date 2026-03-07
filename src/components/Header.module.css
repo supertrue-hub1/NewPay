@@ -10,20 +10,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Grid Pattern */
-.header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-}
+/* Grid Pattern - removed */
 
 /* Top highlight */
 .header::after {
@@ -53,6 +40,7 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  margin-right: auto;
 }
 
 .logoIcon {
@@ -73,6 +61,7 @@
   font-weight: 700;
   color: white;
   letter-spacing: -0.5px;
+  text-transform: lowercase;
 }
 
 .logoText span {
