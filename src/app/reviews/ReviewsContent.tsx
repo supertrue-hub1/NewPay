@@ -194,7 +194,7 @@ export default function ReviewsContent() {
   }
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', pb: 8 }}>
+    <Box sx={{ minHeight: '100vh', pb: 8 }}>
       {/* Hero секция */}
       <Box sx={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
