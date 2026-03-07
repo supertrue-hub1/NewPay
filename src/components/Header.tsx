@@ -144,8 +144,8 @@ export default function Header() {
             <Link href="/admin" className={styles.btnLogin}>
               Войти
             </Link>
-            <Link href="/allmfo" className={styles.btnStart}>
-              Начать
+            <Link href="/mfo" className={styles.btnStart}>
+              Сравнить займ
             </Link>
           </div>
 
@@ -198,8 +198,8 @@ export default function Header() {
             <Link href="/admin" className={styles.mobileBtnLogin} onClick={() => setMobileOpen(false)}>
               Войти
             </Link>
-            <Link href="/allmfo" className={styles.mobileBtnStart} onClick={() => setMobileOpen(false)}>
-              Начать
+            <Link href="/mfo" className={styles.mobileBtnStart} onClick={() => setMobileOpen(false)}>
+              Сравнить займ
             </Link>
           </div>
         </div>
