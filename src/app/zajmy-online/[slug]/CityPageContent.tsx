@@ -77,7 +77,7 @@ export default function CityPageContent({ city }: Props) {
   const cityText = cityTexts[city.slug] || getDefaultText(city.name, city.nameGenitive)
 
   return (
-    <Box sx={{ pt: 12, pb: 8, minHeight: '100vh', bgcolor: '#f8fafc' }}>
+    <Box sx={{ pt: 12, pb: 8, minHeight: '100vh' }}>
       <Container maxWidth="lg">
         {/* Хлебные крошки */}
         <Breadcrumbs sx={{ mb: 3 }}>

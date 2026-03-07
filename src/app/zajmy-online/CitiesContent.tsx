@@ -113,7 +113,7 @@ export default function CitiesContent() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateLoansJsonLd()) }} />
-      <Box sx={{ pt: 14, pb: 8, minHeight: '100vh', bgcolor: '#f8fafc' }}>
+      <Box sx={{ pt: 14, pb: 8, minHeight: '100vh' }}>
       <Container maxWidth="lg">
         {/* Hero блок */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>

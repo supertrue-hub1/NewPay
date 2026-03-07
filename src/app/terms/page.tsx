@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <>
-      <Box sx={{ pt: 8, pb: 8, minHeight: '100vh', bgcolor: '#f8fafc' }}>
+      <Box sx={{ pt: 8, pb: 8, minHeight: '100vh' }}>
         <Container maxWidth="lg">
           <Typography variant="h3" sx={{ fontWeight: 700, mb: 3, color: '#1a237e' }}>
             Пользовательское соглашение

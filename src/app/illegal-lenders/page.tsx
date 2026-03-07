@@ -83,7 +83,7 @@ export default function IllegalLendersPage() {
   }
 
   return (
-    <Box sx={{ bgcolor: '#f8f9fa', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Typography variant="h3" component="h1" sx={{ mb: 1, fontWeight: 800, display: { xs: 'none', md: 'block' } }}>
           Нелегальные кредиторы
