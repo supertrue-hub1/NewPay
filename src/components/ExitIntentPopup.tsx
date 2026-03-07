@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Box, Dialog, IconButton, Typography, Button, Chip } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -18,6 +18,11 @@ interface MfoOffer {
   approvalTime: string
   badge?: string
   link: string
+  headline?: string
+  subheadline?: string
+  urgencyReason?: string
+  socialProof?: string
+  personalBenefit?: string
 }
 
 interface ExitIntentPopupProps {
