@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://sravnipay.ru
+Host: https://cashpeek.ru
 
 # Sitemaps
-Sitemap: https://sravnipay.ru/sitemap.xml
+Sitemap: https://cashpeek.ru/sitemap.xml
