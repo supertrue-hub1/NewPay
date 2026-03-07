@@ -36,11 +36,15 @@ async function createArticlesTable() {
       content TEXT,
       cover_image VARCHAR(500),
       category VARCHAR(100) DEFAULT 'Советы',
-      author VARCHAR(100) DEFAULT 'Редакция',
+      author VARCHAR(255) DEFAULT 'Редакция',
+      author_id INTEGER,
       status VARCHAR(20) DEFAULT 'PUBLISHED' CHECK (status IN ('DRAFT', 'PUBLISHED')),
       views INTEGER DEFAULT 0,
       reading_time INTEGER DEFAULT 5,
-      tags VARCHAR(500),
+      tags TEXT[],
+      seo_title VARCHAR(500),
+      seo_description VARCHAR(500),
+      seo_og_image VARCHAR(500),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -98,7 +102,7 @@ export async function GET(request: NextRequest) {
         createdAt: row.created_at || row.createdAt,
         updatedAt: row.updated_at || row.updatedAt,
         publishedAt: row.published_at || row.publishedAt,
-        tags: row.tags ? row.tags.split(',') : []
+            tags: Array.isArray(row.tags) ? row.tags : (row.tags ? row.tags.split(',') : [])
       }))
 
       // Получаем первую статью для featured
@@ -122,7 +126,7 @@ export async function GET(request: NextRequest) {
             createdAt: row.created_at,
             updatedAt: row.updated_at,
             publishedAt: row.published_at,
-            tags: row.tags ? row.tags.split(',') : []
+        tags: Array.isArray(row.tags) ? row.tags : (row.tags ? row.tags.split(',') : [])
           }
         }
       }
@@ -202,7 +206,7 @@ export async function POST(request: NextRequest) {
     const result = await query(
       `INSERT INTO articles (slug, title, excerpt, content, cover_image, category, author, status, views, reading_time, tags)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-      [articleSlug, title, excerpt, content, cover_image, category || 'Советы', author || 'Редакция', status || 'PUBLISHED', views || 0, reading_time || 5, tags]
+          [articleSlug, title, excerpt, content, cover_image, category || 'Советы', author || 'Редакция', status || 'PUBLISHED', views || 0, reading_time || 5, Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : [])]
     )
 
     return NextResponse.json({ success: true, data: result.rows[0] }, { status: 201 })
@@ -222,7 +226,7 @@ export async function POST(request: NextRequest) {
         const result = await query(
           `INSERT INTO articles (slug, title, excerpt, content, cover_image, category, author, status, views, reading_time, tags)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-          [articleSlug, title, excerpt, content, cover_image, category || 'Советы', author || 'Редакция', status || 'PUBLISHED', views || 0, reading_time || 5, tags]
+      [articleSlug, title, excerpt, content, cover_image, category || 'Советы', author || 'Редакция', status || 'PUBLISHED', views || 0, reading_time || 5, Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : [])]
         )
         
         return NextResponse.json({ success: true, data: result.rows[0] }, { status: 201 })
@@ -267,7 +271,7 @@ export async function PUT(request: NextRequest) {
            author = $7, status = $8, views = $9, reading_time = $10, tags = $11, updated_at = CURRENT_TIMESTAMP
        WHERE id = $12 
        RETURNING *`,
-      [title, articleSlug, excerpt, content, cover_image, category, author, status, views, reading_time, tags, id]
+      [title, articleSlug, excerpt, content, cover_image, category, author, status, views, reading_time, Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : []), id]
     )
 
     if (result.rows.length === 0) {
