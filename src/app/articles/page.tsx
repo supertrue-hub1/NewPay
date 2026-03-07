@@ -93,15 +93,36 @@ function PostCard({ article }: { article: Article }) {
         </Typography>
         <Divider sx={{ my: 1.5, borderColor: '#f1f5f9' }} />
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-            {typeof article.views === 'number' ? article.views.toLocaleString() : '0'} просмотров
-          </Typography>
-          <Stack direction="row" spacing={0.5} alignItems="center">
-            <AccessTimeIcon sx={{ fontSize: 14, color: '#94a3b8' }} />
+          <Stack direction="row" spacing={1.5} alignItems="center">
             <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-              {article.readingTime || 5} мин
+              {typeof article.views === 'number' ? article.views.toLocaleString() : '0'}
             </Typography>
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <AccessTimeIcon sx={{ fontSize: 14, color: '#94a3b8' }} />
+              <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                {article.readingTime || 5} мин
+              </Typography>
+            </Stack>
           </Stack>
+          <Box
+            component={Link}
+            href={`/articles/${article.slug}`}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              color: '#10b981',
+              fontWeight: 600,
+              fontSize: '0.8rem',
+              textDecoration: 'none',
+              '&:hover': {
+                color: '#059669',
+              },
+            }}
+          >
+            Читать
+            <ArrowForwardIcon sx={{ fontSize: 16 }} />
+          </Box>
         </Stack>
       </CardContent>
     </Card>
