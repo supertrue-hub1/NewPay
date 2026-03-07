@@ -78,8 +78,7 @@ export async function GET(request: NextRequest) {
         articleId: row.article_id,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
-      }
-    })
+    }))
 
     return NextResponse.json({
       success: true,
