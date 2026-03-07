@@ -9,7 +9,7 @@ import {
 import { 
   Dashboard, AccountBalance, CreditCard, Article, HelpOutline, 
   Analytics, Menu as MenuIcon, ChevronLeft,
-  Settings, Logout, Person, Notifications, Info, ExpandLess, ExpandMore, Description, LocalOffer, Handshake
+  Settings, Logout, Person, Notifications, Info, ExpandLess, ExpandMore, Description, LocalOffer, Handshake, OpenInNew
 } from '@mui/icons-material'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -108,8 +108,8 @@ export default function AdminLayout({ children, activeTab = 'mfo', onTabChange }
         minHeight: 64
       }}>
         {!collapsed && (
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 700 }}>
-            NewPay
+          <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, textTransform: 'lowercase', letterSpacing: '-0.5px' }}>
+            cashpeek
           </Typography>
         )}
         <IconButton onClick={() => setCollapsed(!collapsed)} sx={{ color: 'white' }}>
@@ -236,7 +236,7 @@ export default function AdminLayout({ children, activeTab = 'mfo', onTabChange }
       <Box sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
         {!collapsed && (
           <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)', display: 'block', textAlign: 'center' }}>
-            v1.0.0 • NewPay Admin
+            v1.0.0 • cashpeek Admin
           </Typography>
         )}
       </Box>
@@ -311,6 +311,17 @@ export default function AdminLayout({ children, activeTab = 'mfo', onTabChange }
             </IconButton>
 
             <Box sx={{ flexGrow: 1 }} />
+
+            <IconButton 
+              color="inherit" 
+              component="a" 
+              href="/mfo" 
+              target="_blank"
+              sx={{ mr: 1 }}
+              title="Сравнить займ"
+            >
+              <OpenInNew />
+            </IconButton>
 
             <IconButton color="inherit" sx={{ mr: 1 }}>
               <Notifications />
