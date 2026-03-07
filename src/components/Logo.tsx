@@ -9,8 +9,14 @@ interface LogoProps {
 }
 
 export default function Logo({ logo, size = 60, color = '#1a237e' }: LogoProps) {
-  // Check if logo is a URL (http/https) or data URI (base64)
-  const isImage = logo && (logo.startsWith('http') || logo.startsWith('https') || logo.startsWith('data:'))
+  // Check if logo is a URL (http/https), data URI (base64), or relative path (/images/)
+  const isImage = logo && (
+    logo.startsWith('http') || 
+    logo.startsWith('https') || 
+    logo.startsWith('data:') ||
+    logo.startsWith('/images/') ||
+    logo.startsWith('/api/')
+  )
 
   if (isImage) {
     return (
